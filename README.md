@@ -78,11 +78,13 @@ MySQL (porta 3306)
 composer install
 copy .env.example .env
 php artisan key:generate
-php artisan migrate
+php artisan migrate --seed
 npm install
 npm run build
 php artisan test
 ```
+
+`php artisan migrate --seed` já cria o primeiro Super Admin automaticamente se `ADMIN_EMAIL`/`ADMIN_PASSWORD` estiverem definidas no `.env` (recomendado em hospedagem/deploy). Caso contrário, crie um administrador a qualquer momento com `php artisan admin:create` (interativo, sem credenciais commitadas). Detalhes em [`INSTALL.md`](INSTALL.md).
 
 ## Configuração do `.env`
 
@@ -102,6 +104,11 @@ DB_PASSWORD=
 CACHE_STORE=database
 QUEUE_CONNECTION=database
 SESSION_DRIVER=database
+
+# Opcional: cria o primeiro Super Admin automaticamente ao rodar `php artisan migrate --seed`
+ADMIN_NAME="Seu Nome"
+ADMIN_EMAIL=admin@exemplo.com
+ADMIN_PASSWORD=
 ```
 
 Crie o banco de dados `jmf_customer_intelligence` no MySQL local antes de rodar as migrations.
@@ -201,7 +208,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ## Status atual
 
-🚧 **Fase 01 — Fundação e documentação** (em andamento).
+✅ **Fase 02 — Autenticação e administração** concluída (login administrativo, usuários/perfis/permissões, layout administrativo, Policies/Gates, auditoria e testes de acesso).
+
+🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 

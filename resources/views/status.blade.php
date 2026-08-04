@@ -21,6 +21,11 @@
                 Plataforma central de inteligência de clientes — Fase 01: Fundação e documentação.
             </p>
 
+            <a href="{{ route('admin.dashboard') }}"
+               class="mt-6 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-300">
+                Acessar painel administrativo
+            </a>
+
             <dl class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-px overflow-hidden rounded-xl border border-slate-800 bg-slate-800">
                 <div class="bg-slate-900 p-5">
                     <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Ambiente</dt>

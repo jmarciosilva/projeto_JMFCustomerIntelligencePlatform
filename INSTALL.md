@@ -47,25 +47,43 @@ Extensões PHP necessárias (todas presentes por padrão no build do Laragon usa
    CREATE DATABASE jmf_customer_intelligence CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
 
-7. Rodar as migrations:
+7. (Opcional, mas recomendado em hospedagem/deploy) Definir no `.env` as credenciais do primeiro administrador, para que sejam criadas automaticamente pelo seeder:
 
-   ```bash
-   php artisan migrate
+   ```env
+   ADMIN_NAME="Seu Nome"
+   ADMIN_EMAIL=admin@exemplo.com
+   ADMIN_PASSWORD="uma-senha-forte"
    ```
 
-8. Instalar dependências JavaScript:
+   Nenhuma credencial fica commitada no repositório — essas variáveis existem apenas no `.env` local/do servidor, nunca versionado.
+
+8. Rodar as migrations e os seeders (perfis/permissões `Super Admin`/`Administrador` e, se `ADMIN_EMAIL`/`ADMIN_PASSWORD` estiverem definidas, o primeiro administrador):
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+   Se você pulou o passo 7 (ou está em ambiente local sem essas variáveis), crie o primeiro administrador manualmente a qualquer momento:
+
+   ```bash
+   php artisan admin:create
+   ```
+
+   O comando pede nome, e-mail e senha de forma interativa (a senha não fica visível no terminal).
+
+9. Instalar dependências JavaScript:
 
    ```bash
    npm install
    ```
 
-9. Compilar os assets:
+10. Compilar os assets:
 
-   ```bash
-   npm run build
-   ```
+    ```bash
+    npm run build
+    ```
 
-10. Rodar os testes automatizados:
+11. Rodar os testes automatizados:
 
     ```bash
     php artisan test

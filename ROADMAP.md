@@ -47,14 +47,33 @@ Nenhuma (fase inicial).
 
 ## Fase 02 — Autenticação e administração
 
-**Status:** `[ ]` Pendente · depende da Fase 01
+**Status:** `[x]` Concluída
 
-- [ ] Login administrativo.
-- [ ] Usuários, perfis e permissões.
-- [ ] Layout administrativo.
-- [ ] Policies e Gates.
-- [ ] Auditoria inicial.
-- [ ] Testes de acesso.
+- [x] Login administrativo.
+- [x] Usuários, perfis e permissões.
+- [x] Layout administrativo.
+- [x] Policies e Gates.
+- [x] Auditoria inicial.
+- [x] Testes de acesso.
+- [x] Criação do primeiro administrador via seeder (`ADMIN_EMAIL`/`ADMIN_PASSWORD` no `.env`) e via comando interativo (`php artisan admin:create`).
+- [x] Alternância de visibilidade de senha (mostrar/ocultar) nos campos de senha.
+- [x] Edição de perfil próprio (nome e senha, com confirmação da senha atual) em `/admin/perfil`.
+
+### Critérios de aceite
+
+- [x] Login administrativo via Livewire (`/admin/login`), sessão autenticada, rate limiting básico.
+- [x] Usuários internos da JMF System com perfis (`Super Admin`, `Administrador`) via `spatie/laravel-permission`.
+- [x] CRUD de usuários (criação, edição, ativação/desativação, exclusão) protegido por `UserPolicy`.
+- [x] Layout administrativo (sidebar, topbar) consistente com a identidade visual do projeto.
+- [x] Auditoria (`audit_logs`) registrando login, logout, ações de gestão de usuários e atualização de perfil próprio, com tela de consulta.
+- [x] Primeiro administrador provisionável sem credenciais commitadas (seeder lê `ADMIN_EMAIL`/`ADMIN_PASSWORD` do `.env`; alternativa via `php artisan admin:create`).
+- [x] Usuário autenticado pode alterar o próprio nome e senha (exigindo senha atual) em `/admin/perfil`.
+- [x] Testes automatizados cobrindo login, logout, autorização, auditoria e edição de perfil (27 testes, `php artisan test`).
+- [x] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende da Fase 01 (fundação do projeto — validação final do Virtual Host no Laragon segue como passo manual pendente do usuário, documentado em `INSTALL.md`, mas não bloqueia o desenvolvimento).
 
 ---
 
@@ -182,3 +201,5 @@ Nenhuma (fase inicial).
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
+- **2026-08-03** — Fase 02 concluída: login administrativo (Livewire), usuários/perfis/permissões (`spatie/laravel-permission`), layout administrativo, Policies/Gates, auditoria (`audit_logs`) e testes de acesso (Pest).
+- **2026-08-03** — Ajustes solicitados após a entrega da Fase 02: botão de acesso ao painel na home; `AdminUserSeeder` para provisionar o primeiro administrador via `.env` (sem credenciais commitadas); alternância de mostrar/ocultar senha; tela de edição de perfil próprio (nome e senha).
