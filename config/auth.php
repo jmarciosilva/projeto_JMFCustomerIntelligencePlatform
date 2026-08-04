@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Application;
 use App\Models\User;
 
 return [
@@ -42,6 +43,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Autentica aplicações clientes (Fase 03) via token Sanctum. Declarar o
+        // 'provider' aqui faz o Guard do Sanctum recusar tokens cujo tokenable
+        // não seja Application, e permite que ferramentas de análise estática
+        // infiram corretamente o tipo de retorno de $request->user('sanctum').
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'applications',
+        ],
     ],
 
     /*
@@ -71,6 +81,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'applications' => [
+            'driver' => 'eloquent',
+            'model' => Application::class,
+        ],
     ],
 
     /*

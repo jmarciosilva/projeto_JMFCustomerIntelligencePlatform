@@ -79,14 +79,28 @@ Depende da Fase 01 (fundação do projeto — validação final do Virtual Host 
 
 ## Fase 03 — Multiempresa e aplicações
 
-**Status:** `[ ]` Pendente · depende da Fase 02
+**Status:** `[x]` Concluída
 
-- [ ] Tenants.
-- [ ] Applications.
-- [ ] Tokens por aplicação.
-- [ ] Rotação e revogação de tokens.
-- [ ] Isolamento por tenant.
-- [ ] Testes de segurança.
+- [x] Tenants.
+- [x] Applications.
+- [x] Tokens por aplicação.
+- [x] Rotação e revogação de tokens.
+- [x] Isolamento por tenant.
+- [x] Testes de segurança.
+
+### Critérios de aceite
+
+- [x] `Tenant` (empresa/cliente) 1:N `Application` (produto/projeto), gerenciáveis via painel admin com CRUD completo protegido por `TenantPolicy`/`ApplicationPolicy`.
+- [x] Autenticação de aplicações via token (Laravel Sanctum), com criação, rotação e revogação — o token completo só é exibido no momento da criação/rotação.
+- [x] Rota `GET /api/v1/ping` (guard `sanctum` + `ensure.application.active` + rate limit por aplicação) valida a cadeia de autenticação/isolamento ponta a ponta; a rota real de ingestão de eventos fica para a Fase 04.
+- [x] Isolamento: token de uma aplicação nunca retorna dados de outro tenant/aplicação; aplicação/tenant inativos são rejeitados (403); token inválido/ausente/revogado é rejeitado (401).
+- [x] Exclusão de tenant bloqueada quando há applications vinculadas; exclusão de application revoga os tokens junto.
+- [x] Testes automatizados cobrindo CRUD administrativo, autorização, gestão de tokens e segurança da API (29 novos testes, 51 no total em `php artisan test`).
+- [x] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende da Fase 02 (concluída).
 
 ---
 
@@ -203,3 +217,4 @@ Depende da Fase 01 (fundação do projeto — validação final do Virtual Host 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
 - **2026-08-03** — Fase 02 concluída: login administrativo (Livewire), usuários/perfis/permissões (`spatie/laravel-permission`), layout administrativo, Policies/Gates, auditoria (`audit_logs`) e testes de acesso (Pest).
 - **2026-08-03** — Ajustes solicitados após a entrega da Fase 02: botão de acesso ao painel na home; `AdminUserSeeder` para provisionar o primeiro administrador via `.env` (sem credenciais commitadas); alternância de mostrar/ocultar senha; tela de edição de perfil próprio (nome e senha).
+- **2026-08-03** — Fase 03 concluída: Tenants e Applications (CRUD administrativo), autenticação de aplicações via token (Laravel Sanctum) com criação/rotação/revogação, rota `GET /api/v1/ping` para validar isolamento por tenant, e testes de segurança da API.

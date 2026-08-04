@@ -28,6 +28,20 @@
                     </a>
                 @endcan
 
+                @can('tenants.view')
+                    <a href="{{ route('admin.tenants.index') }}"
+                       class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.tenants.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                        Tenants
+                    </a>
+                @endcan
+
+                @can('applications.view')
+                    <a href="{{ route('admin.applications.index') }}"
+                       class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.applications.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                        Aplicações
+                    </a>
+                @endcan
+
                 @can('audit.view')
                     <a href="{{ route('admin.audit.index') }}"
                        class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.audit.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">

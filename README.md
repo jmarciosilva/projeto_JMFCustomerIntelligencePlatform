@@ -210,6 +210,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 02 — Autenticação e administração** concluída (login administrativo, usuários/perfis/permissões, layout administrativo, Policies/Gates, auditoria e testes de acesso).
 
+✅ **Fase 03 — Multiempresa e aplicações** concluída (Tenants, Applications, tokens via Laravel Sanctum com rotação/revogação, isolamento por tenant e testes de segurança da API).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).

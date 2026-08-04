@@ -35,6 +35,8 @@ class RolePermissionSeeder extends Seeder
         $administrador = Role::findOrCreate(AdminRole::Administrador->value, 'web');
         $administrador->syncPermissions([
             Permission::UsersView->value,
+            Permission::TenantsView->value,
+            Permission::ApplicationsView->value,
         ]);
     }
 }

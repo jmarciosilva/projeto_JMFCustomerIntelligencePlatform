@@ -8,7 +8,7 @@
 
 ## Autenticação de aplicações (tokens)
 
-- Cada aplicação cliente autentica-se via token próprio (Fase 03).
+- Cada aplicação cliente autentica-se via token próprio (Laravel Sanctum).
 - O token completo é exibido **apenas no momento da criação**; a partir daí somente um hash é armazenado.
 - Tokens podem ser revogados e rotacionados a qualquer momento pelo administrador do tenant.
 - Rate limiting é aplicado por aplicação para conter abuso ou falhas em cascata dos sistemas clientes.

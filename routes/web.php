@@ -2,9 +2,14 @@
 
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Applications\ApplicationForm;
+use App\Livewire\Admin\Applications\ApplicationIndex;
+use App\Livewire\Admin\Applications\ApplicationTokens;
 use App\Livewire\Admin\Audit\AuditLogIndex;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Profile;
+use App\Livewire\Admin\Tenants\TenantForm;
+use App\Livewire\Admin\Tenants\TenantIndex;
 use App\Livewire\Admin\Users\UserForm;
 use App\Livewire\Admin\Users\UserIndex;
 use App\Livewire\Auth\Login;
@@ -24,6 +29,15 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/users', UserIndex::class)->name('users.index');
     Route::get('/users/create', UserForm::class)->name('users.create');
     Route::get('/users/{user}/edit', UserForm::class)->name('users.edit');
+
+    Route::get('/tenants', TenantIndex::class)->name('tenants.index');
+    Route::get('/tenants/create', TenantForm::class)->name('tenants.create');
+    Route::get('/tenants/{tenant}/edit', TenantForm::class)->name('tenants.edit');
+
+    Route::get('/applications', ApplicationIndex::class)->name('applications.index');
+    Route::get('/applications/create', ApplicationForm::class)->name('applications.create');
+    Route::get('/applications/{application}/edit', ApplicationForm::class)->name('applications.edit');
+    Route::get('/applications/{application}/tokens', ApplicationTokens::class)->name('applications.tokens');
 
     Route::get('/auditoria', AuditLogIndex::class)->name('audit.index');
 

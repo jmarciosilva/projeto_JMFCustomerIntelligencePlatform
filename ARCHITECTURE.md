@@ -70,6 +70,8 @@ Camadas são criadas apenas quando existe finalidade clara — evitar pastas vaz
 
 Todo dado de negócio (eventos, visitantes, sessões, contatos) é associado a um `tenant_id` e a um `application_id`. Consultas e regras de autorização devem sempre considerar esse isolamento — nunca expor dados entre tenants.
 
+`Tenant` (empresa/cliente) tem N `Application` (produto/projeto). Cada `Application` autentica-se na API via token (Laravel Sanctum, `HasApiTokens` no model `Application`, não no `User` administrativo). O guard `sanctum` é resolvido explicitamente com `provider => applications` em `config/auth.php`, garantindo que apenas tokens de `Application` sejam aceitos nas rotas de API. Usuários administrativos (Fase 02) continuam sem vínculo a tenant — administram todos os tenants/applications pelo painel.
+
 ## Processamento assíncrono (MVP em hospedagem compartilhada)
 
 - Fila: `QUEUE_CONNECTION=database`.
