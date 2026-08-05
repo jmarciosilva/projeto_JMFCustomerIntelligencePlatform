@@ -4,6 +4,7 @@ namespace App\Application\Applications\Actions;
 
 use App\Models\Application;
 use App\Support\Audit\AuditLogger;
+use Illuminate\Validation\ValidationException;
 
 class DeleteApplicationAction
 {
@@ -11,6 +12,12 @@ class DeleteApplicationAction
 
     public function handle(Application $application): void
     {
+        if ($application->events()->exists()) {
+            throw ValidationException::withMessages([
+                'application' => 'Não é possível excluir uma aplicação que possui eventos vinculados.',
+            ]);
+        }
+
         $this->auditLogger->log('application.deleted', $application, [
             'name' => $application->name,
             'slug' => $application->slug,

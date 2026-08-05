@@ -1,8 +1,8 @@
 # Catálogo de Eventos — JMF Customer Intelligence
 
-> Este documento descreve o contrato de eventos aceito pela plataforma e o catálogo inicial de eventos dos projetos-piloto. A implementação do endpoint de ingestão ocorre na Fase 04 do `ROADMAP.md`; este catálogo é a referência de contrato desde a Fase 01.
+> Este documento descreve o contrato de eventos aceito pela plataforma e o catálogo inicial de eventos dos projetos-piloto. O endpoint de ingestão foi implementado na Fase 04 do `ROADMAP.md`; este catálogo é a referência de contrato desde a Fase 01.
 
-## Endpoint (planejado — Fase 04)
+## Endpoint
 
 ```text
 POST /api/v1/events
@@ -61,7 +61,7 @@ POST /api/v1/events/batch
 ## Regras de contrato
 
 - `event_id` deve ser único por aplicação; eventos repetidos são descartados (idempotência).
-- `properties` e `context` possuem tamanho máximo validado pela API (definido na Fase 04).
+- `properties` e `context` possuem tamanho máximo de 10 KB cada, validado pela API (`StoreEventRequest`).
 - Nenhum evento pode conter senhas, dados de cartão ou qualquer conteúdo sensível.
 - Eventos sem `tenant_id`/`application_id` válidos (via token de aplicação) são rejeitados.
 

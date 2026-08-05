@@ -22,7 +22,7 @@
 
 ## Dados de eventos
 
-- `properties` e `context` têm tamanho máximo validado na ingestão (Fase 04), prevenindo payloads abusivos.
+- `properties` e `context` têm tamanho máximo de 10 KB cada, validado na ingestão (`StoreEventRequest`), prevenindo payloads abusivos.
 - É proibido armazenar senhas, dados de cartão de crédito, documentos ou qualquer conteúdo sensível dentro de eventos.
 - Prevenção de duplicidade obrigatória via `event_id` + aplicação (idempotência).
 - Proteção contra mass assignment em todos os Models (uso de `$fillable`/`$guarded` explícitos).

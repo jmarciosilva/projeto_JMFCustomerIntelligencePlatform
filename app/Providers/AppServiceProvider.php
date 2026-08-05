@@ -36,10 +36,16 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Tenant::class, TenantPolicy::class);
         Gate::policy(Application::class, ApplicationPolicy::class);
 
-        // Limite conservador por aplicação autenticada; a Fase 04 pode ajustar
-        // por endpoint conforme a necessidade real de ingestão de eventos.
+        // Limite conservador por aplicação autenticada, usado por endpoints de
+        // baixo volume (ex.: /api/v1/ping).
         RateLimiter::for('api-application', function ($request) {
             return Limit::perMinute(60)->by($request->user()?->id);
+        });
+
+        // Limite mais generoso para a ingestão de eventos (Fase 04), que tende a
+        // ter volume bem maior que os demais endpoints da API.
+        RateLimiter::for('api-events', function ($request) {
+            return Limit::perMinute(300)->by($request->user()?->id);
         });
     }
 }

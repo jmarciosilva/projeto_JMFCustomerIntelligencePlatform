@@ -3,6 +3,7 @@
 use App\Livewire\Admin\Applications\ApplicationForm;
 use App\Livewire\Admin\Applications\ApplicationIndex;
 use App\Models\Application;
+use App\Models\Event;
 use App\Models\Tenant;
 use Livewire\Livewire;
 
@@ -63,6 +64,19 @@ test('super admin exclui uma aplicação e seus tokens junto', function () {
         'tokenable_type' => Application::class,
         'tokenable_id' => $application->id,
     ]);
+});
+
+test('não é possível excluir uma aplicação com eventos vinculados', function () {
+    $admin = superAdmin();
+    $application = Application::factory()->create();
+    Event::factory()->for($application)->create();
+
+    Livewire::actingAs($admin)
+        ->test(ApplicationIndex::class)
+        ->call('delete', $application)
+        ->assertHasErrors('application');
+
+    $this->assertDatabaseHas('applications', ['id' => $application->id]);
 });
 
 test('administrador só consegue visualizar aplicações, não criar', function () {

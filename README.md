@@ -212,6 +212,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 03 — Multiempresa e aplicações** concluída (Tenants, Applications, tokens via Laravel Sanctum com rotação/revogação, isolamento por tenant e testes de segurança da API).
 
+✅ **Fase 04 — Ingestão de eventos** concluída (`POST /api/v1/events`, validação via Form Request, idempotência por `event_id`, ingestão assíncrona via fila `database`, rate limiting dedicado e logs de falha).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
