@@ -22,6 +22,28 @@ Atualmente cada sistema da JMF System mantém seu próprio CRM, seu próprio Ana
 - Gerar recomendações e automatizar campanhas.
 - Aumentar conversão e melhorar retenção.
 
+## Visão de Longo Prazo
+
+O núcleo já construído (ingestão de eventos, identidade de cliente, analytics, SDK) é a fundação de uma visão maior: o **JMF Customer Intelligence deve se tornar o motor central de inteligência da JMF System** — não apenas uma plataforma de Analytics e CRM, mas uma plataforma de inteligência para negócios digitais, composta por módulos independentes:
+
+- **Analytics** — indicadores, funis, UTMs, páginas/produtos mais acessados.
+- **CRM** — identidade de cliente, timeline, consentimentos.
+- **Customer Journey** — jornada completa do visitante ao cliente recorrente.
+- **Marketing Intelligence** — segmentação e campanhas orientadas a dados.
+- **Recommendation Engine** — recomendações e produtos relacionados.
+- **Lead Scoring** e **Customer Scoring** — pontuação de leads e clientes.
+- **Fraud Detection** — detecção de comportamento suspeito e reputação.
+- **AI Marketing** — geração automática de conteúdo e campanhas.
+- **AI Studio** — geração de imagens e vídeos profissionais a partir de fotos simples.
+- **Content Generation** — títulos, descrições, SEO, textos para redes sociais.
+- **Business Intelligence** e **AI Insights** — previsões, tendências e oportunidades comerciais.
+
+Qualquer sistema desenvolvido pela JMF System poderá consumir um ou mais desses módulos sem precisar reimplementá-los. O **SDK Laravel** (`packages/jmf-system/customer-intelligence-sdk`) continua sendo a principal forma de integração entre aplicações clientes e a plataforma. O isolamento por tenant/aplicação e o desacoplamento entre plataforma e sistemas clientes, já estabelecidos nas fases concluídas, são a base sobre a qual esses módulos serão construídos — nenhuma aplicação cliente fica acoplada a outra, e toda inteligência permanece centralizada aqui.
+
+> Fornecer inteligência artificial reutilizável para qualquer produto digital desenvolvido pela JMF System, auxiliando empresas, marketplaces e pequenos empreendedores a compreender seus clientes, automatizar marketing, gerar conteúdo, detectar fraudes, recomendar produtos e tomar melhores decisões baseadas em dados.
+
+O roadmap completo dessa evolução — incluindo a Feira Esquerda Livre como laboratório de validação e as fases de IA (Business Intelligence, Business Assistant, AI Marketing, AI Studio, Fraud Detection, Intelligence Engine) — está em [`ROADMAP.md`](ROADMAP.md).
+
 ## Projetos-piloto
 
 1. **Site pessoal e blog profissional** — navegação, blog, portfólio, contato, newsletter.

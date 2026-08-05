@@ -273,6 +273,207 @@ Depende da Fase 04 (concluída) — usa o mesmo contrato de eventos (`POST /api/
 
 ---
 
+## Evolução estratégica — próximas fases
+
+As fases a seguir (12 em diante) representam a evolução do JMF Customer Intelligence de uma plataforma de Analytics/CRM para o **motor central de inteligência da JMF System** — uma plataforma de inteligência para negócios digitais, composta por módulos independentes que qualquer aplicação da empresa poderá consumir. Elas **não substituem** as Fases 01-11: a arquitetura consolidada nelas (eventos, identidade, isolamento por tenant, SDK) continua sendo a base sobre a qual esses módulos são construídos.
+
+---
+
+## Fase 12 — Integração com Feira Esquerda Livre
+
+**Status:** `[ ]` Pendente · depende da Fase 07 e da Fase 06
+
+### Objetivo
+
+Usar a Feira Esquerda Livre (marketplace) como laboratório principal de validação dos motores de inteligência da plataforma, com usuários reais — Analytics do Marketplace, CRM por expositor e Customer Journey completa do comprador.
+
+### Tarefas
+
+- [ ] Catálogo de eventos do Marketplace: visualização de produtos, pesquisa, filtros, favoritos, carrinho, checkout, compra, abandono de carrinho, origem dos acessos, eventos de rede social, interação entre compradores e expositores.
+- [ ] CRM do Expositor: painel de inteligência individual por expositor (visitantes, produtos mais vistos, produtos com maior conversão, clientes recorrentes, horários de maior venda, canais de aquisição, origem do tráfego, comportamento dos compradores).
+- [ ] Customer Journey completa do comprador (ex.: Instagram → Landing Page → Produto → Carrinho → Compra → Nova Compra).
+- [ ] Dashboard específico por expositor.
+
+### Critérios de aceite
+
+- [ ] Feira Esquerda Livre integrada via SDK Laravel, sem acoplamento direto entre as aplicações.
+- [ ] Cada expositor acessa, de forma isolada, seu próprio painel de inteligência.
+- [ ] Jornada do comprador reconstruída ponta a ponta a partir dos eventos capturados.
+- [ ] Testes automatizados cobrindo os novos eventos e o isolamento por expositor.
+
+### Dependências
+
+Depende da Fase 07 (SDK Laravel) e da Fase 06 (Analytics MVP).
+
+---
+
+## Fase 13 — AI Business Intelligence
+
+**Status:** `[ ]` Pendente · depende da Fase 06 e da Fase 12
+
+### Objetivo
+
+Motor de inteligência artificial responsável por interpretar os dados já coletados pela plataforma e gerar indicadores preditivos e de afinidade.
+
+### Tarefas
+
+- [ ] Lead Score.
+- [ ] Customer Score.
+- [ ] Afinidade entre produtos.
+- [ ] Recomendações e produtos relacionados.
+- [ ] Previsão de vendas.
+- [ ] Sazonalidade e tendências.
+- [ ] Produtos em alta / produtos em queda.
+- [ ] Segmentação automática.
+- [ ] Identificação de oportunidades comerciais.
+
+### Critérios de aceite
+
+- [ ] Lead Score e Customer Score calculados a partir dos dados já existentes (eventos, visitantes, contatos) e expostos via API.
+- [ ] Recomendações e afinidade entre produtos disponíveis para consumo pelas aplicações clientes.
+- [ ] Segmentação automática de contatos com base em comportamento.
+- [ ] Testes automatizados cobrindo os cálculos e a API de consumo.
+
+### Dependências
+
+Depende da Fase 06 (Analytics MVP) e da Fase 12 (dados reais da Feira Esquerda Livre para validação).
+
+---
+
+## Fase 14 — AI Business Assistant
+
+**Status:** `[ ]` Pendente · depende da Fase 13
+
+### Objetivo
+
+Atuar como consultor inteligente automatizado para pequenos empreendedores, democratizando análises de negócio normalmente restritas a consultorias caras.
+
+### Tarefas
+
+- [ ] Motor de recomendações textuais a partir dos dados do expositor/vendedor (ex.: quedas de venda, qualidade de fotos, tempo de resposta, oportunidades de kit, preço fora da média da categoria, horário ideal de publicação).
+- [ ] Painel de recomendações no dashboard do expositor.
+- [ ] Priorização de recomendações por impacto esperado.
+
+### Critérios de aceite
+
+- [ ] Recomendações geradas automaticamente a partir dos dados já existentes na plataforma (Analytics, CRM, AI Business Intelligence).
+- [ ] Recomendações acionáveis, específicas e atualizadas periodicamente.
+- [ ] Testes automatizados cobrindo a geração das recomendações.
+
+### Dependências
+
+Depende da Fase 13 (AI Business Intelligence).
+
+---
+
+## Fase 15 — AI Marketing
+
+**Status:** `[ ]` Pendente · depende da Fase 13
+
+### Objetivo
+
+Motor especializado em geração automática de conteúdo de marketing a partir dos dados do produto, reduzindo a dificuldade que pequenos empreendedores têm em divulgar o que vendem.
+
+### Tarefas
+
+- [ ] Geração de título, descrição, SEO e palavras-chave.
+- [ ] Geração de hashtags e textos para Instagram, Facebook e WhatsApp.
+- [ ] Geração de campanhas e e-mail marketing.
+- [ ] Geração de banners.
+
+### Critérios de aceite
+
+- [ ] Conteúdo gerado automaticamente a partir dos dados do produto, disponível via API para as aplicações clientes.
+- [ ] Conteúdo revisável/editável pelo usuário antes da publicação.
+- [ ] Testes automatizados cobrindo a geração de conteúdo.
+
+### Dependências
+
+Depende da Fase 13 (AI Business Intelligence).
+
+---
+
+## Fase 16 — AI Studio
+
+**Status:** `[ ]` Pendente · depende da Fase 13
+
+### Objetivo
+
+Democratizar recursos de fotografia e vídeo profissional para artesãos, pequenos produtores e vendedores de brechó: a partir de uma fotografia simples enviada pelo usuário, gerar material profissional via IA.
+
+### Tarefas
+
+- [ ] Geração de fotografia profissional (remoção de fundo, ambientação, iluminação, decoração, cenários).
+- [ ] Geração de imagens com produtos em ambientes reais / pessoas utilizando roupas.
+- [ ] Geração de vídeos curtos para redes sociais.
+- [ ] Geração de imagens para anúncios.
+
+### Critérios de aceite
+
+- [ ] Upload de uma foto simples resulta em material profissional gerado automaticamente.
+- [ ] Resultado disponível para download/uso direto nas aplicações clientes.
+- [ ] Testes automatizados cobrindo o fluxo de geração.
+
+### Dependências
+
+Depende da Fase 13 (AI Business Intelligence).
+
+---
+
+## Fase 17 — AI Fraud Detection
+
+**Status:** `[ ]` Pendente · depende da Fase 12
+
+### Objetivo
+
+Módulo de inteligência para segurança, monitorando comportamento suspeito e mantendo um sistema de reputação/confiança para expositores e compradores.
+
+### Tarefas
+
+- [ ] Monitoramento de comportamento suspeito, criação massiva de contas e acessos incomuns.
+- [ ] Detecção de compras suspeitas e tentativas de fraude.
+- [ ] Detecção de spam, anúncios maliciosos, imagens inadequadas, textos ofensivos e produtos proibidos.
+- [ ] Score de Confiança para expositores.
+- [ ] Indicadores de confiabilidade para compradores.
+
+### Critérios de aceite
+
+- [ ] Comportamentos suspeitos identificados e sinalizados automaticamente.
+- [ ] Score de Confiança calculado e exposto no painel do expositor/comprador.
+- [ ] Testes automatizados cobrindo as regras de detecção e o cálculo de score.
+
+### Dependências
+
+Depende da Fase 12 (Feira Esquerda Livre, fonte de dados reais para validação).
+
+---
+
+## Fase 18 — Intelligence Engine
+
+**Status:** `[ ]` Pendente · depende de todas as fases anteriores (12 a 17)
+
+### Objetivo
+
+Consolidar o JMF Customer Intelligence como motor central de inteligência, consumido por todas as aplicações da JMF System — cada uma utilizando apenas os módulos de que precisa, sem acoplamento entre aplicações.
+
+### Tarefas
+
+- [ ] Catálogo consolidado de módulos consumíveis via API/SDK (Analytics, CRM, AI Studio, Marketing, Recomendações, Fraude, Consultoria Inteligente).
+- [ ] Integração de Feira Esquerda Livre, Clube do Salão, Site Pessoal, Meu Canto Ideal e futuros sistemas.
+- [ ] Documentação consolidada de todos os módulos disponíveis.
+
+### Critérios de aceite
+
+- [ ] Todas as aplicações da JMF System integradas, cada uma consumindo apenas os módulos necessários.
+- [ ] Toda inteligência permanece centralizada no JMF Customer Intelligence; aplicações clientes seguem responsáveis exclusivamente por suas próprias regras de negócio.
+- [ ] Documentação completa dos módulos disponíveis e de como integrá-los via SDK Laravel.
+
+### Dependências
+
+Depende de todas as fases anteriores (12 a 17).
+
+---
+
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
@@ -283,3 +484,4 @@ Depende da Fase 04 (concluída) — usa o mesmo contrato de eventos (`POST /api/
 - **2026-08-05** — Fase 05 concluída: materialização automática de `Visitor`/`VisitorSession` a partir dos eventos (`EventWasIngested` + `ResolveVisitorAndSessionListener`); `Contact` único por tenant com `POST /api/v1/contacts/identify` (criação/atualização incremental, associação anônimo-conhecido, consentimentos LGPD em `contact_consents`); Timeline por contato (`GetContactTimelineAction`) exposta em painel admin somente leitura (`/admin/contacts`); ajuste pontual na Fase 04 bloqueando exclusão de application com visitantes vinculados.
 - **2026-08-05** — Fase 06 concluída: painel `/admin/analytics` (totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência configurável de eventos e conversões); tabela agregada `daily_metrics` populada pelo comando `metrics:aggregate-daily`, agendado via `Schedule::command`; campo opcional `conversion_event_name` adicionado ao CRUD de Application (ajuste pontual na Fase 03).
 - **2026-08-05** — Fase 07 concluída: pacote `jmf-system/customer-intelligence-sdk` (`packages/jmf-system/customer-intelligence-sdk/`) com `identify()`/`track()`/`conversion()`, visitor/sessão automáticos via cookies e middleware, envio assíncrono via fila (`SendPayloadJob`, retry/backoff), e documentação de integração própria — pacote autocontido, testado isoladamente via Orchestra Testbench.
+- **2026-08-05** — Evolução estratégica de visão (`NEW_PROMPT.md`): o projeto passa a se apresentar como o motor central de inteligência da JMF System, não apenas Analytics/CRM. `README.md` ganhou a seção "Visão de Longo Prazo"; roadmap ganhou as Fases 12-18 (Integração com Feira Esquerda Livre, AI Business Intelligence, AI Business Assistant, AI Marketing, AI Studio, AI Fraud Detection, Intelligence Engine), sem alterar as Fases 01-11 nem a arquitetura já consolidada.
