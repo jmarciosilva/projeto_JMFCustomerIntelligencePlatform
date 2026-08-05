@@ -85,6 +85,9 @@ email.clicked
 linkedin.clicked
 resume.downloaded
 newsletter.subscribed
+article.liked
+article.unliked
+comment.submitted
 ```
 
 ### Funil inicial — Site pessoal

@@ -223,14 +223,29 @@ Depende da Fase 04 (concluída) — usa o mesmo contrato de eventos (`POST /api/
 
 ## Fase 08 — Integração com site pessoal
 
-**Status:** `[ ]` Pendente · depende da Fase 07
+**Status:** `[ ]` Pendente (parcial) · depende da Fase 07
 
-- [ ] Eventos de navegação.
-- [ ] Eventos do blog.
-- [ ] Eventos do portfólio.
-- [ ] Eventos de contato.
-- [ ] Funil profissional.
+- [ ] Eventos de navegação — `page.viewed`/`session.started` deliberadamente adiados (ver critérios de aceite).
+- [x] Eventos do blog.
+- [x] Eventos do portfólio.
+- [x] Eventos de contato.
+- [ ] Funil profissional — `identify()`/`conversion()` já disparam no formulário de contato; painel de funil dedicado fica para depois.
 - [ ] Dashboard específico.
+
+### Critérios de aceite
+
+- [x] SDK Laravel (Fase 07) instalado no site pessoal (`D:\projeto_pessoal_jose_marcio\jose-marcio-portfolio-blog`) via *path repository* do Composer; `Application` "Site Pessoal" (slug `site-pessoal`) e token dedicado criados na plataforma; `.env`/`.env.example` documentados.
+- [x] Despacho configurado como **síncrono** (`JMF_CI_QUEUE_CONNECTION=sync`, `JMF_CI_TIMEOUT=2`) — mesma decisão tomada para o envio de e-mail do site pessoal: não depender de `queue:work` rodando no lado do cliente. O SDK continua despachando via `SendPayloadJob`; a conexão `sync` só faz esse job rodar inline.
+- [x] Eventos do blog: `article.viewed` (`BlogController::show`), `article.liked`/`article.unliked` (`PostLikeController::store`), `comment.submitted` (`CommentController::store`) — os dois últimos adicionados ao `EVENT_CATALOG.md` (não existiam antes, curtidas/comentários são funcionalidade nova).
+- [x] Eventos do portfólio: `project.viewed` (`ProjectController::show`), `project.repository_clicked`/`project.demo_clicked` via rota de redirecionamento dedicada (`GET /projetos/{project}/ir/{tipo}`, `LinkClickController::projectRedirect`) — nunca aceita a URL de destino por query string (evita open redirect), lê sempre do próprio `Project`.
+- [x] Eventos de contato: `contact.form_submitted` via `CustomerIntelligence::conversion()` (é o `conversion_event_name` configurado na Application) + `identify()` com nome/e-mail do formulário; `whatsapp.clicked`/`email.clicked`/`linkedin.clicked` via `GET /ir/{tipo}` (`LinkClickController::redirect`), lendo a URL do `SiteSetting` atual.
+- [x] `resume.downloaded` (`ResumeController::pdf`).
+- [x] Bug corrigido no próprio SDK (Fase 07): `Client::track()` aceitava `subjectId` como `int`, mas a API exige `subject_id` como string (`StoreEventRequest`) — descoberto na verificação manual ponta a ponta desta fase, corrigido em `packages/jmf-system/customer-intelligence-sdk/src/Client.php` (cast para string antes do payload), com o teste do próprio pacote atualizado.
+- [x] Verificação manual ponta a ponta: visitas/ações reais no site pessoal local geraram eventos reais na tabela `events` da plataforma (`application_id` correto, `subject_type`/`subject_id` corretos) — processados via `php artisan queue:work` do lado da plataforma (`ProcessIncomingEventJob`, que continua sendo assíncrono no servidor, diferente do despacho do cliente).
+- [x] Testes automatizados (`tests/Feature/CustomerIntelligenceTrackingTest.php`, 10 testes) cobrindo todos os eventos acima via `Bus::fake()`, sem depender da plataforma estar no ar durante `php artisan test`.
+- [x] `vendor/bin/pint` e `npm run build` do site pessoal sem erros; suíte de testes do SDK (`vendor/bin/pest` em `packages/jmf-system/customer-intelligence-sdk`) sem erros.
+
+**Fora de escopo desta etapa** (sem funcionalidade correspondente ainda ou adiado deliberadamente): `page.viewed`/`session.started` globais (adiado — cada chamada síncrona ao JMF CI adiciona uma requisição HTTP real por página, escopo mantido enxuto para validar primeiro), `category.viewed`, `article.completed`, `article.cta_clicked`, `contact.form_started` (precisaria de JS no front-end), `article.shared`, `newsletter.subscribed` (sem funcionalidade de compartilhamento/newsletter no site ainda), dashboard específico do funil profissional no admin da plataforma.
 
 ---
 

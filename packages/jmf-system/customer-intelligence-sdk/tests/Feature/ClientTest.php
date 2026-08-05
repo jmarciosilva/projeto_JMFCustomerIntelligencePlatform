@@ -21,7 +21,7 @@ test('track() despacha SendPayloadJob com o payload correto', function () {
             && $job->payload['event_name'] === 'article.viewed'
             && $job->payload['properties'] === ['article_id' => 5]
             && $job->payload['subject_type'] === 'Article'
-            && $job->payload['subject_id'] === 5
+            && $job->payload['subject_id'] === '5'
             && $job->payload['context']['utm_source'] === 'linkedin'
             && ! empty($job->payload['visitor_id'])
             && ! empty($job->payload['session_id'])

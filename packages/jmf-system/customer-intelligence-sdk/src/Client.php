@@ -51,7 +51,7 @@ class Client
             'properties' => $properties !== [] ? $properties : null,
             'context' => $this->contextResolver->resolve(),
             'subject_type' => $subjectType,
-            'subject_id' => $subjectId,
+            'subject_id' => $subjectId !== null ? (string) $subjectId : null,
         ], fn ($value) => $value !== null);
 
         $this->dispatch('events', $payload);
