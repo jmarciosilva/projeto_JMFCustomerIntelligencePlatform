@@ -216,6 +216,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 05 — Visitantes, sessões e contatos** concluída (`Visitor`/`VisitorSession` materializados automaticamente a partir dos eventos, `Contact` único por tenant com `POST /api/v1/contacts/identify`, associação anônimo-conhecido, consentimentos LGPD e Timeline por contato no painel admin).
 
+✅ **Fase 06 — Analytics MVP** concluída (painel `/admin/analytics` com totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência de eventos e conversões; tabela agregada `daily_metrics` populada pelo comando agendado `metrics:aggregate-daily`).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).

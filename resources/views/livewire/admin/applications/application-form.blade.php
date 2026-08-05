@@ -29,6 +29,16 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="conversion_event_name" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Evento de conversão (opcional)</label>
+                <input wire:model="conversion_event_name" type="text" id="conversion_event_name" placeholder="ex.: contact.form_submitted"
+                       class="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400">
+                <p class="mt-1 text-xs text-slate-500">Nome do evento (`event_name`) que representa uma conversão desta aplicação. Usado no dashboard de Analytics.</p>
+                @error('conversion_event_name')
+                    <p class="mt-1 text-xs text-rose-400">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="flex items-center gap-3 pt-2">
                 <button type="submit"
                         class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-300"

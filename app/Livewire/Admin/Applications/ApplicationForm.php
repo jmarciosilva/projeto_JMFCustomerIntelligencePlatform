@@ -19,6 +19,8 @@ class ApplicationForm extends Component
 
     public ?int $tenant_id = null;
 
+    public string $conversion_event_name = '';
+
     public function mount(?Application $application = null): void
     {
         $this->application = $application;
@@ -28,6 +30,7 @@ class ApplicationForm extends Component
         if ($this->application) {
             $this->name = $this->application->name;
             $this->tenant_id = $this->application->tenant_id;
+            $this->conversion_event_name = $this->application->conversion_event_name ?? '';
         }
     }
 
@@ -39,6 +42,7 @@ class ApplicationForm extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'tenant_id' => ['required', 'integer', 'exists:tenants,id'],
+            'conversion_event_name' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -46,13 +50,15 @@ class ApplicationForm extends Component
     {
         $this->validate();
 
+        $conversionEventName = $this->conversion_event_name !== '' ? $this->conversion_event_name : null;
+
         if ($this->application) {
-            $updateApplication->handle($this->application, $this->name);
+            $updateApplication->handle($this->application, $this->name, $conversionEventName);
         } else {
             /** @var Tenant $tenant */
             $tenant = Tenant::query()->findOrFail($this->tenant_id);
 
-            $createApplication->handle($tenant, $this->name);
+            $createApplication->handle($tenant, $this->name, $conversionEventName);
         }
 
         $this->redirectRoute('admin.applications.index', navigate: false);

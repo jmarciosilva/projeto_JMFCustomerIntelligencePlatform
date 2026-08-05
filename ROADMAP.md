@@ -165,15 +165,31 @@ Depende da Fase 04 (concluída).
 
 ## Fase 06 — Analytics MVP
 
-**Status:** `[ ]` Pendente · depende da Fase 05
+**Status:** `[x]` Concluída
 
-- [ ] Dashboard geral.
-- [ ] Filtros por aplicação e período.
-- [ ] UTMs.
-- [ ] Páginas, artigos e serviços mais acessados.
-- [ ] Funis.
-- [ ] Conversões.
-- [ ] Tabelas agregadas (`daily_metrics`).
+- [x] Dashboard geral.
+- [x] Filtros por aplicação e período.
+- [x] UTMs.
+- [x] Páginas, artigos e serviços mais acessados.
+- [x] Funis.
+- [x] Conversões.
+- [x] Tabelas agregadas (`daily_metrics`).
+
+### Critérios de aceite
+
+- [x] Painel `/admin/analytics` (permissão `analytics.view`) com seletor de aplicação e período (hoje/7/30/90 dias), tiles de totais (eventos, visitantes únicos, sessões únicas, conversões) e gráfico de tendência diária.
+- [x] Totais do período calculados sempre ao vivo sobre `events` (evita contagem duplicada de visitantes que aparecem em múltiplos dias); a tendência dia a dia usa `daily_metrics` para dias já agregados e cálculo ao vivo apenas para o dia corrente.
+- [x] `GetTopPagesAction` (por `context.page_url`) e `GetTopSubjectsAction` (genérico por `subject_type`/`subject_id`, reaproveitado para artigos e serviços).
+- [x] `GetUtmBreakdownAction` agrupando por `utm_source`/`utm_medium`/`utm_campaign` extraídos de `context`.
+- [x] `GetFunnelAction`: funil estrito por sequência configurável de `event_name` (interseção de visitantes entre etapas, não contagem solta); dois templates de exemplo (`FunnelTemplates`) derivados do `EVENT_CATALOG.md`, só com etapas que mapeiam claramente a um evento do catálogo.
+- [x] `GetConversionsAction`: `Application.conversion_event_name` (campo opcional novo, configurável no CRUD da Fase 03) define o evento de conversão; retorna `null` quando não configurado.
+- [x] Comando `metrics:aggregate-daily` (idempotente, `updateOrCreate` defensivo contra mismatch de cast) agenda-do via `Schedule::command(...)->dailyAt('01:00')` em `routes/console.php`.
+- [x] Testes automatizados cobrindo todas as Actions de Analytics, o comando de agregação (incluindo idempotência) e o painel admin (15 novos testes, 92 no total em `php artisan test`).
+- [x] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende da Fase 05 (concluída).
 
 ---
 
@@ -251,3 +267,4 @@ Depende da Fase 04 (concluída).
 - **2026-08-03** — Fase 03 concluída: Tenants e Applications (CRUD administrativo), autenticação de aplicações via token (Laravel Sanctum) com criação/rotação/revogação, rota `GET /api/v1/ping` para validar isolamento por tenant, e testes de segurança da API.
 - **2026-08-05** — Fase 04 concluída: rota `POST /api/v1/events` (validação via `StoreEventRequest`, idempotência por `unique(application_id, event_id)`, ingestão assíncrona via `ProcessIncomingEventJob` na fila `database`, rate limiting dedicado `api-events`, logs de falha via `failed()`); ajuste pontual na Fase 03 bloqueando exclusão de application com eventos vinculados (`DeleteApplicationAction`).
 - **2026-08-05** — Fase 05 concluída: materialização automática de `Visitor`/`VisitorSession` a partir dos eventos (`EventWasIngested` + `ResolveVisitorAndSessionListener`); `Contact` único por tenant com `POST /api/v1/contacts/identify` (criação/atualização incremental, associação anônimo-conhecido, consentimentos LGPD em `contact_consents`); Timeline por contato (`GetContactTimelineAction`) exposta em painel admin somente leitura (`/admin/contacts`); ajuste pontual na Fase 04 bloqueando exclusão de application com visitantes vinculados.
+- **2026-08-05** — Fase 06 concluída: painel `/admin/analytics` (totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência configurável de eventos e conversões); tabela agregada `daily_metrics` populada pelo comando `metrics:aggregate-daily`, agendado via `Schedule::command`; campo opcional `conversion_event_name` adicionado ao CRUD de Application (ajuste pontual na Fase 03).

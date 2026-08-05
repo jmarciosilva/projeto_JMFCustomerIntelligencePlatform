@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Analytics\AnalyticsDashboard;
 use App\Livewire\Admin\Applications\ApplicationForm;
 use App\Livewire\Admin\Applications\ApplicationIndex;
 use App\Livewire\Admin\Applications\ApplicationTokens;
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/applications/create', ApplicationForm::class)->name('applications.create');
     Route::get('/applications/{application}/edit', ApplicationForm::class)->name('applications.edit');
     Route::get('/applications/{application}/tokens', ApplicationTokens::class)->name('applications.tokens');
+
+    Route::get('/analytics', AnalyticsDashboard::class)->name('analytics.index');
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');
     Route::get('/contacts/{contact}', ContactShow::class)->name('contacts.show');

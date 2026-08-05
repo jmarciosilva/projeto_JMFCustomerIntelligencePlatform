@@ -20,6 +20,7 @@ class Application extends Model
         'name',
         'slug',
         'is_active',
+        'conversion_event_name',
     ];
 
     /**
@@ -54,5 +55,13 @@ class Application extends Model
     public function visitors(): HasMany
     {
         return $this->hasMany(Visitor::class);
+    }
+
+    /**
+     * @return HasMany<DailyMetric, $this>
+     */
+    public function dailyMetrics(): HasMany
+    {
+        return $this->hasMany(DailyMetric::class);
     }
 }

@@ -11,7 +11,7 @@ class CreateApplicationAction
 {
     public function __construct(private readonly AuditLogger $auditLogger) {}
 
-    public function handle(Tenant $tenant, string $name): Application
+    public function handle(Tenant $tenant, string $name, ?string $conversionEventName = null): Application
     {
         $slug = UniqueSlugGenerator::generate(
             $name,
@@ -23,6 +23,7 @@ class CreateApplicationAction
             'name' => $name,
             'slug' => $slug,
             'is_active' => true,
+            'conversion_event_name' => $conversionEventName,
         ]);
 
         $this->auditLogger->log('application.created', $application, [

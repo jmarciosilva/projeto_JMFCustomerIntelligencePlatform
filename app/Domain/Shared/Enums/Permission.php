@@ -19,6 +19,7 @@ enum Permission: string
     case ApplicationsDelete = 'applications.delete';
     case ApplicationsTokensManage = 'applications.tokens.manage';
     case ContactsView = 'contacts.view';
+    case AnalyticsView = 'analytics.view';
 
     /**
      * @return list<string>

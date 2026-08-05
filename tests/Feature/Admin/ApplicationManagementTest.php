@@ -37,6 +37,20 @@ test('super admin cria uma nova aplicação vinculada a um tenant', function () 
     $this->assertDatabaseHas('audit_logs', ['action' => 'application.created']);
 });
 
+test('super admin configura o evento de conversão de uma aplicação', function () {
+    $admin = superAdmin();
+    $application = Application::factory()->create(['conversion_event_name' => null]);
+
+    Livewire::actingAs($admin)
+        ->test(ApplicationForm::class, ['application' => $application])
+        ->set('name', $application->name)
+        ->set('conversion_event_name', 'contact.form_submitted')
+        ->call('save')
+        ->assertRedirect(route('admin.applications.index'));
+
+    expect($application->fresh()->conversion_event_name)->toBe('contact.form_submitted');
+});
+
 test('super admin edita o nome de uma aplicação existente', function () {
     $admin = superAdmin();
     $application = Application::factory()->create(['name' => 'Nome Antigo']);
