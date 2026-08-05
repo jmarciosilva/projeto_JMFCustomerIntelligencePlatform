@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>Tokens — {{ $application->name }}</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Tokens da aplicação">
+            <p>O token é o que a aplicação cliente usa no seu <code>.env</code> (<code>JMF_CI_TOKEN</code>) para se autenticar com esta plataforma via SDK.</p>
+            <p><strong>O valor completo só é mostrado uma vez</strong>, no momento da criação ou rotação — copie e guarde em local seguro imediatamente.</p>
+            <p>Use <strong>Rotacionar</strong> para gerar um novo token e invalidar o anterior (ex.: se suspeitar de vazamento), ou <strong>Revogar</strong> para desativar sem gerar um novo.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     @if ($plainTextToken)
         <div class="mb-6 rounded-xl border border-amber-800 bg-amber-950/40 p-4">
             <p class="text-sm font-semibold text-amber-400 mb-2">Copie este token agora — ele não será exibido novamente.</p>

@@ -1,6 +1,13 @@
 <div>
     <x-slot:header>{{ $user ? 'Editar usuário' : 'Novo usuário' }}</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Usuário">
+            <p>Defina nome, e-mail e senha do administrador. O perfil escolhido define o que essa pessoa poderá fazer no painel.</p>
+            <p><strong>Super Admin</strong>: acesso completo a todas as telas e ações. <strong>Administrador</strong>: acesso mais restrito (normalmente só visualização), conforme configurado nas permissões do sistema.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6">
         <form wire:submit="save" class="space-y-4">
             <div>

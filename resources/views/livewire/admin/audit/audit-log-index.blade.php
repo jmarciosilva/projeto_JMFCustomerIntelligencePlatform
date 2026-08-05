@@ -1,6 +1,13 @@
 <div>
     <x-slot:header>Auditoria</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Auditoria">
+            <p>Registro de ações administrativas sensíveis: login/logout, criação, edição e exclusão de usuários, tenants, aplicações e tokens, e alterações de perfil.</p>
+            <p>Serve como trilha de segurança — útil para saber quem fez o quê e quando, especialmente com mais de um administrador usando o painel.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="overflow-hidden rounded-xl border border-slate-800">
         <table class="w-full text-sm">
             <thead class="bg-slate-900">

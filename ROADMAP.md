@@ -490,6 +490,37 @@ Depende de todas as fases anteriores (12 a 17).
 
 ---
 
+## Fase 19 — Ajuda contextual e documentação de usuário
+
+**Status:** `[x]` Concluída
+
+### Objetivo
+
+Tornar o painel administrativo autoexplicativo para administradores e sócios da JMF System, com ajuda contextual em cada tela e um guia de usuário centralizado — tarefa cross-cutting, fora da sequência numérica original do roadmap.
+
+### Tarefas
+
+- [x] Componente de modal de ajuda reutilizável.
+- [x] Ajuda contextual em todas as telas do painel administrativo.
+- [x] Página de Guia do Usuário.
+- [x] Link na sidebar.
+
+### Critérios de aceite
+
+- [x] Componente `<x-help-modal>` (Blade + Alpine.js, sem dependência nova) reutilizado em todas as 13 telas administrativas já existentes (Dashboard, Usuários, Tenants, Aplicações, Tokens, Analytics, Contatos, Auditoria, Perfil), com conteúdo específico por tela.
+- [x] Novo slot `$help` em `layouts/admin.blade.php`, ao lado do título da página — sem aninhar o botão de ajuda dentro do `<h1>`.
+- [x] Página `/admin/guia` (`App\Livewire\Admin\UserGuide`), acessível a qualquer usuário autenticado (sem Permission nova, mesmo padrão de `/admin/perfil`), cobrindo conceitos (Tenant/Application/Visitor/Contact/Evento), como conectar uma aplicação nova, como ler o Analytics, Lead Score/recomendações e perfis de acesso.
+- [x] Link "Guia do usuário" sempre visível na sidebar (não fica atrás de `@can`, por não ter permission associada).
+- [x] Login (`/admin/login`) fica fora do escopo — é o portão de entrada, não faz parte de "administrar a ferramenta".
+- [x] Testes automatizados cobrindo a presença da ajuda em telas representativas de fases diferentes e o acesso à página de guia (7 novos testes, 116 no total em `php artisan test`).
+- [x] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende das Fases 02, 03, 05, 06 (telas administrativas já existentes que recebem a ajuda).
+
+---
+
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
@@ -502,3 +533,4 @@ Depende de todas as fases anteriores (12 a 17).
 - **2026-08-05** — Fase 07 concluída: pacote `jmf-system/customer-intelligence-sdk` (`packages/jmf-system/customer-intelligence-sdk/`) com `identify()`/`track()`/`conversion()`, visitor/sessão automáticos via cookies e middleware, envio assíncrono via fila (`SendPayloadJob`, retry/backoff), e documentação de integração própria — pacote autocontido, testado isoladamente via Orchestra Testbench.
 - **2026-08-05** — Evolução estratégica de visão (`NEW_PROMPT.md`): o projeto passa a se apresentar como o motor central de inteligência da JMF System, não apenas Analytics/CRM. `README.md` ganhou a seção "Visão de Longo Prazo"; roadmap ganhou as Fases 12-18 (Integração com Feira Esquerda Livre, AI Business Intelligence, AI Business Assistant, AI Marketing, AI Studio, AI Fraud Detection, Intelligence Engine), sem alterar as Fases 01-11 nem a arquitetura já consolidada.
 - **2026-08-05** — Fase 10 concluída: lead score por contato (`ComputeLeadScoresAction` + `LeadScoreRules`, cross-application dentro do tenant), afinidade entre produtos (`ComputeProductAffinitiesAction`, tabela `product_affinities`), recomendações simples com fallback de popularidade (`GetRecommendationsAction`) expostas em `GET /api/v1/recommendations`, filtro de contatos inativos e lead score no painel admin; tudo recalculado via comando agendado `intelligence:compute`.
+- **2026-08-05** — Fase 19 concluída (tarefa cross-cutting, fora da sequência original): ajuda contextual (`<x-help-modal>`) em todas as 13 telas do painel administrativo e página de Guia do Usuário (`/admin/guia`) cobrindo os conceitos e fluxos principais da plataforma.

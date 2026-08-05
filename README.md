@@ -248,6 +248,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 10 — Inteligência inicial** concluída (lead score por contato, afinidade entre produtos, recomendações simples com fallback de popularidade via `GET /api/v1/recommendations`, filtro de contatos inativos; recalculados pelo comando agendado `intelligence:compute`).
 
+✅ **Fase 19 — Ajuda contextual e documentação de usuário** concluída (modal de ajuda em todas as telas do painel administrativo e página de Guia do Usuário em `/admin/guia`).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).

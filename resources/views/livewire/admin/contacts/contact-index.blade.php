@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>Contatos</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Contatos">
+            <p>Lista de pessoas identificadas nas aplicações clientes (via <code>identify()</code> do SDK), unificadas por e-mail/ID entre diferentes produtos da JMF System.</p>
+            <p><strong>Lead Score</strong>: pontuação calculada automaticamente todo dia com base nos eventos gerados por essa pessoa — quanto maior, mais engajada.</p>
+            <p>Use o filtro <strong>"Somente inativos"</strong> para encontrar contatos sem atividade há 30 dias ou mais.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="flex items-center justify-between mb-6 gap-4">
         <input wire:model.live.debounce.300ms="search" type="search" placeholder="Buscar por nome, email ou external_id..."
                class="w-full max-w-sm rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400">

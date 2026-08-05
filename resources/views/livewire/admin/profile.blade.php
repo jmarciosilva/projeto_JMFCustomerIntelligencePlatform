@@ -1,6 +1,12 @@
 <div>
     <x-slot:header>Meu perfil</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Meu perfil">
+            <p>Altere seu próprio nome e/ou senha. Para trocar a senha, é preciso informar a senha atual — por segurança, mesmo Super Admins não podem pular essa confirmação.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6">
         @if ($saved)
             <div class="mb-4 rounded-lg border border-emerald-800 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-400">

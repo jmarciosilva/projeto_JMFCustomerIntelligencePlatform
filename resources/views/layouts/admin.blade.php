@@ -62,6 +62,11 @@
                         Auditoria
                     </a>
                 @endcan
+
+                <a href="{{ route('admin.guide') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.guide') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    Guia do usuário
+                </a>
             </nav>
 
             <div class="px-3 py-4 border-t border-slate-800">
@@ -76,7 +81,10 @@
 
         <div class="flex-1 flex flex-col min-w-0">
             <header class="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-                <h1 class="text-lg font-semibold text-white">{{ $header ?? '' }}</h1>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-lg font-semibold text-white">{{ $header ?? '' }}</h1>
+                    {{ $help ?? '' }}
+                </div>
                 <a href="{{ route('admin.profile') }}" class="text-sm text-slate-400 hover:text-amber-400">
                     {{ auth()->user()?->name }}
                 </a>

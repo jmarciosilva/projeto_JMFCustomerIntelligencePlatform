@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>Analytics</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Analytics">
+            <p>Escolha uma <strong>aplicação</strong> e um <strong>período</strong> para ver os números daquele produto.</p>
+            <p>Os tiles mostram totais de eventos, visitantes únicos, sessões e conversões (só aparece se a aplicação tiver um "evento de conversão" configurado). O gráfico mostra eventos por dia.</p>
+            <p>Abaixo: páginas/artigos/serviços mais acessados, origem de tráfego (UTMs) e o <strong>funil</strong> (escolha um modelo no seletor) mostrando quantos visitantes avançaram etapa a etapa.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="flex flex-wrap items-center gap-4 mb-6">
         <div>
             <label for="applicationId" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Aplicação</label>

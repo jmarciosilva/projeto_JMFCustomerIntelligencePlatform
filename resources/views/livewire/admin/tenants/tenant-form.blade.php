@@ -1,6 +1,12 @@
 <div>
     <x-slot:header>{{ $tenant ? 'Editar tenant' : 'Novo tenant' }}</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Tenant">
+            <p>Dê um nome ao Tenant (a empresa/cliente dona das aplicações). O identificador único (slug) é gerado automaticamente a partir do nome.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6">
         <form wire:submit="save" class="space-y-4">
             <div>

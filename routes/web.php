@@ -13,6 +13,7 @@ use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Profile;
 use App\Livewire\Admin\Tenants\TenantForm;
 use App\Livewire\Admin\Tenants\TenantIndex;
+use App\Livewire\Admin\UserGuide;
 use App\Livewire\Admin\Users\UserForm;
 use App\Livewire\Admin\Users\UserIndex;
 use App\Livewire\Auth\Login;
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/auditoria', AuditLogIndex::class)->name('audit.index');
 
     Route::get('/perfil', Profile::class)->name('profile');
+
+    Route::get('/guia', UserGuide::class)->name('guide');
 
     Route::post('/logout', LogoutController::class)->name('logout');
 });

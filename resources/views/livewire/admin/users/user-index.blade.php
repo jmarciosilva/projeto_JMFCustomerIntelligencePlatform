@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>Usuários</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Usuários">
+            <p>Aqui você gerencia quem tem acesso a este painel administrativo — você e seus sócios.</p>
+            <p>Cada usuário tem um perfil: <strong>Super Admin</strong> (acesso total) ou <strong>Administrador</strong> (permissões mais restritas, definidas por perfil).</p>
+            <p>Você pode criar, editar, desativar temporariamente (sem excluir) ou remover um usuário. Um usuário não pode excluir a própria conta.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="flex items-center justify-between mb-6 gap-4">
         <input wire:model.live.debounce.300ms="search" type="search" placeholder="Buscar por nome ou e-mail..."
                class="w-full max-w-sm rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400">

@@ -1,6 +1,13 @@
 <div>
     <x-slot:header>Dashboard</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Dashboard">
+            <p>Visão geral rápida do painel administrativo: quantos administradores estão cadastrados, quantos estão ativos e as últimas ações registradas no log de auditoria.</p>
+            <p>Para números de negócio (eventos, visitantes, conversões), use o menu <strong>Analytics</strong>.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-px overflow-hidden rounded-xl border border-slate-800 bg-slate-800 mb-8">
         <div class="bg-slate-900 p-5">
             <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Administradores</dt>

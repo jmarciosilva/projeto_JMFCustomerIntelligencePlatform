@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>Aplicações</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Aplicações">
+            <p>Uma <strong>Aplicação</strong> é um produto ou projeto específico (ex.: Site Pessoal, Clube do Salão) vinculado a um Tenant.</p>
+            <p>É para cada Aplicação que você gera o <strong>token</strong> usado pelo SDK Laravel para enviar eventos a esta plataforma — acesse "Tokens" na linha da aplicação para gerenciar isso.</p>
+            <p>Uma aplicação só pode ser excluída se não tiver eventos ou visitantes vinculados.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="flex items-center justify-between mb-6 gap-4">
         <input wire:model.live.debounce.300ms="search" type="search" placeholder="Buscar por nome..."
                class="w-full max-w-sm rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400">

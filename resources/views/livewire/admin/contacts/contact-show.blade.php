@@ -1,6 +1,14 @@
 <div>
     <x-slot:header>{{ $contact->name ?? $contact->email ?? 'Contato #'.$contact->id }}</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Detalhe do contato">
+            <p><strong>Dados do contato</strong>: informações conhecidas e o Lead Score atual (recalculado diariamente).</p>
+            <p><strong>Consentimentos</strong>: registro LGPD do que essa pessoa autorizou (ex.: marketing, analytics), capturado via SDK.</p>
+            <p><strong>Timeline</strong>: todos os eventos gerados por essa pessoa, em qualquer aplicação, do mais recente ao mais antigo.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="lg:col-span-1 space-y-6">
             <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5">

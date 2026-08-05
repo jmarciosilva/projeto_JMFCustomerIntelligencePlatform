@@ -1,6 +1,13 @@
 <div>
     <x-slot:header>Tenants</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Tenants">
+            <p>Um <strong>Tenant</strong> representa uma empresa ou cliente da JMF System (ex.: a própria "JMF System" como dona de vários produtos, ou um cliente específico).</p>
+            <p>Cada Tenant pode ter uma ou mais <strong>Aplicações</strong> vinculadas (ex.: Site Pessoal, Clube do Salão). Um Tenant só pode ser excluído se não tiver nenhuma aplicação vinculada.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     @error('tenant')
         <div class="mb-4 rounded-lg border border-rose-800 bg-rose-950/50 px-3 py-2 text-sm text-rose-400">
             {{ $message }}

@@ -1,6 +1,13 @@
 <div>
     <x-slot:header>{{ $application ? 'Editar aplicação' : 'Nova aplicação' }}</x-slot:header>
 
+    <x-slot:help>
+        <x-help-modal title="Ajuda — Aplicação">
+            <p>Vincule a aplicação a um Tenant (não pode ser alterado depois de criada) e dê um nome descritivo.</p>
+            <p><strong>Evento de conversão</strong> (opcional): informe o <code>event_name</code> que representa uma conversão para essa aplicação (ex.: <code>contact.form_submitted</code>). Isso alimenta o indicador de conversão no Analytics.</p>
+        </x-help-modal>
+    </x-slot:help>
+
     <div class="max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-6">
         <form wire:submit="save" class="space-y-4">
             <div>
