@@ -195,15 +195,29 @@ Depende da Fase 05 (concluída).
 
 ## Fase 07 — SDK Laravel
 
-**Status:** `[ ]` Pendente · depende da Fase 04
+**Status:** `[x]` Concluída
 
-- [ ] Pacote cliente inicial.
-- [ ] `identify()`.
-- [ ] `track()`.
-- [ ] `conversion()`.
-- [ ] Envio assíncrono.
-- [ ] Retry e logs.
-- [ ] Documentação de integração.
+- [x] Pacote cliente inicial.
+- [x] `identify()`.
+- [x] `track()`.
+- [x] `conversion()`.
+- [x] Envio assíncrono.
+- [x] Retry e logs.
+- [x] Documentação de integração.
+
+### Critérios de aceite
+
+- [x] Pacote Laravel autocontido em `packages/jmf-system/customer-intelligence-sdk/` (`composer.json`, `src/`, `tests/` e `README.md` próprios, testado via Orchestra Testbench) — não registrado no `composer.json` da app principal, pronto para ser extraído para um repositório próprio quando fizer sentido.
+- [x] `visitor_id` (cookie ~2 anos) e `session_id` (cookie rolante, 30 min) resolvidos automaticamente por `Http\Middleware\ResolveVisitorAndSession`, registrado no grupo `web` da aplicação cliente via `Kernel::appendMiddlewareToGroup` (não `Router::pushMiddlewareToGroup`, que é sobrescrito pela resincronização do Kernel a cada requisição) — nenhuma configuração manual de middleware exigida na instalação.
+- [x] `Client::identify()`/`track()`/`conversion()` (Facade `CustomerIntelligence`) preenchem `visitor_id`, `session_id`, `occurred_at`, `context` (`page_url`/`referrer`/UTMs) e `event_id` (gerado antes do dispatch, garantindo idempotência em retries) automaticamente.
+- [x] Envio via `Jobs\SendPayloadJob` (`ShouldQueue`, fila configurável), com retry/backoff em erros 5xx/429 e desistência silenciosa (só log) em erros 4xx — nenhuma falha de envio propaga para o código da aplicação cliente.
+- [x] Documentação de integração no `README.md` do próprio pacote (instalação, `.env`, exemplos de uso, cookies, comportamento de retry); apontamento a partir do `README.md` da plataforma.
+- [x] Testes automatizados do pacote (Orchestra Testbench + Pest, isolados da suíte principal): `Client` despachando o Job com o payload correto, middleware de visitor/sessão (cookies novos, reaproveitados e renovação de sessão expirada), `SendPayloadJob` (URL/headers corretos, retry em 5xx, sem retry em 422, log de falha final) — 10 testes, 100% passando.
+- [x] `php artisan test` da app principal continua passando sem alterações (Fase 07 não toca em código da app, só adiciona o pacote).
+
+### Dependências
+
+Depende da Fase 04 (concluída) — usa o mesmo contrato de eventos (`POST /api/v1/events`) e o endpoint de identificação (`POST /api/v1/contacts/identify`, Fase 05).
 
 ---
 
@@ -268,3 +282,4 @@ Depende da Fase 05 (concluída).
 - **2026-08-05** — Fase 04 concluída: rota `POST /api/v1/events` (validação via `StoreEventRequest`, idempotência por `unique(application_id, event_id)`, ingestão assíncrona via `ProcessIncomingEventJob` na fila `database`, rate limiting dedicado `api-events`, logs de falha via `failed()`); ajuste pontual na Fase 03 bloqueando exclusão de application com eventos vinculados (`DeleteApplicationAction`).
 - **2026-08-05** — Fase 05 concluída: materialização automática de `Visitor`/`VisitorSession` a partir dos eventos (`EventWasIngested` + `ResolveVisitorAndSessionListener`); `Contact` único por tenant com `POST /api/v1/contacts/identify` (criação/atualização incremental, associação anônimo-conhecido, consentimentos LGPD em `contact_consents`); Timeline por contato (`GetContactTimelineAction`) exposta em painel admin somente leitura (`/admin/contacts`); ajuste pontual na Fase 04 bloqueando exclusão de application com visitantes vinculados.
 - **2026-08-05** — Fase 06 concluída: painel `/admin/analytics` (totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência configurável de eventos e conversões); tabela agregada `daily_metrics` populada pelo comando `metrics:aggregate-daily`, agendado via `Schedule::command`; campo opcional `conversion_event_name` adicionado ao CRUD de Application (ajuste pontual na Fase 03).
+- **2026-08-05** — Fase 07 concluída: pacote `jmf-system/customer-intelligence-sdk` (`packages/jmf-system/customer-intelligence-sdk/`) com `identify()`/`track()`/`conversion()`, visitor/sessão automáticos via cookies e middleware, envio assíncrono via fila (`SendPayloadJob`, retry/backoff), e documentação de integração própria — pacote autocontido, testado isoladamente via Orchestra Testbench.

@@ -1,0 +1,45 @@
+{
+    "name": "jmf-system/customer-intelligence-sdk",
+    "description": "SDK Laravel para enviar eventos, identificações e conversões à plataforma JMF Customer Intelligence.",
+    "type": "library",
+    "license": "proprietary",
+    "keywords": ["laravel", "cdp", "analytics", "sdk"],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^4.7",
+        "pestphp/pest-plugin-laravel": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "JmfSystem\\CustomerIntelligence\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JmfSystem\\CustomerIntelligence\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JmfSystem\\CustomerIntelligence\\CustomerIntelligenceServiceProvider"
+            ],
+            "aliases": {
+                "CustomerIntelligence": "JmfSystem\\CustomerIntelligence\\Facades\\CustomerIntelligence"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

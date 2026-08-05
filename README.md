@@ -194,6 +194,10 @@ Aplicação cliente → SDK Laravel/API HTTP → POST /api/v1/events → Fila (d
 
 Cada evento carrega `event_id`, `event_name`, `tenant_id`, `application_id`, `visitor_id`, `session_id`, `contact_id`, `properties`, `context`, `occurred_at` e `received_at`. Idempotência garantida por `event_id` + aplicação. Detalhes em [`EVENT_CATALOG.md`](EVENT_CATALOG.md).
 
+## SDK Laravel
+
+Aplicações clientes (Site Pessoal, Clube do Salão e futuros projetos) integram-se via o pacote em [`packages/jmf-system/customer-intelligence-sdk`](packages/jmf-system/customer-intelligence-sdk) — `identify()`, `track()` e `conversion()`, com visitor/sessão automáticos e envio assíncrono. Ver o [`README`](packages/jmf-system/customer-intelligence-sdk/README.md) do pacote para instalação e uso.
+
 ## Segurança e LGPD
 
 - Tokens de aplicação com hash seguro; exibição completa apenas na criação.
