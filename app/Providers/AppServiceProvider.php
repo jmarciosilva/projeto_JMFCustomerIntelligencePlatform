@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Application;
+use App\Models\Contact;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Policies\ApplicationPolicy;
+use App\Policies\ContactPolicy;
 use App\Policies\TenantPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Tenant::class, TenantPolicy::class);
         Gate::policy(Application::class, ApplicationPolicy::class);
+        Gate::policy(Contact::class, ContactPolicy::class);
 
         // Limite conservador por aplicação autenticada, usado por endpoints de
         // baixo volume (ex.: /api/v1/ping).

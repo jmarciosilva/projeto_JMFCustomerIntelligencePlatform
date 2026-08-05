@@ -5,6 +5,7 @@ use App\Livewire\Admin\Applications\ApplicationIndex;
 use App\Models\Application;
 use App\Models\Event;
 use App\Models\Tenant;
+use App\Models\Visitor;
 use Livewire\Livewire;
 
 test('super admin visualiza a lista de aplicações', function () {
@@ -70,6 +71,19 @@ test('não é possível excluir uma aplicação com eventos vinculados', functio
     $admin = superAdmin();
     $application = Application::factory()->create();
     Event::factory()->for($application)->create();
+
+    Livewire::actingAs($admin)
+        ->test(ApplicationIndex::class)
+        ->call('delete', $application)
+        ->assertHasErrors('application');
+
+    $this->assertDatabaseHas('applications', ['id' => $application->id]);
+});
+
+test('não é possível excluir uma aplicação com visitantes vinculados', function () {
+    $admin = superAdmin();
+    $application = Application::factory()->create();
+    Visitor::factory()->for($application)->create();
 
     Livewire::actingAs($admin)
         ->test(ApplicationIndex::class)

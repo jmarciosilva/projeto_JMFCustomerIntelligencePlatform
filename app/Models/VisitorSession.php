@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens;
 
-class Application extends Model
+class VisitorSession extends Model
 {
-    use HasApiTokens, HasFactory;
+    use HasFactory;
 
     /**
      * @var list<string>
      */
     protected $fillable = [
         'tenant_id',
-        'name',
-        'slug',
-        'is_active',
+        'application_id',
+        'visitor_id',
+        'session_id',
+        'started_at',
+        'last_seen_at',
     ];
 
     /**
@@ -28,7 +28,8 @@ class Application extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'started_at' => 'datetime',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -41,18 +42,18 @@ class Application extends Model
     }
 
     /**
-     * @return HasMany<Event, $this>
+     * @return BelongsTo<Application, $this>
      */
-    public function events(): HasMany
+    public function application(): BelongsTo
     {
-        return $this->hasMany(Event::class);
+        return $this->belongsTo(Application::class);
     }
 
     /**
-     * @return HasMany<Visitor, $this>
+     * @return BelongsTo<Visitor, $this>
      */
-    public function visitors(): HasMany
+    public function visitor(): BelongsTo
     {
-        return $this->hasMany(Visitor::class);
+        return $this->belongsTo(Visitor::class);
     }
 }

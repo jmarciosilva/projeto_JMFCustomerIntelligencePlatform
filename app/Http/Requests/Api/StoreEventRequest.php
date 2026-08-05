@@ -2,16 +2,11 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\MaxJsonSize;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEventRequest extends FormRequest
 {
-    /**
-     * Tamanho máximo (em bytes) permitido para os campos `properties` e
-     * `context`, prevenindo payloads abusivos (SECURITY.md).
-     */
-    private const MAX_JSON_FIELD_BYTES = 10240;
-
     /**
      * A autorização da requisição já é feita pela cadeia de middlewares da
      * rota (auth:sanctum + ensure.application.active); nada a checar aqui.
@@ -34,8 +29,8 @@ class StoreEventRequest extends FormRequest
             'contact_id' => ['nullable', 'string', 'max:255'],
             'subject_type' => ['nullable', 'string', 'max:255'],
             'subject_id' => ['nullable', 'string', 'max:255'],
-            'properties' => ['nullable', 'array', $this->maxJsonSize()],
-            'context' => ['nullable', 'array', $this->maxJsonSize()],
+            'properties' => ['nullable', 'array', new MaxJsonSize],
+            'context' => ['nullable', 'array', new MaxJsonSize],
             'occurred_at' => ['required', 'date'],
         ];
     }
@@ -48,14 +43,5 @@ class StoreEventRequest extends FormRequest
         return [
             'event_name.regex' => 'O campo event_name deve seguir o padrão "entidade.acao" (ex.: article.viewed).',
         ];
-    }
-
-    private function maxJsonSize(): \Closure
-    {
-        return function (string $attribute, mixed $value, \Closure $fail): void {
-            if (strlen(json_encode($value)) > self::MAX_JSON_FIELD_BYTES) {
-                $fail("O campo {$attribute} excede o tamanho máximo permitido (10 KB).");
-            }
-        };
     }
 }

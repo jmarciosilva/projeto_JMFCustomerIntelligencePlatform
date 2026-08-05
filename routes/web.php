@@ -6,6 +6,8 @@ use App\Livewire\Admin\Applications\ApplicationForm;
 use App\Livewire\Admin\Applications\ApplicationIndex;
 use App\Livewire\Admin\Applications\ApplicationTokens;
 use App\Livewire\Admin\Audit\AuditLogIndex;
+use App\Livewire\Admin\Contacts\ContactIndex;
+use App\Livewire\Admin\Contacts\ContactShow;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Profile;
 use App\Livewire\Admin\Tenants\TenantForm;
@@ -38,6 +40,9 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/applications/create', ApplicationForm::class)->name('applications.create');
     Route::get('/applications/{application}/edit', ApplicationForm::class)->name('applications.edit');
     Route::get('/applications/{application}/tokens', ApplicationTokens::class)->name('applications.tokens');
+
+    Route::get('/contacts', ContactIndex::class)->name('contacts.index');
+    Route::get('/contacts/{contact}', ContactShow::class)->name('contacts.show');
 
     Route::get('/auditoria', AuditLogIndex::class)->name('audit.index');
 

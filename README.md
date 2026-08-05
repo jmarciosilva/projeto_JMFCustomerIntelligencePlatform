@@ -214,6 +214,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 04 — Ingestão de eventos** concluída (`POST /api/v1/events`, validação via Form Request, idempotência por `event_id`, ingestão assíncrona via fila `database`, rate limiting dedicado e logs de falha).
 
+✅ **Fase 05 — Visitantes, sessões e contatos** concluída (`Visitor`/`VisitorSession` materializados automaticamente a partir dos eventos, `Contact` único por tenant com `POST /api/v1/contacts/identify`, associação anônimo-conhecido, consentimentos LGPD e Timeline por contato no painel admin).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).

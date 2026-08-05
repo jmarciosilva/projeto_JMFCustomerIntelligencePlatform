@@ -18,6 +18,12 @@ class DeleteApplicationAction
             ]);
         }
 
+        if ($application->visitors()->exists()) {
+            throw ValidationException::withMessages([
+                'application' => 'Não é possível excluir uma aplicação que possui visitantes vinculados.',
+            ]);
+        }
+
         $this->auditLogger->log('application.deleted', $application, [
             'name' => $application->name,
             'slug' => $application->slug,

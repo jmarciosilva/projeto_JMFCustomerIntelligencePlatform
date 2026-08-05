@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\EventWasIngested;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,7 +31,7 @@ class ProcessIncomingEventJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            Event::query()->create([
+            $event = Event::query()->create([
                 'tenant_id' => $this->tenantId,
                 'application_id' => $this->applicationId,
                 'event_id' => $this->data['event_id'],
@@ -45,6 +46,8 @@ class ProcessIncomingEventJob implements ShouldQueue
                 'occurred_at' => $this->data['occurred_at'],
                 'received_at' => $this->data['received_at'],
             ]);
+
+            event(new EventWasIngested($event));
         } catch (QueryException $exception) {
             // SQLSTATE 23000: violação de unique(application_id, event_id) — duas
             // requisições concorrentes com o mesmo event_id passaram pela checagem

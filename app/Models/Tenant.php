@@ -36,4 +36,12 @@ class Tenant extends Model
     {
         return $this->hasMany(Application::class);
     }
+
+    /**
+     * @return HasMany<Contact, $this>
+     */
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(Contact::class);
+    }
 }

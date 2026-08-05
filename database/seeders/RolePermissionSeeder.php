@@ -37,6 +37,7 @@ class RolePermissionSeeder extends Seeder
             Permission::UsersView->value,
             Permission::TenantsView->value,
             Permission::ApplicationsView->value,
+            Permission::ContactsView->value,
         ]);
     }
 }

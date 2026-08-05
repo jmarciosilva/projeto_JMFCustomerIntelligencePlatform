@@ -3,20 +3,7 @@
 use App\Models\Application;
 use App\Models\Event;
 use App\Models\Tenant;
-use Illuminate\Support\Str;
-
-function validEventPayload(array $overrides = []): array
-{
-    return array_merge([
-        'event_id' => (string) Str::ulid(),
-        'event_name' => 'article.viewed',
-        'visitor_id' => 'visitor_001',
-        'session_id' => 'session_001',
-        'occurred_at' => now()->toIso8601String(),
-        'properties' => ['article_id' => 15, 'category' => 'Laravel'],
-        'context' => ['page_url' => '/blog/laravel-arquitetura'],
-    ], $overrides);
-}
+use App\Models\Visitor;
 
 test('token válido com payload válido é aceito e persistido de forma assíncrona', function () {
     $tenant = Tenant::factory()->create();
@@ -135,4 +122,55 @@ test('mesmo event_id em aplicações diferentes não é tratado como duplicado',
 
     $this->assertDatabaseHas('events', ['application_id' => $applicationA->id, 'event_id' => $payload['event_id']]);
     $this->assertDatabaseHas('events', ['application_id' => $applicationB->id, 'event_id' => $payload['event_id']]);
+});
+
+test('processar um evento cria o visitante e a sessão correspondentes', function () {
+    $application = Application::factory()->create();
+    $token = $application->createToken('teste')->plainTextToken;
+
+    $payload = validEventPayload(['visitor_id' => 'visitor_xyz', 'session_id' => 'session_xyz']);
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->postJson('/api/v1/events', $payload)
+        ->assertStatus(202);
+
+    $this->assertDatabaseHas('visitors', [
+        'application_id' => $application->id,
+        'visitor_id' => 'visitor_xyz',
+        'contact_id' => null,
+    ]);
+
+    $this->assertDatabaseHas('visitor_sessions', [
+        'application_id' => $application->id,
+        'session_id' => 'session_xyz',
+    ]);
+});
+
+test('segundo evento do mesmo visitante atualiza last_seen_at em vez de duplicar', function () {
+    $application = Application::factory()->create();
+    $token = $application->createToken('teste')->plainTextToken;
+
+    $firstOccurredAt = now()->subHour();
+    $secondOccurredAt = now();
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->postJson('/api/v1/events', validEventPayload([
+            'visitor_id' => 'visitor_repeat',
+            'occurred_at' => $firstOccurredAt->toIso8601String(),
+        ]))
+        ->assertStatus(202);
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->postJson('/api/v1/events', validEventPayload([
+            'visitor_id' => 'visitor_repeat',
+            'occurred_at' => $secondOccurredAt->toIso8601String(),
+        ]))
+        ->assertStatus(202);
+
+    expect(Visitor::query()->where('application_id', $application->id)->where('visitor_id', 'visitor_repeat')->count())
+        ->toBe(1);
+
+    $visitor = Visitor::query()->where('application_id', $application->id)->where('visitor_id', 'visitor_repeat')->first();
+
+    expect($visitor->last_seen_at->format('Y-m-d H:i:s'))->toBe($secondOccurredAt->format('Y-m-d H:i:s'));
 });

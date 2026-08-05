@@ -6,20 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens;
 
-class Application extends Model
+class Contact extends Model
 {
-    use HasApiTokens, HasFactory;
+    use HasFactory;
 
     /**
      * @var list<string>
      */
     protected $fillable = [
         'tenant_id',
+        'external_id',
+        'email',
+        'phone',
         'name',
-        'slug',
-        'is_active',
+        'properties',
+        'first_identified_at',
+        'last_seen_at',
     ];
 
     /**
@@ -28,7 +31,9 @@ class Application extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'properties' => 'array',
+            'first_identified_at' => 'datetime',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -41,18 +46,18 @@ class Application extends Model
     }
 
     /**
-     * @return HasMany<Event, $this>
-     */
-    public function events(): HasMany
-    {
-        return $this->hasMany(Event::class);
-    }
-
-    /**
      * @return HasMany<Visitor, $this>
      */
     public function visitors(): HasMany
     {
         return $this->hasMany(Visitor::class);
+    }
+
+    /**
+     * @return HasMany<ContactConsent, $this>
+     */
+    public function consents(): HasMany
+    {
+        return $this->hasMany(ContactConsent::class);
     }
 }
