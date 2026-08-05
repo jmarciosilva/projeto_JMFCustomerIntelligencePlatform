@@ -30,6 +30,15 @@
                         <dt class="text-slate-500">Última atividade</dt>
                         <dd class="text-slate-200 text-right">{{ $contact->last_seen_at?->format('d/m/Y H:i') }}</dd>
                     </div>
+                    <div class="flex justify-between gap-2">
+                        <dt class="text-slate-500">Lead Score</dt>
+                        <dd class="text-slate-200 text-right">
+                            {{ $contact->lead_score }}
+                            @if ($contact->lead_score_computed_at)
+                                <span class="text-xs text-slate-500">(calculado {{ $contact->lead_score_computed_at->diffForHumans() }})</span>
+                            @endif
+                        </dd>
+                    </div>
                 </dl>
             </div>
 

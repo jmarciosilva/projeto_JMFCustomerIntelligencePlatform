@@ -15,12 +15,19 @@ class ContactIndex extends Component
 
     public string $search = '';
 
+    public bool $onlyInactive = false;
+
     public function mount(): void
     {
         $this->authorize('viewAny', Contact::class);
     }
 
     public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedOnlyInactive(): void
     {
         $this->resetPage();
     }
@@ -35,6 +42,7 @@ class ContactIndex extends Component
                         ->orWhere('external_id', 'like', "%{$this->search}%");
                 });
             })
+            ->when($this->onlyInactive, fn ($query) => $query->inactive())
             ->orderByDesc('last_seen_at')
             ->paginate(15);
 

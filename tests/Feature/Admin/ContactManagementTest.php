@@ -47,3 +47,25 @@ test('usuário sem permissão de contacts.view é bloqueado', function () {
         ->test(ContactShow::class, ['contact' => $contact])
         ->assertForbidden();
 });
+
+test('lead score aparece na tela de detalhe do contato', function () {
+    $admin = superAdmin();
+    $contact = Contact::factory()->create(['lead_score' => 42]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.contacts.show', $contact))
+        ->assertOk()
+        ->assertSee('42');
+});
+
+test('filtro de contatos inativos funciona', function () {
+    $admin = superAdmin();
+    $activeContact = Contact::factory()->create(['name' => 'Ativo Recente', 'last_seen_at' => now()]);
+    $inactiveContact = Contact::factory()->create(['name' => 'Inativo Antigo', 'last_seen_at' => now()->subDays(40)]);
+
+    Livewire::actingAs($admin)
+        ->test(ContactIndex::class)
+        ->set('onlyInactive', true)
+        ->assertSee('Inativo Antigo')
+        ->assertDontSee('Ativo Recente');
+});

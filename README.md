@@ -244,6 +244,10 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 06 — Analytics MVP** concluída (painel `/admin/analytics` com totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência de eventos e conversões; tabela agregada `daily_metrics` populada pelo comando agendado `metrics:aggregate-daily`).
 
+✅ **Fase 07 — SDK Laravel** concluída (pacote `packages/jmf-system/customer-intelligence-sdk`, `identify()`/`track()`/`conversion()`, visitor/sessão automáticos via cookies e envio assíncrono com retry/logs).
+
+✅ **Fase 10 — Inteligência inicial** concluída (lead score por contato, afinidade entre produtos, recomendações simples com fallback de popularidade via `GET /api/v1/recommendations`, filtro de contatos inativos; recalculados pelo comando agendado `intelligence:compute`).
+
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).

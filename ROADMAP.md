@@ -249,14 +249,30 @@ Depende da Fase 04 (concluída) — usa o mesmo contrato de eventos (`POST /api/
 
 ## Fase 10 — Inteligência inicial
 
-**Status:** `[ ]` Pendente · depende da Fase 06
+**Status:** `[x]` Concluída
 
-- [ ] Lead score.
-- [ ] Afinidade.
-- [ ] Popularidade.
-- [ ] Inatividade.
-- [ ] Recomendações simples.
-- [ ] API de recomendações.
+- [x] Lead score.
+- [x] Afinidade.
+- [x] Popularidade.
+- [x] Inatividade.
+- [x] Recomendações simples.
+- [x] API de recomendações.
+
+### Critérios de aceite
+
+- [x] `contacts.lead_score`/`lead_score_computed_at` (colunas diretas, não tabela nova) calculados por `ComputeLeadScoresAction` somando pontos de `LeadScoreRules` (mapa `event_name => pontos`, `App\Domain\Intelligence`) de todos os eventos de todos os `Visitor`s do contato — cross-application dentro do mesmo tenant, coerente com `Contact` ser único por tenant (Fase 05). Exibido em `/admin/contacts/{contact}`.
+- [x] Afinidade entre produtos (`product_affinities`, `unique(application_id, subject_type, subject_id_a, subject_id_b)`) calculada por `ComputeProductAffinitiesAction` via co-ocorrência de `subject_id` por `visitor_id` (janela de 90 dias), isolada por aplicação.
+- [x] Popularidade reaproveitada de `GetTopSubjectsAction`/consulta direta em `events` — sem nova tabela, evita duplicar lógica já existente da Fase 06.
+- [x] Inatividade: local scope `Contact::inactive(int $days = 30)`, usado no filtro "Somente inativos" da tela `/admin/contacts`.
+- [x] `GetRecommendationsAction`: prioriza afinidade (maior `co_occurrences`); completa com popularidade (contagem de eventos por `subject_id`) quando não há afinidade suficiente; nunca recomenda o próprio subject consultado.
+- [x] `GET /api/v1/recommendations` (guard `sanctum` + `ensure.application.active` + `throttle:api-application`), parâmetros `subject_type`/`subject_id`/`limit`, isolado por aplicação.
+- [x] Comando `intelligence:compute` (idempotente) agendado via `Schedule::command(...)->dailyAt('02:00')` em `routes/console.php`, depois do `metrics:aggregate-daily`.
+- [x] Testes automatizados cobrindo as três Actions, o comando, a API de recomendações e as extensões no painel admin (17 novos testes, 109 no total em `php artisan test`).
+- [x] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende da Fase 06 (Analytics MVP, concluída).
 
 ---
 
@@ -485,3 +501,4 @@ Depende de todas as fases anteriores (12 a 17).
 - **2026-08-05** — Fase 06 concluída: painel `/admin/analytics` (totais, tendência diária, páginas/artigos/serviços mais acessados, UTMs, funis por sequência configurável de eventos e conversões); tabela agregada `daily_metrics` populada pelo comando `metrics:aggregate-daily`, agendado via `Schedule::command`; campo opcional `conversion_event_name` adicionado ao CRUD de Application (ajuste pontual na Fase 03).
 - **2026-08-05** — Fase 07 concluída: pacote `jmf-system/customer-intelligence-sdk` (`packages/jmf-system/customer-intelligence-sdk/`) com `identify()`/`track()`/`conversion()`, visitor/sessão automáticos via cookies e middleware, envio assíncrono via fila (`SendPayloadJob`, retry/backoff), e documentação de integração própria — pacote autocontido, testado isoladamente via Orchestra Testbench.
 - **2026-08-05** — Evolução estratégica de visão (`NEW_PROMPT.md`): o projeto passa a se apresentar como o motor central de inteligência da JMF System, não apenas Analytics/CRM. `README.md` ganhou a seção "Visão de Longo Prazo"; roadmap ganhou as Fases 12-18 (Integração com Feira Esquerda Livre, AI Business Intelligence, AI Business Assistant, AI Marketing, AI Studio, AI Fraud Detection, Intelligence Engine), sem alterar as Fases 01-11 nem a arquitetura já consolidada.
+- **2026-08-05** — Fase 10 concluída: lead score por contato (`ComputeLeadScoresAction` + `LeadScoreRules`, cross-application dentro do tenant), afinidade entre produtos (`ComputeProductAffinitiesAction`, tabela `product_affinities`), recomendações simples com fallback de popularidade (`GetRecommendationsAction`) expostas em `GET /api/v1/recommendations`, filtro de contatos inativos e lead score no painel admin; tudo recalculado via comando agendado `intelligence:compute`.
