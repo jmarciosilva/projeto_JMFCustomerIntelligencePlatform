@@ -2,6 +2,8 @@
 
 namespace JmfSystem\CustomerIntelligence;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use JmfSystem\CustomerIntelligence\Jobs\SendPayloadJob;
 use JmfSystem\CustomerIntelligence\Support\RequestContextResolver;
@@ -69,6 +71,31 @@ class Client
     public function conversion(string $eventName, array $properties = []): void
     {
         $this->track($eventName, $properties);
+    }
+
+    /**
+     * Verifica se o servidor de Customer Intelligence está online.
+     *
+     * Faz uma requisição GET para `/api/v1/ping` e retorna true se a API
+     * responde com sucesso, false caso contrário. Nunca lança exceção.
+     *
+     * Útil para componentes UI que precisam validar a conexão antes de
+     * exibir dados.
+     */
+    public function healthCheck(): bool
+    {
+        try {
+            $response = Http::baseUrl(rtrim((string) config('customer-intelligence.base_url'), '/'))
+                ->withToken((string) config('customer-intelligence.token'))
+                ->timeout((int) config('customer-intelligence.timeout', 5))
+                ->get('api/v1/ping');
+
+            return $response->successful();
+        } catch (ConnectionException) {
+            return false;
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     /**

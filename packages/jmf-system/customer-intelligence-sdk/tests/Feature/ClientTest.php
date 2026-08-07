@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Route;
 use JmfSystem\CustomerIntelligence\Facades\CustomerIntelligence;
@@ -64,4 +66,43 @@ test('conversion() delega para track() com o mesmo event_name', function () {
             && $job->payload['event_name'] === 'contact.form_submitted'
             && $job->payload['properties'] === ['form' => 'contato'];
     });
+});
+
+test('healthCheck() retorna true quando API está online', function () {
+    Http::fake(['*' => Http::response(['status' => 'ok'], 200)]);
+
+    $result = CustomerIntelligence::healthCheck();
+
+    expect($result)->toBeTrue();
+    Http::assertSent(function ($request) {
+        return str_ends_with($request->url(), 'api/v1/ping')
+            && $request->method() === 'GET'
+            && $request->hasHeader('Authorization', 'Bearer test-token');
+    });
+});
+
+test('healthCheck() retorna false quando API está offline', function () {
+    Http::fake(function () {
+        throw new ConnectionException('Connection refused');
+    });
+
+    $result = CustomerIntelligence::healthCheck();
+
+    expect($result)->toBeFalse();
+});
+
+test('healthCheck() retorna false quando API retorna erro 5xx', function () {
+    Http::fake(['*' => Http::response(['error' => 'server error'], 500)]);
+
+    $result = CustomerIntelligence::healthCheck();
+
+    expect($result)->toBeFalse();
+});
+
+test('healthCheck() retorna false quando API retorna erro 4xx', function () {
+    Http::fake(['*' => Http::response(['error' => 'unauthorized'], 401)]);
+
+    $result = CustomerIntelligence::healthCheck();
+
+    expect($result)->toBeFalse();
 });
