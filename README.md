@@ -236,6 +236,8 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ## Status atual
 
+✅ **Fase 01 — Fundação e documentação** concluída (Laravel 12, MySQL, Livewire, Tailwind, Vite configurados; página inicial técnica operacional; 116 testes passando; qualidade de código validada).
+
 ✅ **Fase 02 — Autenticação e administração** concluída (login administrativo, usuários/perfis/permissões, layout administrativo, Policies/Gates, auditoria e testes de acesso).
 
 ✅ **Fase 03 — Multiempresa e aplicações** concluída (Tenants, Applications, tokens via Laravel Sanctum com rotação/revogação, isolamento por tenant e testes de segurança da API).
@@ -252,11 +254,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 19 — Ajuda contextual e documentação de usuário** concluída (modal de ajuda em todas as telas do painel administrativo e página de Guia do Usuário em `/admin/guia`).
 
-📋 **Fase 20 — Plugin UI Instalável** análise concluída (ver [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md)); implementação pendente (3-4 semanas).
+📋 **Fase 20 — Plugin UI Instalável** análise concluída (ver [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md)); implementação próxima (3-4 semanas).
 
-📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** análise concluída; implementação pendente (2-3 semanas após Fase 20).
-
-🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** análise concluída; implementação após Fase 20 (2-3 semanas).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 

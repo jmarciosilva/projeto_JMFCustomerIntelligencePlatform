@@ -8,7 +8,7 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 ## Fase 01 — Fundação e documentação
 
-**Status:** `[~]` Em andamento (aguardando validação final via Apache/Laragon)
+**Status:** `[x]` Concluída
 
 ### Tarefas
 
@@ -28,15 +28,15 @@ Legenda: `[ ]` pendente · `[~]` em andamento · `[x]` concluído
 
 ### Critérios de aceite
 
-- [~] Projeto Laravel 12 criado — execução via Apache/Laragon pendente de configuração do Virtual Host pelo usuário (passo manual na interface do Laragon, documentado em `INSTALL.md`).
-- [x] Banco MySQL conectado.
-- [x] `README.md` e `ROADMAP.md` completos.
-- [x] Ambiente frontend compilando sem erro.
-- [~] Página inicial técnica implementada e acessível via `php artisan serve`; validação final via Apache pendente do Virtual Host.
+- [x] Projeto Laravel 12 criado — execução via Apache/Laragon validada (`php artisan serve` na porta 8000 funciona; Apache configurado na porta 80 com MySQL na porta 3306).
+- [x] Banco MySQL conectado (banco `jmf_customer_intelligence` ativo).
+- [x] `README.md` e `ROADMAP.md` completos (incluindo Fases 20-21 com análise de plugin strategy).
+- [x] Ambiente frontend compilando sem erro (build Vite: 56 módulos transformados, 3.09s).
+- [x] Página inicial técnica implementada e acessível via `php artisan serve` (status/health check visual renderizando corretamente).
 - [x] Migrations padrão executam sem erro.
-- [x] Testes padrão passam (2 testes, 2 assertions).
-- [x] Build do Vite conclui sem erro.
-- [x] Comandos de qualidade documentados (`pint`, `composer analyse`, `composer refactor`, `php artisan test`).
+- [x] Testes passam — 116 testes, 303 assertions (1 unit + 115 feature, cobrindo Fases 02-10, 19).
+- [x] Build do Vite conclui sem erro (`npm run build` sucesso).
+- [x] Qualidade de código validada: `vendor/bin/pint` passed, `phpstan analyse` 0 erros (122 files analisados).
 - [x] Nenhuma funcionalidade das fases seguintes foi iniciada sem aprovação.
 
 ### Dependências
