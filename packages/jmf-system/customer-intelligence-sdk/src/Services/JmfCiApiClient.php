@@ -2,7 +2,6 @@
 
 namespace JmfSystem\CustomerIntelligence\Services;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use JmfSystem\CustomerIntelligence\Client;
 
@@ -98,7 +97,6 @@ class JmfCiApiClient
      * Recupera detalhes de um contato específico.
      *
      * @param  int|string  $contactId
-     * @return array|null
      */
     public function getContact($contactId): ?array
     {

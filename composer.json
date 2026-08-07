@@ -5,8 +5,18 @@
     "description": "Plataforma central de inteligência de clientes da JMF System.",
     "keywords": ["laravel", "cdp", "crm", "analytics"],
     "license": "proprietary",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/jmf-system/customer-intelligence-sdk",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
         "php": "^8.2",
+        "jmf-system/customer-intelligence-sdk": "@dev",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",

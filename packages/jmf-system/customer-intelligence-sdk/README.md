@@ -10,21 +10,33 @@ Cuida sozinho de:
 
 ## Instalação
 
-Enquanto o pacote não está publicado no Packagist, instale via *path repository* apontando para este diretório:
+### Via Packagist (Recomendado)
+
+```bash
+composer require jmf-system/customer-intelligence-sdk
+php artisan vendor:publish --tag=customer-intelligence-config
+```
+
+### Via Repositório Privado
+
+Se o pacote ainda não está no Packagist, instale via *path repository* ou Git:
 
 ```json
 {
     "repositories": [
-        { "type": "path", "url": "../caminho/para/customer-intelligence-sdk" }
+        {
+            "type": "vcs",
+            "url": "https://github.com/jmf-system/customer-intelligence-sdk.git"
+        }
     ],
     "require": {
-        "jmf-system/customer-intelligence-sdk": "*"
+        "jmf-system/customer-intelligence-sdk": "dev-main"
     }
 }
 ```
 
 ```bash
-composer require jmf-system/customer-intelligence-sdk
+composer require jmf-system/customer-intelligence-sdk:dev-main
 php artisan vendor:publish --tag=customer-intelligence-config
 ```
 
@@ -200,6 +212,30 @@ REDIS_PORT=6379
 
 E rode: `php artisan queue:work redis`
 
+## Componentes UI (Plugin)
+
+O SDK também inclui um painel administrativo completo com componentes Livewire 3:
+
+### Componentes Livewire
+
+| Componente | Rota | Funcionalidade |
+|-----------|------|----------------|
+| **Dashboard** | `/admin/plugin/jmf-ci` | Métricas gerais, gráficos, tabelas recentes |
+| **Configuration** | `/admin/plugin/jmf-ci/configuration` | Validar conexão com API |
+| **ContactIndex** | `/admin/plugin/jmf-ci/contacts` | Lista de contatos com busca e filtros |
+| **ContactShow** | `/admin/plugin/jmf-ci/contacts/{id}` | Detalhe do contato com timeline de eventos |
+| **EventIndex** | `/admin/plugin/jmf-ci/events` | Lista de eventos com filtros |
+
+### Componentes Blade Auxiliares
+
+- `<x-jmf-ci-metrics-card>` — Card com número + label + cor
+- `<x-jmf-ci-event-chart>` — Gráfico de tendência (Chart.js)
+- `<x-jmf-ci-connection-status>` — Indicador online/offline
+- `<x-jmf-ci-metrics-row>` — Container grid para cards
+- `<x-jmf-ci-event-table>` — Tabela genérica com paginação
+
+**📖 Leia:** [PLUGIN_INSTALLATION.md](./PLUGIN_INSTALLATION.md) para instruções completas de instalação e customização do painel.
+
 ## Desenvolvimento do pacote
 
 ```bash
@@ -214,15 +250,34 @@ composer analyse                   # Verificar tipos (PHPStan)
 ```
 packages/jmf-system/customer-intelligence-sdk/
 ├── config/
-│   └── customer-intelligence.php    # Defaults de config
+│   └── customer-intelligence.php
 ├── src/
-│   ├── Client.php                   # Facade pública do SDK
-│   ├── ConfigValidator.php          # Validação de .env
-│   ├── PayloadValidator.php         # Validação de eventos/identify
-│   ├── PayloadLogger.php            # Logging estruturado
+│   ├── Client.php
+│   ├── ConfigValidator.php
+│   ├── PayloadValidator.php
+│   ├── PayloadLogger.php
+│   ├── Services/JmfCiApiClient.php           # Cliente para integração
 │   ├── Facades/CustomerIntelligence.php
-│   ├── Jobs/SendPayloadJob.php      # Job da fila
-│   ├── Middleware/VisitorSessionMiddleware.php
+│   ├── Jobs/SendPayloadJob.php
+│   ├── Middleware/
+│   ├── Http/Middleware/ResolveVisitorAndSession.php
+│   ├── Livewire/Plugins/JmfCi/               # Componentes da UI
+│   │   ├── Dashboard.php
+│   │   ├── Configuration.php
+│   │   ├── Contacts/ContactIndex.php
+│   │   ├── Contacts/ContactShow.php
+│   │   └── Events/EventIndex.php
+│   ├── Routes/plugin.php                     # Rotas da UI
+│   ├── Providers/JmfCiPluginRouteServiceProvider.php
 │   └── Support/
-└── tests/                           # 45+ testes
+├── resources/
+│   └── views/plugins/jmf-ci/                 # Templates
+│       ├── components/                       # Componentes Blade
+│       ├── dashboard.blade.php
+│       ├── configuration.blade.php
+│       ├── contacts/
+│       └── events/
+├── tests/                                    # 55 testes
+├── PLUGIN_INSTALLATION.md                    # Guia de instalação
+└── PLUGIN_ROUTES.md                          # Guia de rotas
 ```

@@ -14,6 +14,12 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Configuration;
+use JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Contacts\ContactIndex;
+use JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Contacts\ContactShow;
+use JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Dashboard;
+use JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Events\EventIndex;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,5 +56,25 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api-events', function ($request) {
             return Limit::perMinute(300)->by($request->user()?->id);
         });
+
+        $this->registerJmfCiComponents();
+    }
+
+    private function registerJmfCiComponents(): void
+    {
+        // Publicar views do SDK
+        $this->publishes([
+            __DIR__.'/../../vendor/jmf-system/customer-intelligence-sdk/resources/views/plugins/jmf-ci' => resource_path('views/plugins/jmf-ci'),
+        ], 'jmf-ci-views');
+
+        // Registrar componentes Livewire
+        Livewire::component('jmf-ci.dashboard', Dashboard::class);
+        Livewire::component('jmf-ci.configuration', Configuration::class);
+        Livewire::component('jmf-ci.contacts.index', ContactIndex::class);
+        Livewire::component('jmf-ci.contacts.show', ContactShow::class);
+        Livewire::component('jmf-ci.events.index', EventIndex::class);
+
+        // Registrar caminho de views do SDK
+        view()->addLocation(__DIR__.'/../../vendor/jmf-system/customer-intelligence-sdk/resources/views');
     }
 }

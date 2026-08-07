@@ -55,4 +55,9 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/guia', UserGuide::class)->name('guide');
 
     Route::post('/logout', LogoutController::class)->name('logout');
+
+    // Plugin: JMF Customer Intelligence
+    Route::prefix('plugin/jmf-ci')->name('plugin.jmf-ci.')->group(function (): void {
+        require base_path('vendor/jmf-system/customer-intelligence-sdk/src/Routes/plugin.php');
+    });
 });

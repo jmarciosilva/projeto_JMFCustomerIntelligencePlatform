@@ -2,9 +2,8 @@
 
 namespace JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi;
 
-use Illuminate\Support\Collection;
-use Livewire\Component;
 use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
+use Livewire\Component;
 
 class Dashboard extends Component
 {

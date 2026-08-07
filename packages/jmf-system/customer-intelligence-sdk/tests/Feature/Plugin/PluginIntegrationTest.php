@@ -1,7 +1,8 @@
 <?php
 
-use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
 
 /**
  * Testes de integração do Plugin.
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Http;
  * Estes testes focam em validar que os componentes do plugin
  * funcionam corretamente com a JmfCiApiClient.
  */
-
 test('jmf ci api client existe e funciona', function () {
     $apiClient = app(JmfCiApiClient::class);
 
@@ -104,7 +104,7 @@ test('api client getEvents retorna eventos paginados', function () {
 
 test('api client trata erros gracefully', function () {
     Http::fake(function () {
-        throw new \Illuminate\Http\Client\ConnectionException('Connection refused');
+        throw new ConnectionException('Connection refused');
     });
 
     $apiClient = app(JmfCiApiClient::class);

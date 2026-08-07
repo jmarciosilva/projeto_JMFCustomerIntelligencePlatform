@@ -352,6 +352,100 @@ Os componentes usam Tailwind CSS puro e não dependem de um layout específico. 
 
 ---
 
+## Deployment em Produção
+
+### 1. Preparar Servidor
+
+```bash
+# Clonar repositório (ou fazer pull se já existe)
+git clone https://seu-repo.com/seu-app.git
+cd seu-app
+
+# Instalar dependências
+composer install --no-dev --optimize-autoloader
+
+# Gerar chave da aplicação
+php artisan key:generate
+
+# Executar migrações (se houver)
+php artisan migrate --force
+
+# Construir assets
+npm install --omit=dev
+npm run build
+
+# Cache de configuração (IMPORTANTE para performance)
+php artisan config:cache
+php artisan route:cache
+```
+
+### 2. Variáveis de Ambiente em Produção
+
+Criar arquivo `.env.production`:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+JMF_CI_ENABLED=true
+JMF_CI_BASE_URL=https://ci.jmfsystem.com/api/v1
+JMF_CI_TOKEN=seu_token_seguro_aqui
+JMF_CI_TIMEOUT=10
+JMF_CI_TRIES=3
+JMF_CI_BACKOFF=5,30,120
+JMF_CI_QUEUE_CONNECTION=redis
+JMF_CI_QUEUE=default
+JMF_CI_VALIDATE_ON_BOOT=false
+QUEUE_DRIVER=redis
+```
+
+### 3. Fila em Produção
+
+```bash
+# Usar Supervisor ou similar para garantir que a fila está sempre rodando
+# Exemplo de configuração Supervisor:
+
+[program:laravel-queue]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/app/artisan queue:work redis --sleep=3 --tries=3 --timeout=300
+autostart=true
+autorestart=true
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/var/log/laravel-queue.log
+```
+
+### 4. Verificações Pré-Deployment
+
+```bash
+# Testar saúde da aplicação
+php artisan health
+
+# Testar conexão com API JMF
+php artisan tinker
+>>> app(\JmfSystem\CustomerIntelligence\Services\JmfCiApiClient::class)->healthCheck()
+=> true // sucesso!
+
+# Rodar testes
+php artisan test
+```
+
+### 5. Após Deployment
+
+```bash
+# Limpar cache
+php artisan cache:clear
+php artisan view:clear
+
+# Re-compilar configurações
+php artisan config:cache
+php artisan route:cache
+
+# Monitorar logs
+tail -f storage/logs/laravel.log
+```
+
+---
+
 ## Troubleshooting
 
 ### "Class not found" para Dashboard, Configuration, etc.

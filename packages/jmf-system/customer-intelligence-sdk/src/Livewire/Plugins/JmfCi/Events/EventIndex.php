@@ -2,9 +2,9 @@
 
 namespace JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi\Events;
 
+use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
 use Livewire\Component;
 use Livewire\WithPagination;
-use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
 
 class EventIndex extends Component
 {

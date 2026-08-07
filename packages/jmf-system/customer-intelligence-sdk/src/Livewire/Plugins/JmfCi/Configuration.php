@@ -2,8 +2,8 @@
 
 namespace JmfSystem\CustomerIntelligence\Livewire\Plugins\JmfCi;
 
-use Livewire\Component;
 use JmfSystem\CustomerIntelligence\Services\JmfCiApiClient;
+use Livewire\Component;
 
 class Configuration extends Component
 {

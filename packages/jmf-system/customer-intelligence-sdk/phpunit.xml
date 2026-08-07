@@ -5,6 +5,11 @@
          colors="true"
 >
     <testsuites>
+        <testsuite name="Unit">
+            <file>tests/ConfigValidatorTest.php</file>
+            <file>tests/PayloadValidatorTest.php</file>
+            <file>tests/PayloadLoggerTest.php</file>
+        </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
