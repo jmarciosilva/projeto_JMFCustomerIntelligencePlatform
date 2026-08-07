@@ -7,10 +7,10 @@
 ## Sprint 1: Refatoração do SDK (Semana 1 — até 2026-08-13)
 
 ### 1.1 Auditar dependências do SDK
-- [ ] Revisar `packages/jmf-system/customer-intelligence-sdk/composer.json`
-- [ ] Confirmar suporte a Laravel 11+ e PHP 8.2+
-- [ ] Verificar se há dependências específicas da app central
-- **Status:** Esperado estar OK
+- [x] Revisar `packages/jmf-system/customer-intelligence-sdk/composer.json`
+- [x] Confirmar suporte a Laravel 11+ e PHP 8.2+
+- [x] Verificar se há dependências específicas da app central
+- **Status:** ✅ **CONCLUÍDO** — SDK está 100% desacoplado (ver TASK_1_1_AUDIT_REPORT.md)
 
 ### 1.2 Refatorar configuração
 - [ ] Criar `packages/jmf-system/customer-intelligence-sdk/config/customer-intelligence.php`
