@@ -5,6 +5,7 @@ namespace JmfSystem\CustomerIntelligence\Tests;
 use Illuminate\Support\Facades\Log;
 use JmfSystem\CustomerIntelligence\PayloadLogger;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PayloadLoggerTest extends TestCase
 {
@@ -18,7 +19,7 @@ class PayloadLoggerTest extends TestCase
         return ['JmfSystem\\CustomerIntelligence\\CustomerIntelligenceServiceProvider'];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function gera_trace_id_unico(): void
     {
         $logger1 = new PayloadLogger('events', ['event_id' => '1']);
@@ -29,7 +30,7 @@ class PayloadLoggerTest extends TestCase
         $this->assertNotEmpty($logger2->getTraceId());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_sucesso_com_contexto(): void
     {
         Log::spy();
@@ -42,7 +43,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('info')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_erro_retentável(): void
     {
         Log::spy();
@@ -55,7 +56,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('warning')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_erro_permanente(): void
     {
         Log::spy();
@@ -68,7 +69,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('warning')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_falha_final(): void
     {
         Log::spy();
@@ -82,7 +83,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('error')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_erro_validacao(): void
     {
         Log::spy();
@@ -95,7 +96,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('error')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_erro_rede(): void
     {
         Log::spy();
@@ -108,7 +109,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('warning')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function loga_erro_configuracao(): void
     {
         Log::spy();
@@ -121,7 +122,7 @@ class PayloadLoggerTest extends TestCase
         Log::shouldHaveReceived('error')->once();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function inclui_informacoes_corretas_no_contexto(): void
     {
         Log::spy();

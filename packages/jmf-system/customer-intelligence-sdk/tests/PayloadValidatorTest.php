@@ -4,6 +4,7 @@ namespace JmfSystem\CustomerIntelligence\Tests;
 
 use JmfSystem\CustomerIntelligence\PayloadValidator;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PayloadValidatorTest extends TestCase
 {
@@ -17,7 +18,7 @@ class PayloadValidatorTest extends TestCase
         return ['JmfSystem\\CustomerIntelligence\\CustomerIntelligenceServiceProvider'];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function valida_evento_valido_sem_erros(): void
     {
         $payload = [
@@ -32,7 +33,7 @@ class PayloadValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function valida_identify_valido_sem_erros(): void
     {
         $payload = [
@@ -45,7 +46,7 @@ class PayloadValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_payload_vazio(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -54,7 +55,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', []);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_evento_sem_event_id(): void
     {
         $payload = [
@@ -69,7 +70,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_evento_sem_event_name(): void
     {
         $payload = [
@@ -84,7 +85,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_event_name_com_formato_invalido(): void
     {
         $payload = [
@@ -100,7 +101,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_identify_sem_identificador(): void
     {
         $payload = [
@@ -113,7 +114,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('contacts/identify', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_payload_com_dados_sensíveis(): void
     {
         $payload = [
@@ -130,7 +131,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_payload_muito_grande(): void
     {
         $payload = [
@@ -149,7 +150,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('events', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function retorna_debug_info_sem_dados_sensíveis(): void
     {
         $payload = [
@@ -168,7 +169,7 @@ class PayloadValidatorTest extends TestCase
         $this->assertEquals(4, $debug['field_count']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_endpoint_desconhecido(): void
     {
         $payload = [
@@ -181,7 +182,7 @@ class PayloadValidatorTest extends TestCase
         PayloadValidator::validate('unknown/endpoint', $payload);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function rejeita_dados_sensíveis_recursivamente(): void
     {
         $payload = [

@@ -6,6 +6,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use JmfSystem\CustomerIntelligence\Jobs\SendPayloadJob;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SendPayloadJobTest extends TestCase
 {
@@ -19,7 +20,7 @@ class SendPayloadJobTest extends TestCase
         return ['JmfSystem\\CustomerIntelligence\\CustomerIntelligenceServiceProvider'];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function envia_payload_com_sucesso_quando_resposta_200(): void
     {
         Http::fake([
@@ -45,7 +46,7 @@ class SendPayloadJobTest extends TestCase
         });
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function relanca_excecao_em_erro_5xx_para_retry(): void
     {
         Http::fake([
@@ -68,7 +69,7 @@ class SendPayloadJobTest extends TestCase
         $job->handle();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function relanca_excecao_em_429_para_retry(): void
     {
         Http::fake([
@@ -91,7 +92,7 @@ class SendPayloadJobTest extends TestCase
         $job->handle();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function nao_relanca_excecao_em_erro_422_de_validacao(): void
     {
         Http::fake([
@@ -117,7 +118,7 @@ class SendPayloadJobTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function nao_relanca_excecao_em_erro_401_de_autenticacao(): void
     {
         Http::fake([
@@ -140,7 +141,7 @@ class SendPayloadJobTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function usa_exponential_backoff_para_retries(): void
     {
         config(['customer-intelligence.backoff' => [5, 30, 120]]);
@@ -155,7 +156,7 @@ class SendPayloadJobTest extends TestCase
         $this->assertEquals([5, 30, 120], $backoff);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function valida_payload_antes_de_enviar(): void
     {
         config([
@@ -171,7 +172,7 @@ class SendPayloadJobTest extends TestCase
         $job->handle();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function resposta_com_sucesso_retorna_sem_excecao(): void
     {
         Http::fake([
@@ -194,7 +195,7 @@ class SendPayloadJobTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function usa_numero_de_tentativas_da_configuracao(): void
     {
         config(['customer-intelligence.tries' => 5]);

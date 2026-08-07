@@ -27,7 +27,6 @@ class PayloadValidator
      * @param  array<string, mixed>  $payload
      *
      * @throws \RuntimeException se payload inválido
-     * @return void
      */
     public static function validate(string $endpoint, array $payload): void
     {
@@ -106,7 +105,7 @@ class PayloadValidator
 
         if ($size > self::MAX_PAYLOAD_SIZE) {
             throw new \RuntimeException(
-                "Payload excede tamanho máximo: {$size}B > " . self::MAX_PAYLOAD_SIZE . 'B'
+                "Payload excede tamanho máximo: {$size}B > ".self::MAX_PAYLOAD_SIZE.'B'
             );
         }
     }

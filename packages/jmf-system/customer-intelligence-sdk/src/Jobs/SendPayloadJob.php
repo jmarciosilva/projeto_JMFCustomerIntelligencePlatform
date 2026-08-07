@@ -105,7 +105,7 @@ class SendPayloadJob implements ShouldQueue
             $status === 401 => 'Token de autenticação inválido ou expirado',
             $status === 403 => 'Acesso negado',
             $status === 404 => 'Endpoint não encontrado',
-            $status === 422 => 'Validação falhada: ' . json_encode($response->json() ?? []),
+            $status === 422 => 'Validação falhada: '.json_encode($response->json() ?? []),
             default => "HTTP $status",
         };
 

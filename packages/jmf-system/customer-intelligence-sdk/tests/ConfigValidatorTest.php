@@ -4,6 +4,7 @@ namespace JmfSystem\CustomerIntelligence\Tests;
 
 use JmfSystem\CustomerIntelligence\ConfigValidator;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ConfigValidatorTest extends TestCase
 {
@@ -17,7 +18,7 @@ class ConfigValidatorTest extends TestCase
         return ['JmfSystem\\CustomerIntelligence\\CustomerIntelligenceServiceProvider'];
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function valida_configuracao_completa_sem_erros(): void
     {
         config([
@@ -33,7 +34,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function detecta_base_url_faltando(): void
     {
         config([
@@ -49,7 +50,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertContains('JMF_CI_BASE_URL não está configurada', $errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function detecta_token_faltando(): void
     {
         config([
@@ -65,7 +66,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertContains('JMF_CI_TOKEN não está configurado', $errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function detecta_base_url_invalida(): void
     {
         config([
@@ -81,7 +82,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertContains('JMF_CI_BASE_URL não é uma URL válida', $errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function detecta_timeout_invalido(): void
     {
         config([
@@ -97,7 +98,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertContains('JMF_CI_TIMEOUT deve ser >= 1 segundo', $errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function detecta_tries_invalido(): void
     {
         config([
@@ -113,7 +114,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertContains('JMF_CI_TRIES deve ser >= 1', $errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function nao_valida_se_sdk_esta_desabilitado(): void
     {
         config([
@@ -127,7 +128,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function lanca_excecao_em_validacao_com_erros(): void
     {
         config([
@@ -144,7 +145,7 @@ class ConfigValidatorTest extends TestCase
         ConfigValidator::validate();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function nao_lanca_excecao_se_configuracao_valida(): void
     {
         config([
@@ -160,7 +161,7 @@ class ConfigValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function retorna_status_da_configuracao(): void
     {
         config([

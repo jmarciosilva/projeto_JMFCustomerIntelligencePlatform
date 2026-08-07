@@ -22,7 +22,7 @@ class ConfigValidator
 
         if (! empty($errors)) {
             throw new \RuntimeException(
-                'Configuração inválida do SDK JMF Customer Intelligence:' . "\n" .
+                'Configuração inválida do SDK JMF Customer Intelligence:'."\n".
                 implode("\n", array_map(fn ($e) => "  • $e", $errors))
             );
         }
@@ -83,7 +83,7 @@ class ConfigValidator
             'enabled' => config('customer-intelligence.enabled'),
             'base_url' => config('customer-intelligence.base_url') ? '✓' : '✗',
             'token' => config('customer-intelligence.token') ? '✓ (****)' : '✗',
-            'timeout' => config('customer-intelligence.timeout') . 's',
+            'timeout' => config('customer-intelligence.timeout').'s',
             'tries' => config('customer-intelligence.tries'),
             'sync' => config('customer-intelligence.sync'),
             'errors' => self::getValidationErrors(),
