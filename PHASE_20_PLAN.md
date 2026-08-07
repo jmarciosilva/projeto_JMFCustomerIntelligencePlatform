@@ -336,20 +336,24 @@ A Fase 20 divide-se em **3 sprints**:
 
 ```
 Semana 1 (2026-08-07 a 2026-08-13)
-└─ Sprint 1: Refatoração do SDK
-   ├─ Seg-Qua: Auditar e refatorar SDK
-   ├─ Qui-Sex: Testes e documentação
-   └─ Segunda seguinte: Review + aprovação
+└─ Sprint 1: Refatoração do SDK ✅ CONCLUÍDO
+   ├─ Seg-Qua: Auditar e refatorar SDK ✅
+   ├─ Qui-Sex: Testes e documentação ✅
+   └─ Segunda seguinte: Review + aprovação ✅
+   
+   Resultado: 45 testes passando (3x meta)
 
 Semana 2-2.5 (2026-08-14 a 2026-08-26)
-└─ Sprint 2: UI Componentizada
-   ├─ Seg-Ter: Estrutura + Dashboard + Configuration
-   ├─ Qua-Qui: ContactIndex + ContactShow + EventIndex
-   ├─ Sex: Testes + Documentação
-   └─ Segunda seguinte: Review + aprovação
+└─ Sprint 2: UI Componentizada ⏳ 90% (falta 2.9)
+   ├─ Seg-Ter: Estrutura + Dashboard + Configuration ✅
+   ├─ Qua-Qui: ContactIndex + ContactShow + EventIndex ✅
+   ├─ Sex: Testes + Documentação ✅ (testes) / ⏳ (doc)
+   └─ Falta: PLUGIN_INSTALLATION.md (2.9)
+   
+   Resultado: 5 Livewire + 5 Blade + JmfCiApiClient + 10 testes
 
 Semana 3-3.5 (2026-08-27 a 2026-09-06)
-└─ Sprint 3: Integração + Testes E2E
+└─ Sprint 3: Integração + Testes E2E ⏳ Aguardando Sprint 2
    ├─ Seg-Ter: Integração + Rotas + E2E testes
    ├─ Qua: Documentação final
    ├─ Qui: Publicação SDK
@@ -363,13 +367,15 @@ Semana 3-3.5 (2026-08-27 a 2026-09-06)
 
 | Métrica | Target | Status |
 |---------|--------|--------|
-| Testes novos | 30+ | 🔄 Em progresso |
-| Testes totais | 130+ | 🔄 Em progresso |
+| Testes novos (Sprint 1) | 15+ | ✅ 45 testes |
+| Testes novos (Sprint 2) | 10+ | ✅ 10 testes (total 55) |
+| Testes totais | 130+ | ⏳ 55/130 (42%) |
 | Cobertura de código | 90%+ | 🔄 Em progresso |
-| Documentação | 100% | 🔄 Em progresso |
-| Qualidade (Pint/PHPStan) | 0 erros | 🔄 Em progresso |
+| Documentação (Sprint 1) | 100% | ✅ README + .env.example |
+| Documentação (Sprint 2) | 100% | ⏳ Falta PLUGIN_INSTALLATION.md |
+| Qualidade (Pint/PHPStan) | 0 erros | ✅ Sprint 1 OK |
 | SDK publicado | Sim | ⏳ Fase 20 Sprint 3 |
-| Plugin instalável em outra app | Sim | ⏳ Fase 20 Sprint 3 |
+| Plugin instalável | Sim | ⏳ Fase 20 Sprint 3 |
 
 ---
 
@@ -399,4 +405,4 @@ Após Fase 20 concluída:
 ---
 
 **Documento criado em:** 2026-08-07  
-**Status:** ⏳ Aguardando início do Sprint 1
+**Status:** ✅ Sprint 1 CONCLUÍDO | ⏳ Sprint 2 90% (falta 2.9)
