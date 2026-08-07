@@ -536,6 +536,75 @@ Depende das Fases 02, 03, 05, 06 (telas administrativas já existentes que receb
 
 ---
 
+## Fase 20 — Plugin UI Instalável
+
+**Status:** `[ ]` Pendente · depende da Fase 07
+
+### Objetivo
+
+Tornar a plataforma JMF Customer Intelligence instalável como plugin em outras aplicações Laravel, permitindo que qualquer plataforma (ex.: Feira Esquerda Livre, Clube do Salão) integre-se via SDK + painel admin customizável, sem necessidade de modificações de código. Análise completa em [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md).
+
+### Tarefas
+
+- [ ] Refatoração do SDK (remoção de dependências específicas da aplicação central).
+- [ ] Publicação do SDK no Packagist (versão 1.0.0).
+- [ ] UI componentizada (Dashboard, Configuração, Contatos, Eventos).
+- [ ] Guia de instalação automática e documentação.
+- [ ] Testes end-to-end (rastrear evento → visualizar no dashboard).
+
+### Critérios de aceite
+
+- [ ] SDK `jmf-system/customer-intelligence-sdk` publicado como package Composer independente, instalável em qualquer aplicação Laravel 11+ via `composer require`.
+- [ ] SDK sem qualquer dependência hardcoded à plataforma central; configuração completa via `.env` (`JMF_CI_API_URL`, `JMF_CI_API_TOKEN`, `JMF_CI_QUEUE_CONNECTION`).
+- [ ] Componente Livewire `<x-jmf-ci-dashboard>` reutilizável, exibindo métricas (total eventos, visitantes, sessões, conversões), gráfico de tendência, tabelas de contatos e eventos — sem assumir layout ou sidebar específicos.
+- [ ] Tela de configuração acessível no painel admin da aplicação cliente, permitindo validar/testar conexão com servidor central e exibir status (online/offline, versão da API, últimos eventos recebidos).
+- [ ] Tela de contatos e eventos com filtros (período, tipo de evento, origem), paginação e busca.
+- [ ] Guia completo de instalação (`PLUGIN_INSTALLATION.md`), incluindo: instalação via Composer, publicação de assets, configuração do `.env`, mapeamento de eventos, exemplos de código (`track()`/`identify()`/`conversion()`), debugging e troubleshooting.
+- [ ] Testes automatizados cobrindo a UI (presença de componentes, dados exibidos corretamente, validação de conexão), middleware de visitor/sessão e envio de eventos de forma end-to-end (10 novos testes, 126 no total em `php artisan test`).
+- [ ] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros; testes do SDK (`vendor/bin/pest` em `packages/jmf-system/customer-intelligence-sdk`) sem erros.
+
+### Dependências
+
+Depende da Fase 07 (SDK Laravel já existe; refatoração é incremental).
+
+---
+
+## Fase 21 — Integração com Feira Esquerda Livre (Piloto)
+
+**Status:** `[ ]` Pendente · depende da Fase 20
+
+### Objetivo
+
+Usar a Feira Esquerda Livre como laboratório de validação do plugin e do sistema de inteligência centralizada. Rastrear eventos reais de marketplace (produtos, búsquedas, carrinho, compras, análises por vendedor) e validar funcionalidades de lead scoring, recomendações e analytics.
+
+### Tarefas
+
+- [ ] Registrar Feira como Application na plataforma central e gerar token de API.
+- [ ] Instalar SDK + Plugin UI na Feira via Composer.
+- [ ] Mapear eventos de negócio (product.viewed, cart.abandoned, purchase.completed, etc.).
+- [ ] Validar rastreamento e visualização de dados no painel.
+- [ ] Teste de lead scoring e recomendações com dados reais.
+- [ ] Dashboard específico do Marketplace (métricas por produto, por vendedor, funis de compra).
+
+### Critérios de aceite
+
+- [ ] Feira Esquerda Livre integrada via SDK Laravel, sem acoplamento direto entre aplicações — comunicação via API REST autenticada apenas.
+- [ ] Eventos de negócio mapeados e rastreados: `product.viewed`, `product.search`, `cart.item_added`, `cart.abandoned`, `purchase.completed`, `review.submitted`, `seller.contacted`.
+- [ ] Cada evento chega corretamente na plataforma central (verificado via tabela `events` e logs).
+- [ ] Plugin UI instalado no painel admin da Feira, exibindo métricas do período (hoje/7/30/90 dias).
+- [ ] Contatos identificados corretamente (email/CPF de comprador mapeado para Contact no servidor central).
+- [ ] Lead scoring funcionando: contatos recebem pontuação baseada em eventos (visualizações, compras, interações com vendedor).
+- [ ] Recomendações funcionando: ao consultar `GET /api/v1/recommendations?subject_type=produto&subject_id=123`, retorna produtos relacionados baseado em co-ocorrência e popularidade.
+- [ ] Dashboard específico do Marketplace no painel admin central (`/admin/marketplace`) mostrando: produtos mais vistos, páginas com maior taxa de abandono de carrinho, vendedores com maiores conversões, origem do tráfego (UTMs, referrer).
+- [ ] Testes automatizados cobrindo eventos, identificação de contatos, lead scoring com dados da Feira e isolamento (dados da Feira não vazam para outras aplicações) (12 novos testes, 138 no total).
+- [ ] `vendor/bin/pint`, `composer analyse` e `npm run build` sem erros.
+
+### Dependências
+
+Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
+
+---
+
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
@@ -549,3 +618,4 @@ Depende das Fases 02, 03, 05, 06 (telas administrativas já existentes que receb
 - **2026-08-05** — Evolução estratégica de visão (`NEW_PROMPT.md`): o projeto passa a se apresentar como o motor central de inteligência da JMF System, não apenas Analytics/CRM. `README.md` ganhou a seção "Visão de Longo Prazo"; roadmap ganhou as Fases 12-18 (Integração com Feira Esquerda Livre, AI Business Intelligence, AI Business Assistant, AI Marketing, AI Studio, AI Fraud Detection, Intelligence Engine), sem alterar as Fases 01-11 nem a arquitetura já consolidada.
 - **2026-08-05** — Fase 10 concluída: lead score por contato (`ComputeLeadScoresAction` + `LeadScoreRules`, cross-application dentro do tenant), afinidade entre produtos (`ComputeProductAffinitiesAction`, tabela `product_affinities`), recomendações simples com fallback de popularidade (`GetRecommendationsAction`) expostas em `GET /api/v1/recommendations`, filtro de contatos inativos e lead score no painel admin; tudo recalculado via comando agendado `intelligence:compute`.
 - **2026-08-05** — Fase 19 concluída (tarefa cross-cutting, fora da sequência original): ajuda contextual (`<x-help-modal>`) em todas as 13 telas do painel administrativo e página de Guia do Usuário (`/admin/guia`) cobrindo os conceitos e fluxos principais da plataforma.
+- **2026-08-07** — Análise de viabilidade completa (`PLUGIN_STRATEGY.md`): plataforma pode ser instalada como plugin em outras aplicações Laravel. Fases 20 e 21 adicionadas ao roadmap (Plugin UI Instalável e Integração com Feira Esquerda Livre). Arquitetura multi-tenant e desacoplamento via SDK já estão em lugar; refatorações incrementais necessárias apenas.

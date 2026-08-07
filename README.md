@@ -216,9 +216,11 @@ Aplicação cliente → SDK Laravel/API HTTP → POST /api/v1/events → Fila (d
 
 Cada evento carrega `event_id`, `event_name`, `tenant_id`, `application_id`, `visitor_id`, `session_id`, `contact_id`, `properties`, `context`, `occurred_at` e `received_at`. Idempotência garantida por `event_id` + aplicação. Detalhes em [`EVENT_CATALOG.md`](EVENT_CATALOG.md).
 
-## SDK Laravel
+## SDK Laravel e Plugin Instalável
 
-Aplicações clientes (Site Pessoal, Clube do Salão e futuros projetos) integram-se via o pacote em [`packages/jmf-system/customer-intelligence-sdk`](packages/jmf-system/customer-intelligence-sdk) — `identify()`, `track()` e `conversion()`, com visitor/sessão automáticos e envio assíncrono. Ver o [`README`](packages/jmf-system/customer-intelligence-sdk/README.md) do pacote para instalação e uso.
+Aplicações clientes (Site Pessoal, Clube do Salão, Feira Esquerda Livre e futuros projetos) integram-se via o pacote em [`packages/jmf-system/customer-intelligence-sdk`](packages/jmf-system/customer-intelligence-sdk) — `identify()`, `track()` e `conversion()`, com visitor/sessão automáticos e envio assíncrono.
+
+**A plataforma é instalável como plugin** em qualquer aplicação Laravel, permitindo que cada plataforma tenha seu próprio painel admin com métricas e inteligência centralizada. Ver [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md) para análise completa de arquitetura, viabilidade e roadmap de implementação. O [`README`](packages/jmf-system/customer-intelligence-sdk/README.md) do pacote cobre instalação e uso do SDK.
 
 ## Segurança e LGPD
 
@@ -249,6 +251,10 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 ✅ **Fase 10 — Inteligência inicial** concluída (lead score por contato, afinidade entre produtos, recomendações simples com fallback de popularidade via `GET /api/v1/recommendations`, filtro de contatos inativos; recalculados pelo comando agendado `intelligence:compute`).
 
 ✅ **Fase 19 — Ajuda contextual e documentação de usuário** concluída (modal de ajuda em todas as telas do painel administrativo e página de Guia do Usuário em `/admin/guia`).
+
+📋 **Fase 20 — Plugin UI Instalável** análise concluída (ver [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md)); implementação pendente (3-4 semanas).
+
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** análise concluída; implementação pendente (2-3 semanas após Fase 20).
 
 🚧 Fase 01 aguarda apenas a validação final do Virtual Host no Laragon (passo manual, ver `INSTALL.md`).
 
