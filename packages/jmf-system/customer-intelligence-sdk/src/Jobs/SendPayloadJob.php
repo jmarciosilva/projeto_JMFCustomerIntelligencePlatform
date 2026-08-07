@@ -16,6 +16,11 @@ use Throwable;
  * Intelligence de forma assíncrona. Nunca deixa uma falha propagar para o
  * código da aplicação cliente — apenas loga e, quando fizer sentido, deixa
  * a fila tentar de novo.
+ *
+ * Retry logic:
+ * - 5xx (erro de servidor): retry com exponential backoff
+ * - 429 (rate limit): retry com exponential backoff
+ * - 4xx (erro de cliente): sem retry, apenas log
  */
 class SendPayloadJob implements ShouldQueue
 {
@@ -35,15 +40,39 @@ class SendPayloadJob implements ShouldQueue
     }
 
     /**
+     * Exponential backoff para retries: [5s, 30s, 120s].
+     *
      * @return list<int>
      */
     public function backoff(): array
     {
-        return [5, 30, 120];
+        return config('customer-intelligence.backoff', [5, 30, 120]);
+    }
+
+    /**
+     * Validação de payload antes de enviar.
+     *
+     * @return bool
+     *
+     * @throws \RuntimeException se payload inválido
+     */
+    private function validatePayload(): bool
+    {
+        if (empty($this->payload)) {
+            throw new \RuntimeException('Payload vazio não pode ser enviado');
+        }
+
+        if (! isset($this->payload['event_id']) && ! isset($this->payload['visitor_id'])) {
+            throw new \RuntimeException('Payload deve ter event_id ou visitor_id');
+        }
+
+        return true;
     }
 
     public function handle(): void
     {
+        $this->validatePayload();
+
         $response = Http::baseUrl(rtrim((string) config('customer-intelligence.base_url'), '/'))
             ->withToken((string) config('customer-intelligence.token'))
             ->timeout((int) config('customer-intelligence.timeout', 5))
@@ -51,24 +80,44 @@ class SendPayloadJob implements ShouldQueue
             ->post($this->endpoint, $this->payload);
 
         if ($response->successful()) {
-            return;
-        }
-
-        // Erros do cliente (ex.: 422 de validação, 401 de token inválido) nunca
-        // terão sucesso numa nova tentativa — loga e desiste. Erros de servidor
-        // ou de rate limit (429) são transitórios: relança para acionar o
-        // retry/backoff da fila.
-        if (! $response->serverError() && $response->status() !== 429) {
-            Log::warning('JMF Customer Intelligence: payload rejeitado pela API.', [
+            Log::debug('JMF Customer Intelligence: payload enviado com sucesso.', [
                 'endpoint' => $this->endpoint,
+                'event_id' => $this->payload['event_id'] ?? null,
                 'status' => $response->status(),
-                'body' => $response->json() ?? $response->body(),
             ]);
 
             return;
         }
 
-        throw new RequestException($response);
+        $this->handleErrorResponse($response);
+    }
+
+    /**
+     * Trata resposta de erro de forma inteligente.
+     *
+     * Erros 4xx (exceto 429): não retry, apenas log
+     * Erros 5xx ou 429: retry via exception
+     */
+    private function handleErrorResponse($response): void
+    {
+        $status = $response->status();
+        $isRetryable = $response->serverError() || $status === 429;
+
+        $context = [
+            'endpoint' => $this->endpoint,
+            'status' => $status,
+            'event_id' => $this->payload['event_id'] ?? null,
+            'body' => $response->json() ?? $response->body(),
+            'attempt' => $this->attempts(),
+            'retryable' => $isRetryable,
+        ];
+
+        if ($isRetryable) {
+            Log::warning('JMF Customer Intelligence: erro transitório, agendando retry.', $context);
+            throw new RequestException($response);
+        }
+
+        Log::warning('JMF Customer Intelligence: payload rejeitado pela API (erro de cliente).', $context);
     }
 
     public function failed(Throwable $exception): void
@@ -76,6 +125,7 @@ class SendPayloadJob implements ShouldQueue
         Log::error('JMF Customer Intelligence: falha ao enviar payload após todas as tentativas.', [
             'endpoint' => $this->endpoint,
             'event_id' => $this->payload['event_id'] ?? null,
+            'attempts' => $this->attempts(),
             'exception' => $exception->getMessage(),
         ]);
     }

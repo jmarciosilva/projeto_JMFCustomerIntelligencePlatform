@@ -28,6 +28,10 @@ class CustomerIntelligenceServiceProvider extends ServiceProvider
             __DIR__.'/../config/customer-intelligence.php' => config_path('customer-intelligence.php'),
         ], 'customer-intelligence-config');
 
+        if (config('customer-intelligence.validate_on_boot', true)) {
+            ConfigValidator::validate();
+        }
+
         // appendMiddlewareToGroup precisa ser chamado no Kernel (não no
         // Router::pushMiddlewareToGroup!): o Kernel mantém sua própria cópia
         // de $middlewareGroups e a resincroniza para o Router a cada
