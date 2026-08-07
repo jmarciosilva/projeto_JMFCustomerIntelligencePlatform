@@ -1,8 +1,16 @@
 {
     "name": "jmf-system/customer-intelligence-sdk",
     "description": "SDK Laravel para enviar eventos, identificações e conversões à plataforma JMF Customer Intelligence.",
+    "version": "1.0.0",
     "type": "library",
     "license": "proprietary",
+    "homepage": "https://github.com/jmf-system/customer-intelligence",
+    "authors": [
+        {
+            "name": "JMF System",
+            "email": "dev@jmfsystem.com"
+        }
+    ],
     "keywords": ["laravel", "cdp", "analytics", "sdk"],
     "require": {
         "php": "^8.2",
