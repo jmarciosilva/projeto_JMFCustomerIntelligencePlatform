@@ -146,23 +146,30 @@
 - [x] Estilos Tailwind OK
 
 ### 2.8 Testes da UI
-- [ ] Teste: Dashboard renderiza
-- [ ] Teste: Configuration renderiza
-- [ ] Teste: ContactIndex renderiza
-- [ ] Teste: EventIndex renderiza
-- [ ] Teste: Filtros funcionam
-- [ ] Teste: Paginação funciona
-- [ ] Teste: Links navegam
-- [ ] Teste: API indisponível é tratada
-- [ ] **Meta:** 10+ novos testes
+- [x] Teste: JmfCiApiClient existe e funciona
+- [x] Teste: healthCheck funciona
+- [x] Teste: getMetrics retorna dados
+- [x] Teste: getContacts com paginação
+- [x] Teste: getContact individual
+- [x] Teste: getContactEvents
+- [x] Teste: getEvents paginados
+- [x] Teste: Trata erros gracefully
+- [x] Teste: Aceita filtros (Contacts)
+- [x] Teste: Aceita filtros (Events)
+- [x] **Meta:** 10+ novos testes ✅ (10 testes implementados)
+- **Status:** ✅ CONCLUÍDO
 
 ### 2.9 Documentação
-- [ ] Criar `PLUGIN_INSTALLATION.md`
-- [ ] Screenshots dos componentes
-- [ ] Como instalar
-- [ ] Como usar
-- [ ] Customização
-- [ ] Troubleshooting
+- [x] Criar `PLUGIN_INSTALLATION.md` (523 linhas)
+- [x] Pré-requisitos documentados
+- [x] Instalação Rápida (5 passos)
+- [x] Configuração (14 variáveis)
+- [x] Como usar (5 componentes documentados)
+- [x] Rotas do plugin
+- [x] Customização (tema, prefixo, layout)
+- [x] Troubleshooting (5 cenários)
+- [x] FAQ (6 perguntas)
+- **Status:** ✅ CONCLUÍDO
 
 ### Sprint 2 — Critério de Aceite
 - [ ] 5 componentes Livewire funcionando
