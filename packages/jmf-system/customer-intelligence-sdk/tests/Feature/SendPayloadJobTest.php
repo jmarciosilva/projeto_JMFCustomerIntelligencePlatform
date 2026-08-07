@@ -8,7 +8,12 @@ use JmfSystem\CustomerIntelligence\Jobs\SendPayloadJob;
 test('envia o payload para a URL, headers e endpoint corretos', function () {
     Http::fake(['*' => Http::response(['status' => 'accepted'], 202)]);
 
-    $job = new SendPayloadJob('events', ['event_id' => 'abc', 'event_name' => 'page.viewed']);
+    $job = new SendPayloadJob('events', [
+        'event_id' => 'evt-123',
+        'event_name' => 'page.viewed',
+        'visitor_id' => 'vis-123',
+        'occurred_at' => now()->toIso8601String(),
+    ]);
     $job->handle();
 
     Http::assertSent(function ($request) {
@@ -21,7 +26,12 @@ test('envia o payload para a URL, headers e endpoint corretos', function () {
 test('resposta 500 aciona retry (relança exceção)', function () {
     Http::fake(['*' => Http::response(['message' => 'erro'], 500)]);
 
-    $job = new SendPayloadJob('events', ['event_id' => 'abc']);
+    $job = new SendPayloadJob('events', [
+        'event_id' => 'evt-123',
+        'event_name' => 'page.viewed',
+        'visitor_id' => 'vis-123',
+        'occurred_at' => now()->toIso8601String(),
+    ]);
 
     expect(fn () => $job->handle())->toThrow(RequestException::class);
 });
@@ -30,7 +40,12 @@ test('resposta 422 não relança exceção (sem retry) e loga warning', function
     Http::fake(['*' => Http::response(['message' => 'invalido'], 422)]);
     Log::spy();
 
-    $job = new SendPayloadJob('events', ['event_id' => 'abc']);
+    $job = new SendPayloadJob('events', [
+        'event_id' => 'evt-123',
+        'event_name' => 'page.viewed',
+        'visitor_id' => 'vis-123',
+        'occurred_at' => now()->toIso8601String(),
+    ]);
     $job->handle();
 
     Log::shouldHaveReceived('warning')->once();
@@ -39,7 +54,12 @@ test('resposta 422 não relança exceção (sem retry) e loga warning', function
 test('failed() loga erro com contexto do payload', function () {
     Log::spy();
 
-    $job = new SendPayloadJob('events', ['event_id' => 'abc-123']);
+    $job = new SendPayloadJob('events', [
+        'event_id' => 'evt-123',
+        'event_name' => 'page.viewed',
+        'visitor_id' => 'vis-123',
+        'occurred_at' => now()->toIso8601String(),
+    ]);
     $job->failed(new Exception('falha de rede'));
 
     Log::shouldHaveReceived('error')->once();
