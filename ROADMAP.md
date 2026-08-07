@@ -538,7 +538,7 @@ Depende das Fases 02, 03, 05, 06 (telas administrativas já existentes que receb
 
 ## Fase 20 — Plugin UI Instalável
 
-**Status:** `[ ]` Pendente · depende da Fase 07
+**Status:** `[~]` Em andamento · depende da Fase 07 (concluída)
 
 ### Objetivo
 
