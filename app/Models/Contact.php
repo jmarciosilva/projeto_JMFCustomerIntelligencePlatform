@@ -67,6 +67,14 @@ class Contact extends Model
     }
 
     /**
+     * @return HasMany<Event, $this>
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    /**
      * @param  Builder<Contact>  $query
      * @return Builder<Contact>
      */
