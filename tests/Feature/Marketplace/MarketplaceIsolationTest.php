@@ -1,8 +1,14 @@
 <?php
 
+use App\Events\EventWasIngested;
 use App\Models\Application;
 use App\Models\Event;
 use App\Models\Tenant;
+
+// Sanctum's RequestGuard caches the resolved user for its lifetime; within a single
+// test method, sequential requests reuse that cached guard unless explicitly reset.
+// Production is unaffected (fresh PHP process per request), but tests issuing two
+// different tokens must call auth()->forgetGuards() between calls.
 
 test('seller analytics does not leak data between applications', function () {
     $tenant1 = Tenant::factory()->create();
@@ -14,20 +20,22 @@ test('seller analytics does not leak data between applications', function () {
     $token1 = $app1->createToken('test')->plainTextToken;
     $token2 = $app2->createToken('test')->plainTextToken;
 
-    // Create events in app1
+    // Create events in app1 (materializing MarketplaceMetric, as production does via EventWasIngested)
     Event::factory()->count(10)->for($app1)->create([
         'event_name' => 'product.viewed',
         'properties' => ['seller_id' => 5, 'product_id' => 42],
-    ]);
+    ])->each(fn ($event) => event(new EventWasIngested($event)));
 
     // Create events in app2
     Event::factory()->count(5)->for($app2)->create([
         'event_name' => 'product.viewed',
         'properties' => ['seller_id' => 5, 'product_id' => 43],
-    ]);
+    ])->each(fn ($event) => event(new EventWasIngested($event)));
 
     $response1 = $this->withHeader('Authorization', "Bearer {$token1}")
         ->getJson('/api/v1/marketplace/sellers/5/analytics');
+
+    auth()->forgetGuards();
 
     $response2 = $this->withHeader('Authorization', "Bearer {$token2}")
         ->getJson('/api/v1/marketplace/sellers/5/analytics');
@@ -67,6 +75,8 @@ test('top products only shows data from current application', function () {
     $response1 = $this->withHeader('Authorization', "Bearer {$token1}")
         ->getJson('/api/v1/marketplace/products/top');
     $views1 = $response1->json('data.0.views') ?? 0;
+
+    auth()->forgetGuards();
 
     $response2 = $this->withHeader('Authorization', "Bearer {$token2}")
         ->getJson('/api/v1/marketplace/products/top');

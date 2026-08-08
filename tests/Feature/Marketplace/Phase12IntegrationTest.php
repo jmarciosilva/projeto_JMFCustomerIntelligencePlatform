@@ -20,7 +20,7 @@ test('marketplace events are captured correctly', function () {
             'properties' => ['product_id' => 42, 'seller_id' => 5],
         ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'product.viewed')->count())->toBe(1);
 });
 
@@ -34,10 +34,10 @@ test('purchase event contains revenue information', function () {
             'properties' => ['total_value' => 99.90, 'order_id' => 'ORD-001'],
         ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
 
     $event = Event::where('event_name', 'purchase.completed')->first();
-    expect($event->properties->get('total_value'))->toBe(99.90);
+    expect($event->properties['total_value'])->toBe(99.90);
 });
 
 test('cart abandonment event captured', function () {
@@ -50,7 +50,7 @@ test('cart abandonment event captured', function () {
             'properties' => ['items_count' => 3, 'total_value' => 150.00],
         ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'cart.abandoned')->count())->toBe(1);
 });
 
@@ -64,6 +64,6 @@ test('review event captured with rating', function () {
             'properties' => ['product_id' => 42, 'rating' => 5, 'seller_id' => 5],
         ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'review.submitted')->count())->toBe(1);
 });

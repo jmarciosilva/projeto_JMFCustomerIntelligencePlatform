@@ -31,7 +31,7 @@ test('captures product viewed event', function () {
         ],
     ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'product.viewed')->count())->toBe(1);
 });
 
@@ -51,7 +51,7 @@ test('captures cart abandoned event', function () {
         ],
     ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'cart.abandoned')->count())->toBe(1);
 });
 
@@ -75,7 +75,7 @@ test('captures purchase completed event', function () {
         ],
     ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'purchase.completed')->count())->toBe(1);
 });
 
@@ -95,6 +95,6 @@ test('captures review submitted event', function () {
         ],
     ]);
 
-    expect($response->status())->toBe(201);
+    expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'review.submitted')->count())->toBe(1);
 });

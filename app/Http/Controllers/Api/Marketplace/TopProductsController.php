@@ -16,7 +16,7 @@ class TopProductsController extends Controller
         $startDate = now()->subDays($days)->startOfDay();
         $endDate = now()->endOfDay();
 
-        $topProducts = Event::where('application_id', $request->user()->application->id)
+        $topProducts = Event::where('application_id', $request->user()->id)
             ->whereIn('event_name', ['product.viewed', 'purchase.completed'])
             ->whereBetween('occurred_at', [$startDate, $endDate])
             ->get()

@@ -17,7 +17,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         EventWasIngested::class => [
             ResolveVisitorAndSessionListener::class,
-            // ProcessMarketplaceEventListener::class, // Disabled for testing
+            ProcessMarketplaceEventListener::class,
         ],
     ];
 

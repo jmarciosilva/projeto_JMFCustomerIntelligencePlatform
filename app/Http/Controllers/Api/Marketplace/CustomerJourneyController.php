@@ -14,7 +14,7 @@ class CustomerJourneyController extends Controller
     {
         $contact = Contact::findOrFail($contactId);
 
-        $journey = Event::where('application_id', $request->user()->application->id)
+        $journey = Event::where('application_id', $request->user()->id)
             ->where('contact_id', $contactId)
             ->orderBy('occurred_at', 'asc')
             ->get()
@@ -23,15 +23,15 @@ class CustomerJourneyController extends Controller
                     'event_id' => $event->id,
                     'event_name' => $event->event_name,
                     'occurred_at' => $event->occurred_at->toIso8601String(),
-                    'product_id' => $event->properties?->get('product_id'),
-                    'seller_id' => $event->properties?->get('seller_id'),
-                    'value' => $event->properties?->get('total_value') ?? $event->properties?->get('price'),
+                    'product_id' => $event->properties['product_id'] ?? null,
+                    'seller_id' => $event->properties['seller_id'] ?? null,
+                    'value' => $event->properties['total_value'] ?? $event->properties['price'] ?? null,
                     'context' => [
-                        'page_url' => $event->context?->get('page_url'),
-                        'referrer' => $event->context?->get('referrer'),
-                        'utm_source' => $event->context?->get('utm_source'),
-                        'utm_medium' => $event->context?->get('utm_medium'),
-                        'utm_campaign' => $event->context?->get('utm_campaign'),
+                        'page_url' => $event->context['page_url'] ?? null,
+                        'referrer' => $event->context['referrer'] ?? null,
+                        'utm_source' => $event->context['utm_source'] ?? null,
+                        'utm_medium' => $event->context['utm_medium'] ?? null,
+                        'utm_campaign' => $event->context['utm_campaign'] ?? null,
                     ],
                 ];
             });
@@ -45,8 +45,8 @@ class CustomerJourneyController extends Controller
             'events' => $journey,
             'journey_stages' => $journeyStages,
             'total_events' => $journey->count(),
-            'first_event' => $journey->first()?->toArray(),
-            'last_event' => $journey->last()?->toArray(),
+            'first_event' => $journey->first(),
+            'last_event' => $journey->last(),
         ]);
     }
 

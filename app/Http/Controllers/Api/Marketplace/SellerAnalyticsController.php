@@ -14,7 +14,7 @@ class SellerAnalyticsController extends Controller
         $days = $request->get('days', 7);
 
         $analytics = $action->handle(
-            $request->user()->application->id,
+            $request->user()->id,
             $sellerId,
             (int) $days
         );

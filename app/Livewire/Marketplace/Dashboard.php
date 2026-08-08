@@ -65,7 +65,7 @@ class Dashboard extends Component
             'purchases' => $events->where('event_name', 'purchase.completed')->count(),
             'reviews' => $events->where('event_name', 'review.submitted')->count(),
             'revenue' => $events->where('event_name', 'purchase.completed')
-                ->sum(fn ($e) => $e->properties?->get('total_value') ?? 0),
+                ->sum(fn ($e) => $e->properties['total_value'] ?? 0),
             'unique_visitors' => $events->pluck('visitor_id')->unique()->count(),
             'cart_abandonment_rate' => $this->calculateAbandonmentRate($events),
         ];
@@ -122,7 +122,7 @@ class Dashboard extends Component
                     'views' => $sellerEvents->where('event_name', 'product.viewed')->count(),
                     'purchases' => $sellerEvents->where('event_name', 'purchase.completed')->count(),
                     'revenue' => $sellerEvents->where('event_name', 'purchase.completed')
-                        ->sum(fn ($e) => $e->properties?->get('total_value') ?? 0),
+                        ->sum(fn ($e) => $e->properties['total_value'] ?? 0),
                 ];
             })
             ->sortByDesc('revenue')

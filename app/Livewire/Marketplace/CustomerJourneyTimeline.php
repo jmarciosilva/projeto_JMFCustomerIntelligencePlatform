@@ -38,9 +38,9 @@ class CustomerJourneyTimeline extends Component
                 'color' => $this->getEventColor($event->event_name),
                 'occurred_at' => $event->occurred_at->format('d/m/Y H:i'),
                 'timestamp' => $event->occurred_at->timestamp,
-                'product_id' => $event->properties?->get('product_id'),
-                'seller_id' => $event->properties?->get('seller_id'),
-                'value' => $event->properties?->get('total_value'),
+                'product_id' => $event->properties['product_id'] ?? null,
+                'seller_id' => $event->properties['seller_id'] ?? null,
+                'value' => $event->properties['total_value'] ?? null,
             ];
         })->toArray();
 

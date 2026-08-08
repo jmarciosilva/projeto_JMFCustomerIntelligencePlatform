@@ -77,14 +77,7 @@ class CustomerScoreCalculator
     {
         $totalValue = $events
             ->where('event_name', 'purchase.completed')
-            ->sum(function ($e) {
-                $props = $e->properties;
-                if (is_array($props)) {
-                    return $props['total_value'] ?? 0;
-                }
-
-                return $e->properties?->get('total_value') ?? 0;
-            });
+            ->sum(fn ($e) => $e->properties['total_value'] ?? 0);
 
         return match (true) {
             $totalValue >= 1000 => 100,

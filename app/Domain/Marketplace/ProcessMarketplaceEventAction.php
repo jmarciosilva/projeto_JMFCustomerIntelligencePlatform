@@ -59,12 +59,12 @@ class ProcessMarketplaceEventAction
 
     private function extractSellerId(Event $event): ?int
     {
-        return $event->properties?->get('seller_id');
+        return $event->properties['seller_id'] ?? null;
     }
 
     private function extractProductId(Event $event): ?int
     {
-        return $event->properties?->get('product_id');
+        return $event->properties['product_id'] ?? null;
     }
 
     private function getMetricsUpdate(Event $event): array
@@ -82,7 +82,7 @@ class ProcessMarketplaceEventAction
             'checkout.started' => $updates['checkout_starts'] = \DB::raw('checkout_starts + 1'),
             'purchase.completed' => [
                 $updates['purchases'] = \DB::raw('purchases + 1'),
-                $updates['revenue'] = \DB::raw('revenue + ' . ($event->properties?->get('total_value') ?? 0)),
+                $updates['revenue'] = \DB::raw('revenue + ' . ($event->properties['total_value'] ?? 0)),
             ],
             'review.submitted' => $updates['reviews'] = \DB::raw('reviews + 1'),
             default => null,
