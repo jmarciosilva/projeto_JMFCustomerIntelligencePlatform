@@ -5,13 +5,14 @@ use App\Http\Controllers\Api\IdentifyContactController;
 use App\Http\Controllers\Api\ListContactEventsController;
 use App\Http\Controllers\Api\ListContactsController;
 use App\Http\Controllers\Api\ListEventsController;
+use App\Http\Controllers\Api\Marketplace\CustomerJourneyController;
+use App\Http\Controllers\Api\Marketplace\SellerAnalyticsController;
+use App\Http\Controllers\Api\Marketplace\TopProductsController;
 use App\Http\Controllers\Api\MetricsController;
+use App\Http\Controllers\Api\OpportunitiesController;
 use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\RecommendationsController;
 use App\Http\Controllers\Api\ShowContactController;
-use App\Http\Controllers\Api\Marketplace\SellerAnalyticsController;
-use App\Http\Controllers\Api\Marketplace\TopProductsController;
-use App\Http\Controllers\Api\Marketplace\CustomerJourneyController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'ensure.application.active'])
@@ -21,6 +22,7 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
             Route::get('/ping', PingController::class)->name('api.ping');
             Route::post('/contacts/identify', IdentifyContactController::class)->name('api.contacts.identify');
             Route::get('/recommendations', RecommendationsController::class)->name('api.recommendations.index');
+            Route::get('/opportunities/{type}', OpportunitiesController::class)->name('api.opportunities.index');
             Route::get('/metrics', MetricsController::class)->name('api.metrics.index');
             Route::get('/events', ListEventsController::class)->name('api.events.index');
             Route::get('/contacts', ListContactsController::class)->name('api.contacts.index');
