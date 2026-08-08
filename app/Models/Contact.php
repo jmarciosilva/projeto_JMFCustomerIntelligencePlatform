@@ -26,6 +26,9 @@ class Contact extends Model
         'last_seen_at',
         'lead_score',
         'lead_score_computed_at',
+        'customer_score',
+        'segment',
+        'customer_score_computed_at',
     ];
 
     /**
@@ -39,6 +42,8 @@ class Contact extends Model
             'last_seen_at' => 'datetime',
             'lead_score' => 'integer',
             'lead_score_computed_at' => 'datetime',
+            'customer_score' => 'integer',
+            'customer_score_computed_at' => 'datetime',
         ];
     }
 
@@ -72,6 +77,14 @@ class Contact extends Model
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    /**
+     * @return HasMany<CustomerSegment, $this>
+     */
+    public function segments(): HasMany
+    {
+        return $this->hasMany(CustomerSegment::class);
     }
 
     /**
