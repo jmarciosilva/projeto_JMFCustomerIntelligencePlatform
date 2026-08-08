@@ -23,15 +23,12 @@ class ProductAffinity extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'co_occurrences' => 'integer',
-            'computed_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'co_occurrences' => 'integer',
+        'computed_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo<Application, $this>

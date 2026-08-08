@@ -24,15 +24,12 @@ class Visitor extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'first_seen_at' => 'datetime',
-            'last_seen_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'first_seen_at' => 'datetime',
+        'last_seen_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo<Tenant, $this>

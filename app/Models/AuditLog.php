@@ -24,14 +24,11 @@ class AuditLog extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'changes' => 'array',
-        ];
-    }
+    protected $casts = [
+        'changes' => 'array',
+    ];
 
     /**
      * @return BelongsTo<User, $this>

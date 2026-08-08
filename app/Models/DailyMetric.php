@@ -22,15 +22,12 @@ class DailyMetric extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'date' => 'date',
-            'metric_value' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'date' => 'date',
+        'metric_value' => 'integer',
+    ];
 
     /**
      * @return BelongsTo<Tenant, $this>

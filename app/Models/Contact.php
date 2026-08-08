@@ -32,20 +32,17 @@ class Contact extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'properties' => 'array',
-            'first_identified_at' => 'datetime',
-            'last_seen_at' => 'datetime',
-            'lead_score' => 'integer',
-            'lead_score_computed_at' => 'datetime',
-            'customer_score' => 'integer',
-            'customer_score_computed_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'properties' => 'array',
+        'first_identified_at' => 'datetime',
+        'last_seen_at' => 'datetime',
+        'lead_score' => 'integer',
+        'lead_score_computed_at' => 'datetime',
+        'customer_score' => 'integer',
+        'customer_score_computed_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo<Tenant, $this>

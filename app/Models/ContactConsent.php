@@ -23,16 +23,13 @@ class ContactConsent extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'granted' => 'boolean',
-            'granted_at' => 'datetime',
-            'revoked_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'granted' => 'boolean',
+        'granted_at' => 'datetime',
+        'revoked_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo<Contact, $this>

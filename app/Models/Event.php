@@ -30,17 +30,14 @@ class Event extends Model
     ];
 
     /**
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'properties' => 'array',
-            'context' => 'array',
-            'occurred_at' => 'datetime',
-            'received_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'properties' => 'array',
+        'context' => 'array',
+        'occurred_at' => 'datetime',
+        'received_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo<Tenant, $this>
