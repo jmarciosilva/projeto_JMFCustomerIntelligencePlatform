@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\IdentifyContactController;
 use App\Http\Controllers\Api\ListContactEventsController;
 use App\Http\Controllers\Api\ListContactsController;
 use App\Http\Controllers\Api\ListEventsController;
+use App\Http\Controllers\Api\Marketing\GenerateMarketingContentController;
+use App\Http\Controllers\Api\Marketing\ListMarketingContentController;
+use App\Http\Controllers\Api\Marketing\ReviewMarketingContentController;
 use App\Http\Controllers\Api\Marketplace\CustomerJourneyController;
 use App\Http\Controllers\Api\Marketplace\SellerAnalyticsController;
 use App\Http\Controllers\Api\Marketplace\SellerRecommendationsController;
@@ -33,6 +36,14 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
 
         Route::middleware('throttle:api-events')->group(function (): void {
             Route::post('/events', EventIngestController::class)->name('api.events.store');
+        });
+
+        Route::prefix('marketing')->group(function (): void {
+            Route::middleware('throttle:api-application')->group(function (): void {
+                Route::post('/generate', GenerateMarketingContentController::class)->name('api.marketing.generate');
+                Route::get('/content', ListMarketingContentController::class)->name('api.marketing.content.index');
+                Route::patch('/content/{marketingContent}', ReviewMarketingContentController::class)->name('api.marketing.content.review');
+            });
         });
 
         Route::prefix('marketplace')->group(function (): void {
