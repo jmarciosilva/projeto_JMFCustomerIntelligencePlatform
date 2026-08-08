@@ -1,6 +1,9 @@
-<div class="space-y-6">
-    <!-- Cabeçalho do Contato -->
-    <div class="bg-white rounded-lg shadow p-6">
+<div>
+    <x-slot:header>🎯 Jornada do Comprador</x-slot:header>
+
+    <div class="space-y-6">
+        <!-- Cabeçalho do Contato -->
+        <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">👤 {{ $contact->name ?? 'Contato' }}</h1>
@@ -139,6 +142,7 @@
                 <p>• 💬 Ofereça suporte ou chatbot para dúvidas</p>
             </div>
         @endif
+    </div>
     </div>
 </div>
 

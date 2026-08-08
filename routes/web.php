@@ -52,25 +52,9 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
 
     // Marketplace & Seller Analytics
     Route::prefix('marketplace')->name('marketplace.')->group(function (): void {
-        Route::get('/', function () {
-            $application = auth()->user()->application ?? Application::first();
-            return view('admin.marketplace.dashboard', [
-                'application' => $application,
-            ]);
-        })->name('dashboard');
-
-        Route::get('/contacts', function () {
-            $tenant = auth()->user()->tenant ?? \App\Models\Tenant::first();
-            return view('admin.marketplace.contacts', [
-                'tenant' => $tenant,
-            ]);
-        })->name('contacts');
-
-        Route::get('/contacts/{contact}', function (Contact $contact) {
-            return view('admin.marketplace.journey', [
-                'contact' => $contact,
-            ]);
-        })->name('journey');
+        Route::get('/', MarketplaceDashboard::class)->name('dashboard');
+        Route::get('/contacts', ContactsList::class)->name('contacts');
+        Route::get('/contacts/{contact}', CustomerJourneyTimeline::class)->name('journey');
     });
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');

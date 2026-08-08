@@ -1,8 +1,7 @@
-<div class="space-y-6">
-    <!-- Cabeçalho -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-gray-900">👥 Contatos & Clientes</h1>
-    </div>
+<div>
+    <x-slot:header>👥 Contatos & Clientes</x-slot:header>
+
+    <div class="space-y-6">
 
     <!-- Filtros e Busca -->
     <div class="bg-white rounded-lg shadow p-6 space-y-4">
@@ -117,5 +116,6 @@
         <div class="px-6 py-4 border-t border-gray-200">
             {{ $contacts->links() }}
         </div>
+    </div>
     </div>
 </div>

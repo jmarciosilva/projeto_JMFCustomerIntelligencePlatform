@@ -1,6 +1,11 @@
-<div class="space-y-6">
-    <!-- Cabeçalho -->
-    <div class="flex justify-between items-center">
+<div>
+    <x-slot:header>📊 Marketplace Analytics</x-slot:header>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div class="space-y-6">
+        <!-- Cabeçalho -->
+        <div class="flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">📊 Dashboard Marketplace</h1>
             <p class="text-gray-500 mt-1">{{ $application->name }}</p>
@@ -192,4 +197,5 @@
             });
         });
     </script>
+    </div>
 </div>
