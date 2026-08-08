@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Domain\Marketing\AnthropicContentGenerator;
+use App\Domain\Marketing\Contracts\ContentGenerator;
+use App\Domain\Marketing\TemplateContentGenerator;
 use App\Models\Application;
 use App\Models\Contact;
 use App\Models\Tenant;
@@ -28,7 +31,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ContentGenerator::class, function () {
+            return match (config('marketing.driver')) {
+                'anthropic' => new AnthropicContentGenerator(
+                    config('marketing.anthropic.api_key') ?? '',
+                    config('marketing.anthropic.model'),
+                    config('marketing.anthropic.base_url'),
+                    config('marketing.anthropic.max_tokens'),
+                ),
+                default => new TemplateContentGenerator,
+            };
+        });
     }
 
     /**
