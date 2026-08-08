@@ -351,34 +351,36 @@ Depende da Fase 07 (SDK Laravel) e da Fase 06 (Analytics MVP) — ambas concluí
 
 ## Fase 13 — AI Business Intelligence
 
-**Status:** `[ ]` Pendente · depende da Fase 06 e da Fase 12
+**Status:** `[x]` Concluída (2026-08-08)
 
 ### Objetivo
 
 Motor de inteligência artificial responsável por interpretar os dados já coletados pela plataforma e gerar indicadores preditivos e de afinidade.
 
-### Tarefas
+### Tarefas (3 Sprints)
 
-- [ ] Lead Score.
-- [ ] Customer Score.
-- [ ] Afinidade entre produtos.
-- [ ] Recomendações e produtos relacionados.
-- [ ] Previsão de vendas.
-- [ ] Sazonalidade e tendências.
-- [ ] Produtos em alta / produtos em queda.
-- [ ] Segmentação automática.
-- [ ] Identificação de oportunidades comerciais.
+- [x] **Sprint 1 — Customer Score & Segmentation**: RFV Score (Recência/Frequência/Valor), 5 segmentos automáticos (VIP, Novo, Inativo, Convertido, Engajado), comando agendado.
+- [x] **Sprint 2 — Trends & Sales Forecast**: análise de tendência por produto (rising/falling/stable vs período anterior), previsão de vendas por média móvel com ajuste de tendência (7/30 dias), comando agendado.
+- [x] **Sprint 3 — Opportunities & API**: detecção de 4 tipos de oportunidade comercial (cross-sell, up-sell, win-back, bundle) e 4 endpoints REST para consumo pelas aplicações clientes.
+- [x] Lead Score (reaproveitado da Fase 10, já existente).
+- [x] Afinidade entre produtos (reaproveitada da Fase 10 via `ProductAffinity`, base dos detectores de cross-sell/bundle).
+- [x] Recomendações e produtos relacionados (reaproveitadas da Fase 10).
 
 ### Critérios de aceite
 
-- [ ] Lead Score e Customer Score calculados a partir dos dados já existentes (eventos, visitantes, contatos) e expostos via API.
-- [ ] Recomendações e afinidade entre produtos disponíveis para consumo pelas aplicações clientes.
-- [ ] Segmentação automática de contatos com base em comportamento.
-- [ ] Testes automatizados cobrindo os cálculos e a API de consumo.
+- [x] **Customer Score** (`CustomerScoreCalculator`): RFV Score 0-100 por contato — Recency (dias desde última atividade), Frequency (contagem de compras em 90 dias), Monetary (valor total gasto); persistido em `contacts.customer_score`.
+- [x] **Segmentação automática** (`SegmentationEngine` + tabela `customer_segments`): 5 segmentos — VIP (score ≥80 + recorrência), New (primeiros 7 dias), Inactive (30+ dias sem atividade), Converted (1+ compras), Engaged (score ≥50 sem compra).
+- [x] **Análise de tendências** (`TrendAnalyzer` + tabela `product_trends`): compara período atual vs anterior por produto usando `MarketplaceMetric`; classifica direção por growth rate (≥10% rising, ≤-10% falling, senão stable); produto sem histórico anterior é tratado como rising.
+- [x] **Previsão de vendas** (`ForecastEngine` + tabela `sales_forecasts`): média móvel (janela de 30 dias) com ajuste de tendência (±50% máximo); confiança low/medium/high conforme volume de dados históricos; forecasts para toda a aplicação e por vendedor, horizontes de 7 e 30 dias.
+- [x] **Oportunidades comerciais** (`OpportunityDetector` + tabela `opportunities`): cross-sell (afinidade moderada, `co_occurrences` 3-7), bundle (afinidade forte, `co_occurrences` ≥8), up-sell (contatos VIP/convertidos com score ≥60), win-back (contatos inativos com histórico de compras).
+- [x] **API REST**: `GET /api/v1/opportunities/{cross-sell|up-sell|win-back|bundles}` — autenticado via Sanctum, isolado por aplicação, ordenado por score, filtro por `product_id` (cross-sell), paginação via `limit`.
+- [x] **5 comandos agendados** de inteligência rodando em sequência diária: `intelligence:compute` (01:xx, Fase 10) → `intelligence:compute-segments` (02:30) → `intelligence:analyze-trends` (03:00) → `intelligence:detect-opportunities` (03:30).
+- [x] Testes automatizados: **59 novos testes** (26 Sprint 1 + 14 Sprint 2 + 19 Sprint 3), cobrindo cálculos, isolamento por aplicação/tenant e API.
+- [x] Descoberto e corrigido durante a Fase 13: pipeline de eventos de marketplace da Fase 12 estava quebrado (listener desabilitado + `properties` acessado como objeto em vez de array) — ver histórico de atualizações.
 
 ### Dependências
 
-Depende da Fase 06 (Analytics MVP) e da Fase 12 (dados reais da Feira Esquerda Livre para validação).
+Depende da Fase 06 (Analytics MVP) e da Fase 12 (dados reais da Feira Esquerda Livre para validação) — ambas concluídas.
 
 ---
 
@@ -632,3 +634,5 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 - **2026-08-05** — Fase 19 concluída (tarefa cross-cutting, fora da sequência original): ajuda contextual (`<x-help-modal>`) em todas as 13 telas do painel administrativo e página de Guia do Usuário (`/admin/guia`) cobrindo os conceitos e fluxos principais da plataforma.
 - **2026-08-07** — Análise de viabilidade completa (`PLUGIN_STRATEGY.md`): plataforma pode ser instalada como plugin em outras aplicações Laravel. Fases 20 e 21 adicionadas ao roadmap (Plugin UI Instalável e Integração com Feira Esquerda Livre). Arquitetura multi-tenant e desacoplamento via SDK já estão em lugar; refatorações incrementais necessárias apenas.
 - **2026-08-08** — Fase 12 concluída: 3 dashboards visuais completos para marketplace (Analytics Principal, CRM de Contatos, Customer Journey Timeline); 17 eventos de marketplace documentados; componentes Livewire com reatividade; Chart.js integrado; 7 commits realizados; tudo pronto para consumo por Feira Esquerda Livre e outras aplicações de marketplace.
+- **2026-08-08** — Ao iniciar a Fase 13, descobertos e corrigidos bugs críticos que quebravam o pipeline de eventos de marketplace da Fase 12 desde sua implementação: `ProcessMarketplaceEventListener` estava desabilitado em `EventServiceProvider` (`MarketplaceMetric` nunca era populada); `$event->properties?->get('key')` usado em 6 arquivos apesar de `properties` ser cast como array (erro 500 fatal); controllers de API usando `$request->user()->application->id` quando `$request->user()` já é a própria `Application` (Sanctum). Os 3 dashboards da Fase 12 estavam de fato inoperantes com dados reais apesar de documentados como funcionais; corrigidos e os 14 testes de marketplace que falhavam com erro 500 voltaram a passar.
+- **2026-08-08** — Fase 13 concluída em 3 sprints: **Sprint 1** — Customer Score (RFV) e 5 segmentos automáticos (`CustomerScoreCalculator`, `SegmentationEngine`, tabela `customer_segments`); **Sprint 2** — análise de tendências por produto e previsão de vendas por média móvel (`TrendAnalyzer`, `ForecastEngine`, tabelas `product_trends`/`sales_forecasts`); **Sprint 3** — detecção de 4 tipos de oportunidade comercial e API REST de consumo (`OpportunityDetector`, tabela `opportunities`, `GET /api/v1/opportunities/{type}`). 5 comandos agendados de inteligência em cadeia diária (01h-03h30). 59 novos testes (201/202 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).

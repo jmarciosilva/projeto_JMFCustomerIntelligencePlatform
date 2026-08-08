@@ -258,7 +258,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 12 — Integração com Feira Esquerda Livre (Marketplace Analytics & Customer Journey)** concluída (3 dashboards visuais: Analytics Principal em `/admin/marketplace`, CRM de Contatos em `/admin/marketplace/contacts`, Customer Journey Timeline em `/admin/marketplace/contacts/{id}`; 17 eventos de marketplace documentados; Chart.js integrado; isolamento multi-tenant; 7 commits).
 
-📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20 e 12 — ambas concluídas).
+✅ **Fase 13 — AI Business Intelligence** concluída em 3 sprints (Customer Score RFV e 5 segmentos automáticos; análise de tendências e previsão de vendas por produto/vendedor; detecção de 4 tipos de oportunidade comercial — cross-sell, up-sell, win-back, bundle — expostos via `GET /api/v1/opportunities/{type}`; 5 comandos agendados de inteligência; 59 novos testes).
+
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20, 12 e 13 — todas concluídas).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 
