@@ -386,27 +386,34 @@ Depende da Fase 06 (Analytics MVP) e da Fase 12 (dados reais da Feira Esquerda L
 
 ## Fase 14 — AI Business Assistant
 
-**Status:** `[ ]` Pendente · depende da Fase 13
+**Status:** `[x]` Concluída (2026-08-08)
 
 ### Objetivo
 
 Atuar como consultor inteligente automatizado para pequenos empreendedores, democratizando análises de negócio normalmente restritas a consultorias caras.
 
-### Tarefas
+### Tarefas (2 Sprints)
 
-- [ ] Motor de recomendações textuais a partir dos dados do expositor/vendedor (ex.: quedas de venda, qualidade de fotos, tempo de resposta, oportunidades de kit, preço fora da média da categoria, horário ideal de publicação).
-- [ ] Painel de recomendações no dashboard do expositor.
-- [ ] Priorização de recomendações por impacto esperado.
+- [x] **Sprint 1 — Motor de Recomendações**: `BusinessAdvisor` com 4 detectores textuais a partir de dados já coletados (quedas de venda, oportunidades de kit, preço fora da média da categoria, horário ideal de venda), modelo `BusinessRecommendation`, Action e comando agendado.
+- [x] **Sprint 2 — API de Consumo**: `GET /api/v1/marketplace/sellers/{seller_id}/recommendations`, base para o futuro painel de recomendações no dashboard do expositor.
+- [x] Priorização de recomendações por impacto esperado (campo `priority`, 0-100, ordenação desc na API).
 
 ### Critérios de aceite
 
-- [ ] Recomendações geradas automaticamente a partir dos dados já existentes na plataforma (Analytics, CRM, AI Business Intelligence).
-- [ ] Recomendações acionáveis, específicas e atualizadas periodicamente.
-- [ ] Testes automatizados cobrindo a geração das recomendações.
+- [x] **Motor de recomendações** (`BusinessAdvisor`) gera 4 tipos de recomendação textual, 100% a partir de dados já existentes na plataforma (Analytics/`MarketplaceMetric`, CRM/`Contact`, AI Business Intelligence/`Opportunity` da Fase 13) — nenhum dado novo precisou ser coletado:
+  - **Queda de vendas**: produto com recuo de compras ≥20% na semana atual vs anterior, por vendedor+produto.
+  - **Oportunidade de kit**: reaproveita `Opportunity` tipo `bundle` (Fase 13), atribuindo o vendedor via `MarketplaceMetric`.
+  - **Preço fora da média**: preço do produto (evento `product.viewed`) comparado à média da categoria; desvio ≥30% gera alerta.
+  - **Horário ideal de venda**: hora do dia com pico de `purchase.completed` por vendedor (mínimo 5 compras).
+- [x] Dois itens sugeridos no roadmap ficaram **fora de escopo** por falta de dados de suporte no catálogo de eventos atual: qualidade de fotos e tempo de resposta ao comprador — exigiriam eventos que não existem hoje (mesmo padrão de transparência da Fase 08).
+- [x] Recomendações acionáveis (mensagem em texto livre com contexto específico) e atualizadas periodicamente via comando agendado `intelligence:generate-recommendations` (diário às 04:00, encadeado após `detect-opportunities` da Fase 13).
+- [x] **API REST**: `GET /api/v1/marketplace/sellers/{seller_id}/recommendations` — autenticado via Sanctum, isolado por aplicação e vendedor, ordenado por prioridade, filtro por `type`, paginação via `limit`.
+- [x] Testes automatizados: **22 novos testes** (15 Sprint 1 + 7 Sprint 2), cobrindo cada detector, exclusões, isolamento e a API.
+- [x] Descoberto e corrigido durante a Fase 14: 11 models usavam a sintaxe `casts(): array` (método, Laravel 11+) não reconhecida pelo Larastan desta versão, causando dezenas de falsos positivos no PHPStan em toda a aplicação; convertidos para `protected $casts` (propriedade), comportamento idêntico em runtime.
 
 ### Dependências
 
-Depende da Fase 13 (AI Business Intelligence).
+Depende da Fase 13 (AI Business Intelligence) — concluída.
 
 ---
 
@@ -636,3 +643,5 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 - **2026-08-08** — Fase 12 concluída: 3 dashboards visuais completos para marketplace (Analytics Principal, CRM de Contatos, Customer Journey Timeline); 17 eventos de marketplace documentados; componentes Livewire com reatividade; Chart.js integrado; 7 commits realizados; tudo pronto para consumo por Feira Esquerda Livre e outras aplicações de marketplace.
 - **2026-08-08** — Ao iniciar a Fase 13, descobertos e corrigidos bugs críticos que quebravam o pipeline de eventos de marketplace da Fase 12 desde sua implementação: `ProcessMarketplaceEventListener` estava desabilitado em `EventServiceProvider` (`MarketplaceMetric` nunca era populada); `$event->properties?->get('key')` usado em 6 arquivos apesar de `properties` ser cast como array (erro 500 fatal); controllers de API usando `$request->user()->application->id` quando `$request->user()` já é a própria `Application` (Sanctum). Os 3 dashboards da Fase 12 estavam de fato inoperantes com dados reais apesar de documentados como funcionais; corrigidos e os 14 testes de marketplace que falhavam com erro 500 voltaram a passar.
 - **2026-08-08** — Fase 13 concluída em 3 sprints: **Sprint 1** — Customer Score (RFV) e 5 segmentos automáticos (`CustomerScoreCalculator`, `SegmentationEngine`, tabela `customer_segments`); **Sprint 2** — análise de tendências por produto e previsão de vendas por média móvel (`TrendAnalyzer`, `ForecastEngine`, tabelas `product_trends`/`sales_forecasts`); **Sprint 3** — detecção de 4 tipos de oportunidade comercial e API REST de consumo (`OpportunityDetector`, tabela `opportunities`, `GET /api/v1/opportunities/{type}`). 5 comandos agendados de inteligência em cadeia diária (01h-03h30). 59 novos testes (201/202 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
+- **2026-08-08** — Corrigidos 11 models (`Tenant`, `DailyMetric`, `Application`, `AuditLog`, `VisitorSession`, `ProductAffinity`, `Event`, `ContactConsent`, `Visitor`, `User`, `Contact`) que usavam a sintaxe `casts(): array` (método, Laravel 11+) não reconhecida pelo Larastan desta versão — causava dezenas de falsos positivos no PHPStan em toda a aplicação (tipo inferido como `string|null` em vez de array/Carbon/bool reais). Convertidos para `protected $casts` (propriedade), comportamento idêntico em runtime; PHPStan caiu de 51 para 13 erros restantes (avisos legítimos de código defensivo agora provado desnecessário, nenhum bug real). Descoberta uma propriedade inexistente (`$contact->last_event_at` em `ListContactsController`) fora de escopo por afetar contrato de API já publicado (SDK).
+- **2026-08-08** — Fase 14 concluída em 2 sprints: **Sprint 1** — motor de recomendações textuais para o expositor (`BusinessAdvisor`, 4 detectores: queda de vendas, oportunidade de kit, preço fora da média, horário ideal de venda; tabela `business_recommendations`; comando agendado `intelligence:generate-recommendations`); **Sprint 2** — API de consumo (`GET /api/v1/marketplace/sellers/{seller_id}/recommendations`). 22 novos testes (223/224 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
