@@ -1,7 +1,3 @@
-@extends('layouts.admin')
-
-@section('content')
-    <div class="py-6">
-        <livewire:marketplace.customer-journey-timeline :contact="$contact" />
-    </div>
-@endsection
+<x-layouts.admin header="🎯 Jornada do Comprador">
+    <livewire:marketplace.customer-journey-timeline :contact="$contact" />
+</x-layouts.admin>
