@@ -5,9 +5,11 @@ namespace App\Livewire\Marketplace;
 use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Tenant;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('layouts.admin')]
 class ContactsList extends Component
 {
     use WithPagination;

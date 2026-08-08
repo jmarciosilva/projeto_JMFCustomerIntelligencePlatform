@@ -4,8 +4,10 @@ namespace App\Livewire\Marketplace;
 
 use App\Models\Contact;
 use App\Models\Event;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.admin')]
 class CustomerJourneyTimeline extends Component
 {
     public Contact $contact;

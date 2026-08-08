@@ -6,8 +6,10 @@ use App\Models\Application;
 use App\Models\Event;
 use App\Models\MarketplaceMetric;
 use Carbon\Carbon;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.admin')]
 class Dashboard extends Component
 {
     public Application $application;
