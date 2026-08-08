@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\MetricsController;
 use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\RecommendationsController;
 use App\Http\Controllers\Api\ShowContactController;
+use App\Http\Controllers\Api\Marketplace\SellerAnalyticsController;
+use App\Http\Controllers\Api\Marketplace\TopProductsController;
+use App\Http\Controllers\Api\Marketplace\CustomerJourneyController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'ensure.application.active'])
@@ -27,5 +30,13 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
 
         Route::middleware('throttle:api-events')->group(function (): void {
             Route::post('/events', EventIngestController::class)->name('api.events.store');
+        });
+
+        Route::prefix('marketplace')->group(function (): void {
+            Route::middleware('throttle:api-application')->group(function (): void {
+                Route::get('/sellers/{seller_id}/analytics', SellerAnalyticsController::class)->name('api.marketplace.seller.analytics');
+                Route::get('/products/top', TopProductsController::class)->name('api.marketplace.products.top');
+                Route::get('/journey/{contact_id}', CustomerJourneyController::class)->name('api.marketplace.journey');
+            });
         });
     });

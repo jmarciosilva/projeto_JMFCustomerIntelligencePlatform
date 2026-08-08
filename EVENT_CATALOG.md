@@ -135,6 +135,177 @@ Atendimento realizado
 Cliente recorrente
 ```
 
+## Catálogo — Feira Esquerda Livre (Marketplace)
+
+```text
+product.viewed
+product.search
+product.filtered
+product.favorited
+product.unfavorited
+cart.item_added
+cart.item_removed
+cart.viewed
+cart.abandoned
+checkout.started
+purchase.completed
+purchase.cancelled
+review.submitted
+seller.contacted
+seller.profile_viewed
+social_media.clicked
+traffic_source.detected
+```
+
+### Estrutura de `properties` por evento
+
+#### `product.viewed`
+```json
+{
+  "product_id": 123,
+  "category": "Artesanato",
+  "seller_id": 5,
+  "price": 49.90
+}
+```
+
+#### `product.search`
+```json
+{
+  "search_term": "vaso cerâmica",
+  "results_count": 15,
+  "filters_applied": ["category", "price"]
+}
+```
+
+#### `product.filtered`
+```json
+{
+  "filter_type": "category",
+  "filter_value": "Artesanato",
+  "results_count": 45
+}
+```
+
+#### `product.favorited` / `product.unfavorited`
+```json
+{
+  "product_id": 123,
+  "seller_id": 5
+}
+```
+
+#### `cart.item_added` / `cart.item_removed`
+```json
+{
+  "product_id": 123,
+  "quantity": 2,
+  "price": 49.90,
+  "seller_id": 5
+}
+```
+
+#### `cart.viewed`
+```json
+{
+  "items_count": 3,
+  "total_value": 149.70,
+  "sellers_involved": [5, 8, 12]
+}
+```
+
+#### `cart.abandoned`
+```json
+{
+  "items_count": 3,
+  "total_value": 149.70,
+  "sellers_involved": [5, 8, 12],
+  "time_to_abandon": 1800
+}
+```
+
+#### `checkout.started`
+```json
+{
+  "items_count": 3,
+  "total_value": 149.70
+}
+```
+
+#### `purchase.completed` / `purchase.cancelled`
+```json
+{
+  "order_id": "ORD-2026-0001",
+  "items_count": 3,
+  "total_value": 149.70,
+  "sellers": [
+    {"seller_id": 5, "items_count": 1, "subtotal": 49.90},
+    {"seller_id": 8, "items_count": 2, "subtotal": 99.80}
+  ],
+  "payment_method": "credit_card",
+  "shipping_type": "standard"
+}
+```
+
+#### `review.submitted`
+```json
+{
+  "product_id": 123,
+  "seller_id": 5,
+  "rating": 5,
+  "review_text": "Produto excelente!"
+}
+```
+
+#### `seller.contacted`
+```json
+{
+  "seller_id": 5,
+  "contact_method": "whatsapp",
+  "product_id": 123
+}
+```
+
+#### `seller.profile_viewed`
+```json
+{
+  "seller_id": 5,
+  "seller_name": "Artesanato da Maria"
+}
+```
+
+#### `social_media.clicked`
+```json
+{
+  "platform": "instagram",
+  "seller_id": 5
+}
+```
+
+#### `traffic_source.detected`
+```json
+{
+  "source": "instagram",
+  "medium": "social",
+  "campaign": "summer_collection"
+}
+```
+
+### Funil inicial — Feira Esquerda Livre
+
+```text
+Visitante
+Produto visualizado
+Produto favoritado
+Item no carrinho
+Carrinho visualizado
+Checkout iniciado
+Compra concluída
+Cliente recorrente
+Avaliação submetida
+Indicação (rede social)
+```
+
 ## Evolução
 
 Novos eventos e novos projetos-piloto devem ser adicionados a este catálogo antes de serem implementados, mantendo a nomenclatura `entidade.acao` em inglês, minúsculas, separada por ponto.
