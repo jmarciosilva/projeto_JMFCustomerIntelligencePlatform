@@ -49,6 +49,11 @@
                     </a>
                 @endcan
 
+                <a href="{{ route('admin.marketplace.dashboard') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.marketplace.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    📊 Marketplace
+                </a>
+
                 @can('contacts.view')
                     <a href="{{ route('admin.contacts.index') }}"
                        class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.contacts.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">

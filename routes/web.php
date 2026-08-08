@@ -17,6 +17,11 @@ use App\Livewire\Admin\UserGuide;
 use App\Livewire\Admin\Users\UserForm;
 use App\Livewire\Admin\Users\UserIndex;
 use App\Livewire\Auth\Login;
+use App\Livewire\Marketplace\Dashboard as MarketplaceDashboard;
+use App\Livewire\Marketplace\ContactsList;
+use App\Livewire\Marketplace\CustomerJourneyTimeline;
+use App\Models\Application;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', StatusController::class)->name('status');
@@ -44,6 +49,29 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/applications/{application}/tokens', ApplicationTokens::class)->name('applications.tokens');
 
     Route::get('/analytics', AnalyticsDashboard::class)->name('analytics.index');
+
+    // Marketplace & Seller Analytics
+    Route::prefix('marketplace')->name('marketplace.')->group(function (): void {
+        Route::get('/', function () {
+            $application = auth()->user()->application ?? Application::first();
+            return view('admin.marketplace.dashboard', [
+                'application' => $application,
+            ]);
+        })->name('dashboard');
+
+        Route::get('/contacts', function () {
+            $tenant = auth()->user()->tenant ?? \App\Models\Tenant::first();
+            return view('admin.marketplace.contacts', [
+                'tenant' => $tenant,
+            ]);
+        })->name('contacts');
+
+        Route::get('/contacts/{contact}', function (Contact $contact) {
+            return view('admin.marketplace.journey', [
+                'contact' => $contact,
+            ]);
+        })->name('journey');
+    });
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');
     Route::get('/contacts/{contact}', ContactShow::class)->name('contacts.show');
