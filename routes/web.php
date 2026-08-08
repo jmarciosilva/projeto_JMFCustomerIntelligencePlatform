@@ -10,6 +10,9 @@ use App\Livewire\Admin\Audit\AuditLogIndex;
 use App\Livewire\Admin\Contacts\ContactIndex;
 use App\Livewire\Admin\Contacts\ContactShow;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Intelligence\BusinessIntelligenceDashboard;
+use App\Livewire\Admin\Intelligence\RecommendationsDashboard;
+use App\Livewire\Admin\Marketing\ContentDashboard;
 use App\Livewire\Admin\Profile;
 use App\Livewire\Admin\Tenants\TenantForm;
 use App\Livewire\Admin\Tenants\TenantIndex;
@@ -17,11 +20,9 @@ use App\Livewire\Admin\UserGuide;
 use App\Livewire\Admin\Users\UserForm;
 use App\Livewire\Admin\Users\UserIndex;
 use App\Livewire\Auth\Login;
-use App\Livewire\Marketplace\Dashboard as MarketplaceDashboard;
 use App\Livewire\Marketplace\ContactsList;
 use App\Livewire\Marketplace\CustomerJourneyTimeline;
-use App\Models\Application;
-use App\Models\Contact;
+use App\Livewire\Marketplace\Dashboard as MarketplaceDashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', StatusController::class)->name('status');
@@ -56,6 +57,15 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/contacts', ContactsList::class)->name('contacts');
         Route::get('/contacts/{contact}', CustomerJourneyTimeline::class)->name('journey');
     });
+
+    // Fase 13 — AI Business Intelligence / Fase 14 — AI Business Assistant
+    Route::prefix('intelligence')->name('intelligence.')->group(function (): void {
+        Route::get('/', BusinessIntelligenceDashboard::class)->name('dashboard');
+        Route::get('/recommendations', RecommendationsDashboard::class)->name('recommendations');
+    });
+
+    // Fase 15 — AI Marketing
+    Route::get('/marketing', ContentDashboard::class)->name('marketing.dashboard');
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');
     Route::get('/contacts/{contact}', ContactShow::class)->name('contacts.show');

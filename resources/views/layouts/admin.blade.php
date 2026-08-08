@@ -54,6 +54,21 @@
                     📊 Marketplace
                 </a>
 
+                <a href="{{ route('admin.intelligence.dashboard') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.intelligence.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    🧠 Business Intelligence
+                </a>
+
+                <a href="{{ route('admin.intelligence.recommendations') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.intelligence.recommendations') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    🎯 Recomendações IA
+                </a>
+
+                <a href="{{ route('admin.marketing.dashboard') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.marketing.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    ✍️ AI Marketing
+                </a>
+
                 @can('contacts.view')
                     <a href="{{ route('admin.contacts.index') }}"
                        class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.contacts.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
