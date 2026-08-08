@@ -13,3 +13,4 @@ Schedule::command('intelligence:compute')->dailyAt('02:00');
 Schedule::command('intelligence:compute-segments')->dailyAt('02:30');
 Schedule::command('intelligence:analyze-trends')->dailyAt('03:00');
 Schedule::command('intelligence:detect-opportunities')->dailyAt('03:30');
+Schedule::command('intelligence:generate-recommendations')->dailyAt('04:00');
