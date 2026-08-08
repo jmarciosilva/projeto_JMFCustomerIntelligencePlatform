@@ -262,7 +262,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 14 — AI Business Assistant** concluída em 2 sprints (motor de recomendações textuais para o expositor — queda de vendas, oportunidade de kit, preço fora da média, horário ideal de venda — 100% a partir de dados já coletados; API de consumo em `GET /api/v1/marketplace/sellers/{seller_id}/recommendations`; 22 novos testes).
 
-📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20, 12, 13 e 14 — todas concluídas).
+✅ **Fase 15 — AI Marketing** concluída em 2 sprints (geração de título/descrição/SEO, textos + hashtags para Instagram/Facebook/WhatsApp e campanha de e-mail marketing; driver plugável — `template` sem custo por padrão, `Anthropic Claude API` pronto para ativar via `.env`; conteúdo revisável/editável antes de publicar via `PATCH /api/v1/marketing/content/{id}`; 42 novos testes). Geração de banners fica para a Fase 16.
+
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20, 12, 13, 14 e 15 — todas concluídas).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 

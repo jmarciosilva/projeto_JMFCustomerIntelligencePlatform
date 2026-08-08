@@ -419,28 +419,29 @@ Depende da Fase 13 (AI Business Intelligence) — concluída.
 
 ## Fase 15 — AI Marketing
 
-**Status:** `[ ]` Pendente · depende da Fase 13
+**Status:** `[x]` Concluída (2026-08-08)
 
 ### Objetivo
 
 Motor especializado em geração automática de conteúdo de marketing a partir dos dados do produto, reduzindo a dificuldade que pequenos empreendedores têm em divulgar o que vendem.
 
-### Tarefas
+### Tarefas (2 Sprints)
 
-- [ ] Geração de título, descrição, SEO e palavras-chave.
-- [ ] Geração de hashtags e textos para Instagram, Facebook e WhatsApp.
-- [ ] Geração de campanhas e e-mail marketing.
-- [ ] Geração de banners.
+- [x] **Sprint 1 — Arquitetura + Conteúdo de Produto**: contrato `ContentGenerator` com 2 drivers plugáveis (`TemplateContentGenerator`, sem custo, padrão; `AnthropicContentGenerator`, pronto mas inativo até configurar API key), modelo `MarketingContent`, geração de título/descrição/SEO.
+- [x] **Sprint 2 — Redes Sociais + E-mail + API**: geração de hashtags e textos para Instagram/Facebook/WhatsApp, campanha de e-mail marketing, 3 endpoints REST (gerar, listar, revisar/aprovar).
+- [ ] Geração de banners — **adiado deliberadamente para a Fase 16** (AI Studio), que já cobre motor de geração de imagem; decisão tomada com o usuário para não duplicar essa capacidade em duas fases.
 
 ### Critérios de aceite
 
-- [ ] Conteúdo gerado automaticamente a partir dos dados do produto, disponível via API para as aplicações clientes.
-- [ ] Conteúdo revisável/editável pelo usuário antes da publicação.
-- [ ] Testes automatizados cobrindo a geração de conteúdo.
+- [x] **Conteúdo gerado automaticamente a partir dos dados do produto** (nome, categoria, preço, descrição), disponível via API para as aplicações clientes: `POST /api/v1/marketing/generate` gera de uma vez título, descrição, SEO/palavras-chave, textos + hashtags para 3 redes sociais e campanha de e-mail (7 registros).
+- [x] **Driver plugável sem custo obrigatório**: `MARKETING_AI_DRIVER=template` (padrão) gera conteúdo determinístico via templates, funcional desde a instalação, sem exigir chave de API paga; `MARKETING_AI_DRIVER=anthropic` ativa geração via Anthropic Claude API quando `ANTHROPIC_API_KEY` for configurada — mesma interface (`ContentGenerator`) para ambos, trocável só por config.
+- [x] **Conteúdo revisável/editável antes da publicação**: `MarketingContent` nasce com `status=draft`; `PATCH /api/v1/marketing/content/{id}` aprova/rejeita e permite substituir o texto gerado antes de publicar.
+- [x] **Listagem filtrável**: `GET /api/v1/marketing/content` por `subject_type`/`subject_id`, com filtros opcionais de `status` e `type`, isolado por aplicação.
+- [x] Testes automatizados: **42 novos testes** (16 Sprint 1 + 26 Sprint 2), cobrindo os dois drivers (incluindo o Anthropic via `Http::fake()`, sem custo real de API), as Actions e os 3 endpoints da API.
 
 ### Dependências
 
-Depende da Fase 13 (AI Business Intelligence).
+Depende da Fase 13 (AI Business Intelligence) — concluída.
 
 ---
 
@@ -645,3 +646,4 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 - **2026-08-08** — Fase 13 concluída em 3 sprints: **Sprint 1** — Customer Score (RFV) e 5 segmentos automáticos (`CustomerScoreCalculator`, `SegmentationEngine`, tabela `customer_segments`); **Sprint 2** — análise de tendências por produto e previsão de vendas por média móvel (`TrendAnalyzer`, `ForecastEngine`, tabelas `product_trends`/`sales_forecasts`); **Sprint 3** — detecção de 4 tipos de oportunidade comercial e API REST de consumo (`OpportunityDetector`, tabela `opportunities`, `GET /api/v1/opportunities/{type}`). 5 comandos agendados de inteligência em cadeia diária (01h-03h30). 59 novos testes (201/202 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
 - **2026-08-08** — Corrigidos 11 models (`Tenant`, `DailyMetric`, `Application`, `AuditLog`, `VisitorSession`, `ProductAffinity`, `Event`, `ContactConsent`, `Visitor`, `User`, `Contact`) que usavam a sintaxe `casts(): array` (método, Laravel 11+) não reconhecida pelo Larastan desta versão — causava dezenas de falsos positivos no PHPStan em toda a aplicação (tipo inferido como `string|null` em vez de array/Carbon/bool reais). Convertidos para `protected $casts` (propriedade), comportamento idêntico em runtime; PHPStan caiu de 51 para 13 erros restantes (avisos legítimos de código defensivo agora provado desnecessário, nenhum bug real). Descoberta uma propriedade inexistente (`$contact->last_event_at` em `ListContactsController`) fora de escopo por afetar contrato de API já publicado (SDK).
 - **2026-08-08** — Fase 14 concluída em 2 sprints: **Sprint 1** — motor de recomendações textuais para o expositor (`BusinessAdvisor`, 4 detectores: queda de vendas, oportunidade de kit, preço fora da média, horário ideal de venda; tabela `business_recommendations`; comando agendado `intelligence:generate-recommendations`); **Sprint 2** — API de consumo (`GET /api/v1/marketplace/sellers/{seller_id}/recommendations`). 22 novos testes (223/224 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
+- **2026-08-08** — Fase 15 concluída em 2 sprints: **Sprint 1** — arquitetura de geração de conteúdo com driver plugável (`ContentGenerator`, `TemplateContentGenerator` padrão sem custo, `AnthropicContentGenerator` pronto porém inativo até configurar `ANTHROPIC_API_KEY`), modelo `MarketingContent` (draft/approved/rejected); **Sprint 2** — geração de redes sociais (Instagram/Facebook/WhatsApp + hashtags) e e-mail marketing, 3 endpoints REST (`POST /api/v1/marketing/generate`, `GET /api/v1/marketing/content`, `PATCH /api/v1/marketing/content/{id}`). Geração de banners adiada para a Fase 16 (decisão registrada com o usuário, evita duplicar motor de imagem). 42 novos testes (249/250 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
