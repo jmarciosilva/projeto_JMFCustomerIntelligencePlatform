@@ -5,7 +5,17 @@
 
     <!-- Filtros e Busca -->
     <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Empresa/Tenant -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Empresa</label>
+                <select wire:model.live="tenantId" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    @foreach ($tenants as $t)
+                        <option value="{{ $t->id }}">{{ $t->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <!-- Busca -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Buscar por nome ou e-mail</label>

@@ -14,7 +14,7 @@ class ContactsList extends Component
 {
     use WithPagination;
 
-    public Tenant $tenant;
+    public ?int $tenantId = null;
 
     public string $searchTerm = '';
 
@@ -26,9 +26,15 @@ class ContactsList extends Component
 
     protected $queryString = ['searchTerm', 'sortBy', 'sortDirection', 'filterBy'];
 
-    public function mount(Tenant $tenant)
+    public function mount(): void
     {
-        $this->tenant = $tenant;
+        $this->tenantId = Tenant::query()->where('is_active', true)->orderBy('name')->value('id')
+            ?? Tenant::query()->orderBy('name')->value('id');
+    }
+
+    public function updatedTenantId()
+    {
+        $this->resetPage();
     }
 
     public function updatingSearchTerm()
@@ -60,7 +66,18 @@ class ContactsList extends Component
 
     public function render()
     {
-        $query = Contact::where('tenant_id', $this->tenant->id);
+        $tenants = Tenant::query()->orderBy('name')->get();
+        $tenant = $tenants->firstWhere('id', $this->tenantId);
+
+        if (! $tenant) {
+            return view('livewire.marketplace.contacts-list', [
+                'tenants' => $tenants,
+                'tenant' => null,
+                'contacts' => Contact::whereRaw('1 = 0')->paginate(15),
+            ]);
+        }
+
+        $query = Contact::where('tenant_id', $tenant->id);
 
         // Filtro de busca
         if ($this->searchTerm) {
@@ -87,6 +104,8 @@ class ContactsList extends Component
         });
 
         return view('livewire.marketplace.contacts-list', [
+            'tenants' => $tenants,
+            'tenant' => $tenant,
             'contacts' => $contacts,
         ]);
     }

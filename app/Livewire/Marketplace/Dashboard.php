@@ -4,15 +4,13 @@ namespace App\Livewire\Marketplace;
 
 use App\Models\Application;
 use App\Models\Event;
-use App\Models\MarketplaceMetric;
-use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.admin')]
 class Dashboard extends Component
 {
-    public Application $application;
+    public ?int $applicationId = null;
 
     public string $period = '7'; // dias
 
@@ -26,9 +24,17 @@ class Dashboard extends Component
 
     public array $products = [];
 
-    public function mount(Application $application)
+    public function mount(): void
     {
-        $this->application = $application;
+        $this->applicationId = Application::query()->where('is_active', true)->orderBy('name')->value('id')
+            ?? Application::query()->orderBy('name')->value('id');
+
+        $this->loadData();
+    }
+
+    public function updatedApplicationId(): void
+    {
+        $this->selectedSeller = null;
         $this->loadData();
     }
 
@@ -44,11 +50,20 @@ class Dashboard extends Component
 
     private function loadData(): void
     {
+        if (! $this->applicationId) {
+            $this->metrics = [];
+            $this->chartData = ['labels' => [], 'views' => [], 'purchases' => []];
+            $this->sellers = [];
+            $this->products = [];
+
+            return;
+        }
+
         $days = (int) $this->period;
         $startDate = now()->subDays($days)->startOfDay();
         $endDate = now()->endOfDay();
 
-        $query = Event::where('application_id', $this->application->id)
+        $query = Event::where('application_id', $this->applicationId)
             ->whereBetween('occurred_at', [$startDate, $endDate]);
 
         if ($this->selectedSeller) {
@@ -158,6 +173,12 @@ class Dashboard extends Component
 
     public function render()
     {
-        return view('livewire.marketplace.dashboard');
+        $applications = Application::query()->orderBy('name')->get();
+        $application = $applications->firstWhere('id', $this->applicationId);
+
+        return view('livewire.marketplace.dashboard', [
+            'applications' => $applications,
+            'application' => $application,
+        ]);
     }
 }

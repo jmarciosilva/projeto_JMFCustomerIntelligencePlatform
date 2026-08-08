@@ -5,28 +5,47 @@
 
     <div class="space-y-6">
         <!-- Cabeçalho -->
-        <div class="flex justify-between items-center">
+        <div class="flex flex-wrap justify-between items-center gap-4">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">📊 Dashboard Marketplace</h1>
-            <p class="text-gray-500 mt-1">{{ $application->name }}</p>
+            <p class="text-gray-500 mt-1">{{ $application->name ?? 'Nenhuma aplicação selecionada' }}</p>
         </div>
 
-        <!-- Filtro de Período -->
-        <div class="flex gap-2">
-            @foreach(['7' => 'Últimos 7 dias', '30' => 'Últimos 30 dias', '90' => 'Últimos 90 dias'] as $days => $label)
-                <button
-                    wire:click="$set('period', '{{ $days }}')"
-                    @class([
-                        'px-4 py-2 rounded-lg font-medium transition',
-                        'bg-blue-600 text-white' => $period === $days,
-                        'bg-gray-200 text-gray-700 hover:bg-gray-300' => $period !== $days
-                    ])
-                >
-                    {{ $label }}
-                </button>
-            @endforeach
+        <div class="flex flex-wrap items-center gap-4">
+            <!-- Seletor de Aplicação -->
+            <div>
+                <label for="applicationId" class="block text-xs font-medium text-gray-500 mb-1">Aplicação</label>
+                <select wire:model.live="applicationId" id="applicationId"
+                        class="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    @foreach ($applications as $app)
+                        <option value="{{ $app->id }}">{{ $app->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Filtro de Período -->
+            <div class="flex gap-2">
+                @foreach(['7' => 'Últimos 7 dias', '30' => 'Últimos 30 dias', '90' => 'Últimos 90 dias'] as $days => $label)
+                    <button
+                        wire:click="$set('period', '{{ $days }}')"
+                        @class([
+                            'px-4 py-2 rounded-lg font-medium transition',
+                            'bg-blue-600 text-white' => $period === $days,
+                            'bg-gray-200 text-gray-700 hover:bg-gray-300' => $period !== $days
+                        ])
+                    >
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
         </div>
     </div>
+
+    @if (!$application)
+        <div class="bg-white rounded-lg shadow p-8 text-center">
+            <p class="text-gray-500">Nenhuma aplicação cadastrada ainda.</p>
+        </div>
+    @else
 
     <!-- KPIs Principais -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -197,5 +216,6 @@
             });
         });
     </script>
+    @endif
     </div>
 </div>
