@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ListContactsController;
 use App\Http\Controllers\Api\ListEventsController;
 use App\Http\Controllers\Api\Marketplace\CustomerJourneyController;
 use App\Http\Controllers\Api\Marketplace\SellerAnalyticsController;
+use App\Http\Controllers\Api\Marketplace\SellerRecommendationsController;
 use App\Http\Controllers\Api\Marketplace\TopProductsController;
 use App\Http\Controllers\Api\MetricsController;
 use App\Http\Controllers\Api\OpportunitiesController;
@@ -37,6 +38,7 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
         Route::prefix('marketplace')->group(function (): void {
             Route::middleware('throttle:api-application')->group(function (): void {
                 Route::get('/sellers/{seller_id}/analytics', SellerAnalyticsController::class)->name('api.marketplace.seller.analytics');
+                Route::get('/sellers/{seller_id}/recommendations', SellerRecommendationsController::class)->name('api.marketplace.seller.recommendations');
                 Route::get('/products/top', TopProductsController::class)->name('api.marketplace.products.top');
                 Route::get('/journey/{contact_id}', CustomerJourneyController::class)->name('api.marketplace.journey');
             });
