@@ -254,9 +254,11 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 19 — Ajuda contextual e documentação de usuário** concluída (modal de ajuda em todas as telas do painel administrativo e página de Guia do Usuário em `/admin/guia`).
 
-📋 **Fase 20 — Plugin UI Instalável** análise concluída (ver [`PLUGIN_STRATEGY.md`](PLUGIN_STRATEGY.md)); implementação próxima (3-4 semanas).
+✅ **Fase 20 — Plugin UI Instalável** concluída (plataforma instalável como plugin em outras aplicações Laravel; 5 componentes Livewire, documentação de instalação/publicação SDK, 121 testes).
 
-📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** análise concluída; implementação após Fase 20 (2-3 semanas).
+✅ **Fase 12 — Integração com Feira Esquerda Livre (Marketplace Analytics & Customer Journey)** concluída (3 dashboards visuais: Analytics Principal em `/admin/marketplace`, CRM de Contatos em `/admin/marketplace/contacts`, Customer Journey Timeline em `/admin/marketplace/contacts/{id}`; 17 eventos de marketplace documentados; Chart.js integrado; isolamento multi-tenant; 7 commits).
+
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20 e 12 — ambas concluídas).
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 

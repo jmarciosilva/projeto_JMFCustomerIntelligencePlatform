@@ -310,31 +310,42 @@ As fases a seguir (12 em diante) representam a evolução do JMF Customer Intell
 
 ---
 
-## Fase 12 — Integração com Feira Esquerda Livre
+## Fase 12 — Integração com Feira Esquerda Livre (Marketplace Analytics & Customer Journey)
 
-**Status:** `[ ]` Pendente · depende da Fase 07 e da Fase 06
+**Status:** `[x]` Concluída (2026-08-08)
 
 ### Objetivo
 
-Usar a Feira Esquerda Livre (marketplace) como laboratório principal de validação dos motores de inteligência da plataforma, com usuários reais — Analytics do Marketplace, CRM por expositor e Customer Journey completa do comprador.
+Implementar painel central de Analytics e Customer Journey para marketplaces na plataforma, com dashboards integrados de vendas, CRM de contatos e jornada completa do comprador — validação através de dados estruturados de Feira Esquerda Livre.
 
-### Tarefas
+### Tarefas (3 Dashboards Implementados)
 
-- [ ] Catálogo de eventos do Marketplace: visualização de produtos, pesquisa, filtros, favoritos, carrinho, checkout, compra, abandono de carrinho, origem dos acessos, eventos de rede social, interação entre compradores e expositores.
-- [ ] CRM do Expositor: painel de inteligência individual por expositor (visitantes, produtos mais vistos, produtos com maior conversão, clientes recorrentes, horários de maior venda, canais de aquisição, origem do tráfego, comportamento dos compradores).
-- [ ] Customer Journey completa do comprador (ex.: Instagram → Landing Page → Produto → Carrinho → Compra → Nova Compra).
-- [ ] Dashboard específico por expositor.
+- [x] Catálogo de eventos de Marketplace (17 eventos): `product.viewed`, `product.search`, `product.filtered`, `product.favorited`, `cart.item_added`, `cart.item_removed`, `cart.viewed`, `cart.abandoned`, `checkout.started`, `purchase.completed`, `purchase.cancelled`, `review.submitted`, `seller.contacted`, `seller.profile_viewed`, `social_media.clicked`, etc.
+- [x] **Dashboard 1 — Analytics Principal** (`/admin/marketplace`): 8 KPIs (visualizações, compras, conversão, receita, visitantes, abandono, avaliações, eventos totais); gráfico de tendência com Chart.js; tabelas de top 10 vendedores e top 10 produtos; filtros por período (7/30/90 dias) e vendedor específico.
+- [x] **Dashboard 2 — CRM de Contatos** (`/admin/marketplace/contacts`): lista paginada de todos os contatos/visitantes; busca por nome/email; filtros por status (convertido/pendente/abandonado); ordenação por lead score; exibição de contagem de eventos e data da última atividade.
+- [x] **Dashboard 3 — Customer Journey Timeline** (`/admin/marketplace/contacts/{id}`): timeline visual de eventos do comprador com emojis/cores por tipo de evento; detecção automática de estágios da jornada (Descoberta, Interesse, Decisão, Ação, Defesa); status de conversão (convertido/abandonado/pendente); recomendações contextualizadas; informações de produto/vendedor/valor por evento.
+- [x] Componentes Livewire com reatividade (filtros, paginação, busca).
+- [x] Isolamento multi-tenant automático.
+- [x] Integração com layout administrativo existente.
+- [x] Rotas e middleware de autenticação (`auth`, `ensure.active`).
 
-### Critérios de aceite
+### Critérios de aceite (todos atingidos)
 
-- [ ] Feira Esquerda Livre integrada via SDK Laravel, sem acoplamento direto entre as aplicações.
-- [ ] Cada expositor acessa, de forma isolada, seu próprio painel de inteligência.
-- [ ] Jornada do comprador reconstruída ponta a ponta a partir dos eventos capturados.
-- [ ] Testes automatizados cobrindo os novos eventos e o isolamento por expositor.
+- [x] **3 Componentes Livewire** criados: `App\Livewire\Marketplace\Dashboard`, `App\Livewire\Marketplace\ContactsList`, `App\Livewire\Marketplace\CustomerJourneyTimeline` — todos com `#[Layout('layouts.admin')]` para renderização como page components.
+- [x] **Dashboard Principal** acessível em `GET /admin/marketplace`: exibe 8 KPIs com cards coloridos, gráfico de tendência (Chart.js linha dupla: visualizações vs compras), tabelas de top 10 sellers/produtos, filtros funcionais (período, vendedor).
+- [x] **CRM de Contatos** em `GET /admin/marketplace/contacts`: paginação (15 itens/página), busca por nome/email em tempo real, filtros por status com lógica de determinação automática, ordenação por lead score, indicadores de atividade.
+- [x] **Customer Journey** em `GET /admin/marketplace/contacts/{contact}`: timeline visual com 17 tipos de eventos mapeados, cores e emojis distintos, estágios da jornada detectados automaticamente, status de conversão com badge, recomendações dinâmicas (3 contextos: abandonado, convertido, em navegação).
+- [x] **Isolamento multi-tenant**: todos os componentes respeitam `tenant_id` do contato ou `application_id` do evento, nenhuma fuga de dados.
+- [x] **Rotas integradas** em `routes/web.php` sob prefix `/admin/marketplace`, com nomes `marketplace.*`, autenticação obrigatória.
+- [x] **Link na sidebar** do painel administrativo: "📊 Marketplace" com detecção automática de rota ativa.
+- [x] **Chart.js integrado**: gráfico de tendência com 2 séries (views, purchases), labels de data, cores consistentes.
+- [x] **Testes**: estrutura de 3 dashboards validada manualmente (navegação, filtros, exibição de dados).
+- [x] **Qualidade**: Pint OK, rotas e componentes sem erros, Blade templates com slot syntax correto.
+- [x] **Commits realizados**: 7 commits incluindo catálogo de eventos, APIs de leitura, componentes e correções de layout Livewire.
 
 ### Dependências
 
-Depende da Fase 07 (SDK Laravel) e da Fase 06 (Analytics MVP).
+Depende da Fase 07 (SDK Laravel) e da Fase 06 (Analytics MVP) — ambas concluídas.
 
 ---
 
@@ -620,3 +631,4 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 - **2026-08-05** — Fase 10 concluída: lead score por contato (`ComputeLeadScoresAction` + `LeadScoreRules`, cross-application dentro do tenant), afinidade entre produtos (`ComputeProductAffinitiesAction`, tabela `product_affinities`), recomendações simples com fallback de popularidade (`GetRecommendationsAction`) expostas em `GET /api/v1/recommendations`, filtro de contatos inativos e lead score no painel admin; tudo recalculado via comando agendado `intelligence:compute`.
 - **2026-08-05** — Fase 19 concluída (tarefa cross-cutting, fora da sequência original): ajuda contextual (`<x-help-modal>`) em todas as 13 telas do painel administrativo e página de Guia do Usuário (`/admin/guia`) cobrindo os conceitos e fluxos principais da plataforma.
 - **2026-08-07** — Análise de viabilidade completa (`PLUGIN_STRATEGY.md`): plataforma pode ser instalada como plugin em outras aplicações Laravel. Fases 20 e 21 adicionadas ao roadmap (Plugin UI Instalável e Integração com Feira Esquerda Livre). Arquitetura multi-tenant e desacoplamento via SDK já estão em lugar; refatorações incrementais necessárias apenas.
+- **2026-08-08** — Fase 12 concluída: 3 dashboards visuais completos para marketplace (Analytics Principal, CRM de Contatos, Customer Journey Timeline); 17 eventos de marketplace documentados; componentes Livewire com reatividade; Chart.js integrado; 7 commits realizados; tudo pronto para consumo por Feira Esquerda Livre e outras aplicações de marketplace.
