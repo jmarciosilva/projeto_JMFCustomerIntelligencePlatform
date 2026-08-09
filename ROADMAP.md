@@ -679,7 +679,7 @@ Nenhuma dependência de fases pendentes — reaproveita apenas a arquitetura con
 
 ## Fase 23 — Trend Intelligence (fundação)
 
-**Status:** `[ ]` Pendente · depende da Fase 22
+**Status:** `[x]` Concluída (2026-08-09)
 
 ### Objetivo
 
@@ -687,25 +687,25 @@ Monitorar sinais de crescimento de interesse por produtos, categorias, marcas, a
 
 ### Tarefas
 
-- [ ] Models: `Watchlist`, `Trend`, `TrendSnapshot`.
-- [ ] Migrations correspondentes.
-- [ ] Services: `App\Domain\Trends\Contracts\TrendProviderInterface` + `ManualTrendProvider` + `InternalBehaviorProvider` (reaproveita eventos de marketplace já coletados, ex. `product.viewed`/`product.search`).
-- [ ] Stubs documentados (`InstagramTrendProvider`, `GoogleTrendsProvider`, `YouTubeTrendProvider`) lançando exceção clara de "não configurado", prontos para ativação futura com acesso oficial.
-- [ ] Jobs: `CollectTrendsJob` (por watchlist/provider), agendado.
-- [ ] UI: CRUD de Watchlists, tela de detalhe de tendência com histórico (7/30/90 dias).
-- [ ] Tests: providers, geração de snapshot, isolamento por application.
-- [ ] Documentation.
+- [x] Models: `Watchlist`, `Trend`, `TrendSnapshot`, isolados por `application_id`.
+- [x] Migrations correspondentes (`Trend` único por `(watchlist_id, term)`; `TrendSnapshot` indexado por `(trend_id, collected_at)`).
+- [x] Services: `App\Domain\Trends\Contracts\TrendProviderInterface` + `ManualTrendProvider` (sem coleta automática, observação manual via UI) + `InternalBehaviorProvider` (reaproveita eventos de marketplace já coletados — `product.search`/`properties.search_term` e `product.viewed`/`properties.category` — como sinal de interesse, dado 100% próprio).
+- [x] Stubs documentados (`InstagramTrendProvider`, `GoogleTrendsProvider`, `YouTubeTrendProvider`) com `isConfigured()=false` e `collect()` lançando `ProviderNotConfiguredException` com a justificativa oficial verificada (Instagram exige App Review da Meta; Google Trends não tem API pública; YouTube Data API exige API key não provisionada) — prontos para ativação futura sem alterar o restante do módulo.
+- [x] Jobs: `CollectTrendSignalsJob` (uma por `Trend`, `ShouldQueue`, `tries=3`), despachado pelo comando agendado `trends:collect` (`dailyAt('05:00')`, encadeado após as demais fases de inteligência).
+- [x] UI: CRUD de Watchlists (`/admin/trends/watchlists`, com sincronização automática de `Trend` a partir das palavras-chave/hashtags via `WatchlistTrendSynchronizer` — termos removidos ficam `inactive`, nunca são apagados), tela de detalhe de tendência (`/admin/trends/{trend}`) com histórico filtrável (7/30/90/365 dias), gráfico de menções (Chart.js) e formulário de observação manual.
+- [x] Tests: providers (manual, dados próprios com isolamento por application, stubs), sincronização de watchlist→trends (idempotente, preserva histórico ao desativar), `CollectTrendSignalsAction`, job/command agendado, CRUD administrativo e permissões (35 novos testes).
+- [x] Documentation: seção no `README.md` (Fase 22, atualizada) e este checklist.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável (mesmo racional da Fase 22: Eloquent direto nas Actions).
+- [x] Jobs
+- [x] UI
+- [x] Tests (35 novos testes, 312/313 na suíte completa — 1 falha pré-existente não relacionada, já registrada nas Fases 13-15)
+- [x] Documentation
 
 ### Dependências
 
@@ -993,3 +993,5 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-08** — Fase 15 concluída em 2 sprints: **Sprint 1** — arquitetura de geração de conteúdo com driver plugável (`ContentGenerator`, `TemplateContentGenerator` padrão sem custo, `AnthropicContentGenerator` pronto porém inativo até configurar `ANTHROPIC_API_KEY`), modelo `MarketingContent` (draft/approved/rejected); **Sprint 2** — geração de redes sociais (Instagram/Facebook/WhatsApp + hashtags) e e-mail marketing, 3 endpoints REST (`POST /api/v1/marketing/generate`, `GET /api/v1/marketing/content`, `PATCH /api/v1/marketing/content/{id}`). Geração de banners adiada para a Fase 16 (decisão registrada com o usuário, evita duplicar motor de imagem). 42 novos testes (249/250 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
 - **2026-08-09** — Adicionadas as Fases 22-31 (Trend Intelligence & Affiliate Intelligence), evolução estratégica validada por um caso de uso real (Influenciador Magalu/Magazine Você): Affiliate Intelligence (22), Trend Intelligence (23), Trend Score (24), Product Matcher (25), Product Opportunity Engine (26), Content & Link Tracking (27), Conversões (28), Affiliate Analytics (29), JMF Recommendation Engine (30), IA/ML futura (31). Decisão registrada: nomes de entidade distintos dos existentes na Fase 13 (`Trend`/`ProductOpportunity` vs `ProductTrend`/`Opportunity`) para não confundir tendência/oportunidade *interna* de marketplace cliente com tendência/oportunidade *externa* de afiliados; sem API pública oficial do Google Trends e sem acesso liberado ao Instagram Graph API (exige App Review da Meta), o MVP usa apenas `ManualTrendProvider`/`InternalBehaviorProvider`, com os demais providers como interface + stub. Fase 22 iniciada.
 - **2026-08-09** — Fase 22 concluída: `AffiliateProgram`/`AffiliateProduct`/`IntegrationLog` (isolados por `application_id`), workspace interno seedado (`AffiliateWorkspaceSeeder`: tenant `jmf-system` + application `magazine-voce-afiliados`), `AffiliateProviderInterface` com `ManualAffiliateProvider` (padrão, cadastro manual/CSV) e `MagaluAffiliateProvider` (stub — sem API pública oficial documentada), import de produtos via CSV (`league/csv`, `ImportAffiliateProductsFromCsvAction`, linhas inválidas reportadas sem interromper as demais), permissões `affiliate_programs.*`/`affiliate_products.*`, Policies, CRUD administrativo completo (`/admin/affiliate/programs`, `/admin/affiliate/products`, import CSV) com links na sidebar. 23 novos testes (285/286 na suíte completa, 1 falha pré-existente não relacionada, já registrada nas Fases 13-15). `vendor/bin/pint`, `phpstan analyse` (13 erros pré-existentes inalterados) e `npm run build` sem regressões.
+- **2026-08-09** — Corrigido gap operacional descoberto ao final da Fase 22: migrar as tabelas no banco real (`jmf_ci_homolog`) não recria/sincroniza permissões nem dados de seed — só o banco de testes (`jmf_ci_testing`) reseeda automaticamente via Pest. `RolePermissionSeeder`/`AffiliateWorkspaceSeeder` precisaram ser executados manualmente no banco real após o `migrate --force`, sem o que os novos links da sidebar (`@can(...)`) ficavam invisíveis mesmo para Super Admin. Passo de reseed do banco real incorporado ao checklist de toda fase seguinte (ver Fase 23).
+- **2026-08-09** — Fase 23 concluída: `Watchlist`/`Trend`/`TrendSnapshot` (isolados por `application_id`; `WatchlistTrendSynchronizer` expande palavras-chave/hashtags em `Trend` sem nunca apagar histórico — termos removidos ficam `inactive`), `TrendProviderInterface` com `ManualTrendProvider` (observação manual via UI), `InternalBehaviorProvider` (dados próprios: eventos `product.search`/`product.viewed` do marketplace, Fase 12) e stubs documentados `InstagramTrendProvider`/`GoogleTrendsProvider`/`YouTubeTrendProvider` (sem acesso oficial disponível — App Review da Meta, API pública inexistente do Google Trends, API key não provisionada do YouTube). `CollectTrendSignalsJob` despachado pelo comando agendado `trends:collect` (05:00, encadeado após as demais fases de inteligência). CRUD administrativo de Watchlists e tela de detalhe de tendência com histórico filtrável (7/30/90/365 dias) e gráfico Chart.js. 35 novos testes (312/313 na suíte completa, mesma falha pré-existente não relacionada). Seeders reexecutados no banco real (`jmf_ci_homolog`) antes de considerar a fase visível no painel, conforme lição registrada acima.
