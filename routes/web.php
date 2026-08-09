@@ -21,6 +21,10 @@ use App\Livewire\Admin\Marketing\ContentDashboard;
 use App\Livewire\Admin\Profile;
 use App\Livewire\Admin\Tenants\TenantForm;
 use App\Livewire\Admin\Tenants\TenantIndex;
+use App\Livewire\Admin\Trends\TrendShow;
+use App\Livewire\Admin\Trends\WatchlistForm;
+use App\Livewire\Admin\Trends\WatchlistIndex;
+use App\Livewire\Admin\Trends\WatchlistShow;
 use App\Livewire\Admin\UserGuide;
 use App\Livewire\Admin\Users\UserForm;
 use App\Livewire\Admin\Users\UserIndex;
@@ -82,6 +86,15 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/products/import', AffiliateProductImport::class)->name('products.import');
         Route::get('/products/create', AffiliateProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', AffiliateProductForm::class)->name('products.edit');
+    });
+
+    // Fase 23 — Trend Intelligence
+    Route::prefix('trends')->name('trends.')->group(function (): void {
+        Route::get('/watchlists', WatchlistIndex::class)->name('watchlists.index');
+        Route::get('/watchlists/create', WatchlistForm::class)->name('watchlists.create');
+        Route::get('/watchlists/{watchlist}/edit', WatchlistForm::class)->name('watchlists.edit');
+        Route::get('/watchlists/{watchlist}', WatchlistShow::class)->name('watchlists.show');
+        Route::get('/{trend}', TrendShow::class)->name('show');
     });
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');

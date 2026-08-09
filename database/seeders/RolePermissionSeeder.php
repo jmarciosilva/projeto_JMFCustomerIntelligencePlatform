@@ -41,6 +41,7 @@ class RolePermissionSeeder extends Seeder
             Permission::AnalyticsView->value,
             Permission::AffiliateProgramsView->value,
             Permission::AffiliateProductsView->value,
+            Permission::WatchlistsView->value,
         ]);
     }
 }

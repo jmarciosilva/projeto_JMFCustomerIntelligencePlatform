@@ -28,6 +28,10 @@ enum Permission: string
     case AffiliateProductsCreate = 'affiliate_products.create';
     case AffiliateProductsUpdate = 'affiliate_products.update';
     case AffiliateProductsDelete = 'affiliate_products.delete';
+    case WatchlistsView = 'watchlists.view';
+    case WatchlistsCreate = 'watchlists.create';
+    case WatchlistsUpdate = 'watchlists.update';
+    case WatchlistsDelete = 'watchlists.delete';
 
     /**
      * @return list<string>

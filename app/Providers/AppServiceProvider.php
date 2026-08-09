@@ -7,18 +7,24 @@ use App\Domain\Affiliate\ManualAffiliateProvider;
 use App\Domain\Marketing\AnthropicContentGenerator;
 use App\Domain\Marketing\Contracts\ContentGenerator;
 use App\Domain\Marketing\TemplateContentGenerator;
+use App\Domain\Trends\Contracts\TrendProviderInterface;
+use App\Domain\Trends\ManualTrendProvider;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
 use App\Models\Application;
 use App\Models\Contact;
 use App\Models\Tenant;
+use App\Models\Trend;
 use App\Models\User;
+use App\Models\Watchlist;
 use App\Policies\AffiliateProductPolicy;
 use App\Policies\AffiliateProgramPolicy;
 use App\Policies\ApplicationPolicy;
 use App\Policies\ContactPolicy;
 use App\Policies\TenantPolicy;
+use App\Policies\TrendPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\WatchlistPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -52,6 +58,11 @@ class AppServiceProvider extends ServiceProvider
         // Único provider real disponível no MVP da Fase 22 (ver README.md/ROADMAP.md):
         // programas sem API oficial documentada usam cadastro manual/import CSV.
         $this->app->bind(AffiliateProviderInterface::class, ManualAffiliateProvider::class);
+
+        // Idem para a Fase 23 (Trend Intelligence): binding padrão do contrato é o
+        // provider manual; a coleta automática (CollectTrendSignalsJob) injeta os
+        // providers concretos (InternalBehaviorProvider + stubs) diretamente.
+        $this->app->bind(TrendProviderInterface::class, ManualTrendProvider::class);
     }
 
     /**
@@ -69,6 +80,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Contact::class, ContactPolicy::class);
         Gate::policy(AffiliateProgram::class, AffiliateProgramPolicy::class);
         Gate::policy(AffiliateProduct::class, AffiliateProductPolicy::class);
+        Gate::policy(Watchlist::class, WatchlistPolicy::class);
+        Gate::policy(Trend::class, TrendPolicy::class);
 
         // Limite conservador por aplicação autenticada, usado por endpoints de
         // baixo volume (ex.: /api/v1/ping).
