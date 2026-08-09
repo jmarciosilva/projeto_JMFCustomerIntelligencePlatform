@@ -2,13 +2,19 @@
 
 namespace App\Providers;
 
+use App\Domain\Affiliate\Contracts\AffiliateProviderInterface;
+use App\Domain\Affiliate\ManualAffiliateProvider;
 use App\Domain\Marketing\AnthropicContentGenerator;
 use App\Domain\Marketing\Contracts\ContentGenerator;
 use App\Domain\Marketing\TemplateContentGenerator;
+use App\Models\AffiliateProduct;
+use App\Models\AffiliateProgram;
 use App\Models\Application;
 use App\Models\Contact;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Policies\AffiliateProductPolicy;
+use App\Policies\AffiliateProgramPolicy;
 use App\Policies\ApplicationPolicy;
 use App\Policies\ContactPolicy;
 use App\Policies\TenantPolicy;
@@ -42,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
                 default => new TemplateContentGenerator,
             };
         });
+
+        // Único provider real disponível no MVP da Fase 22 (ver README.md/ROADMAP.md):
+        // programas sem API oficial documentada usam cadastro manual/import CSV.
+        $this->app->bind(AffiliateProviderInterface::class, ManualAffiliateProvider::class);
     }
 
     /**
@@ -57,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Tenant::class, TenantPolicy::class);
         Gate::policy(Application::class, ApplicationPolicy::class);
         Gate::policy(Contact::class, ContactPolicy::class);
+        Gate::policy(AffiliateProgram::class, AffiliateProgramPolicy::class);
+        Gate::policy(AffiliateProduct::class, AffiliateProductPolicy::class);
 
         // Limite conservador por aplicação autenticada, usado por endpoints de
         // baixo volume (ex.: /api/v1/ping).

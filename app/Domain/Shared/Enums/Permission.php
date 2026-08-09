@@ -20,6 +20,14 @@ enum Permission: string
     case ApplicationsTokensManage = 'applications.tokens.manage';
     case ContactsView = 'contacts.view';
     case AnalyticsView = 'analytics.view';
+    case AffiliateProgramsView = 'affiliate_programs.view';
+    case AffiliateProgramsCreate = 'affiliate_programs.create';
+    case AffiliateProgramsUpdate = 'affiliate_programs.update';
+    case AffiliateProgramsDelete = 'affiliate_programs.delete';
+    case AffiliateProductsView = 'affiliate_products.view';
+    case AffiliateProductsCreate = 'affiliate_products.create';
+    case AffiliateProductsUpdate = 'affiliate_products.update';
+    case AffiliateProductsDelete = 'affiliate_products.delete';
 
     /**
      * @return list<string>

@@ -39,6 +39,8 @@ class RolePermissionSeeder extends Seeder
             Permission::ApplicationsView->value,
             Permission::ContactsView->value,
             Permission::AnalyticsView->value,
+            Permission::AffiliateProgramsView->value,
+            Permission::AffiliateProductsView->value,
         ]);
     }
 }

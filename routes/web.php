@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Affiliate\ProductForm as AffiliateProductForm;
+use App\Livewire\Admin\Affiliate\ProductImport as AffiliateProductImport;
+use App\Livewire\Admin\Affiliate\ProductIndex as AffiliateProductIndex;
+use App\Livewire\Admin\Affiliate\ProgramForm as AffiliateProgramForm;
+use App\Livewire\Admin\Affiliate\ProgramIndex as AffiliateProgramIndex;
 use App\Livewire\Admin\Analytics\AnalyticsDashboard;
 use App\Livewire\Admin\Applications\ApplicationForm;
 use App\Livewire\Admin\Applications\ApplicationIndex;
@@ -66,6 +71,18 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
 
     // Fase 15 — AI Marketing
     Route::get('/marketing', ContentDashboard::class)->name('marketing.dashboard');
+
+    // Fase 22 — Affiliate Intelligence
+    Route::prefix('affiliate')->name('affiliate.')->group(function (): void {
+        Route::get('/programs', AffiliateProgramIndex::class)->name('programs.index');
+        Route::get('/programs/create', AffiliateProgramForm::class)->name('programs.create');
+        Route::get('/programs/{program}/edit', AffiliateProgramForm::class)->name('programs.edit');
+
+        Route::get('/products', AffiliateProductIndex::class)->name('products.index');
+        Route::get('/products/import', AffiliateProductImport::class)->name('products.import');
+        Route::get('/products/create', AffiliateProductForm::class)->name('products.create');
+        Route::get('/products/{product}/edit', AffiliateProductForm::class)->name('products.edit');
+    });
 
     Route::get('/contacts', ContactIndex::class)->name('contacts.index');
     Route::get('/contacts/{contact}', ContactShow::class)->name('contacts.show');
