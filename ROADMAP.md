@@ -715,7 +715,7 @@ Depende da Fase 22 (padrão de `IntegrationLog`/providers já estabelecido).
 
 ## Fase 24 — Trend Score
 
-**Status:** `[ ]` Pendente · depende da Fase 23
+**Status:** `[x]` Concluída (2026-08-09)
 
 ### Objetivo
 
@@ -723,23 +723,23 @@ Algoritmo baseado em regras que gera uma pontuação de 0 a 100 representando o 
 
 ### Tarefas
 
-- [ ] Service: `App\Domain\Trends\TrendScoreCalculator` (fatores: crescimento recente, quantidade de ocorrências, velocidade, recorrência, engajamento, estabilidade, sazonalidade).
-- [ ] Persistência do `trend_score` em `Trend`/`TrendSnapshot`.
-- [ ] Jobs: `CalculateTrendScoresJob`, agendado após a coleta.
-- [ ] UI: exibição do score nas telas de Watchlist/Trend.
-- [ ] Tests: casos de regra isolados (crescimento alto/baixo, estabilidade, dados insuficientes).
-- [ ] Documentation.
+- [x] Service: `App\Domain\Trends\TrendScoreCalculator` — fatores implementados: crescimento recente (velocidade do snapshot mais atual), volume de ocorrências (média de menções na janela), recorrência (fração de snapshots com menções > 0) e estabilidade (fração de snapshots sem queda relevante); engajamento entra quando disponível, com peso redistribuído entre os demais fatores quando ausente (nenhum provider ativo do MVP o preenche). **Sazonalidade deliberadamente fora da fórmula** nesta versão — exigiria histórico comparável de pelo menos um ano, que nenhum Trend real ainda tem; arquitetura (fatores nomeados + pesos) permite adicioná-la depois.
+- [x] Persistência do `trend_score` (+ `trend_score_breakdown`, `trend_score_computed_at`) em `Trend` — não em `TrendSnapshot`, que já tinha seu próprio `score` (bruto, por fonte/snapshot, Fase 23); o Trend Score consolida a janela de snapshots recentes, é um conceito diferente.
+- [x] `CalculateTrendScoresAction` (sem `ShouldQueue` — mesmo padrão de `AnalyzeTrendsAction`/`OpportunityDetector` da Fase 13: cálculo síncrono em memória, sem I/O externo, não justifica fila), comando agendado `trends:calculate-scores` (`dailyAt('05:30')`, encadeado após `trends:collect`).
+- [x] UI: componente `<x-trend-score-badge>` (cores por faixa: verde ≥70, âmbar 40-69, vermelho <40) na listagem de tendências da Watchlist (`WatchlistShow`) e no detalhe da tendência (`TrendShow`, com breakdown dos fatores e botão "Recalcular score" para recalcular sob demanda sem esperar o agendamento).
+- [x] Tests: casos de regra isolados (tendência em alta/consistente vs. em queda errática, cálculo manual verificado byte a byte, dados insuficientes, engajamento ausente/presente, janela de snapshots), Action (isolamento por application, apenas trends ativas), Command, UI (23 novos testes).
+- [x] Documentation.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável (mesmo racional das Fases 22-23).
+- [x] Jobs — não aplicável (cálculo síncrono via comando agendado, sem I/O externo que justifique fila; mesmo padrão de `intelligence:analyze-trends` da Fase 13).
+- [x] UI
+- [x] Tests (23 novos testes, 325/326 na suíte completa — 1 falha pré-existente não relacionada, já registrada nas Fases 13-15)
+- [x] Documentation
 
 ### Dependências
 
@@ -995,3 +995,4 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-09** — Fase 22 concluída: `AffiliateProgram`/`AffiliateProduct`/`IntegrationLog` (isolados por `application_id`), workspace interno seedado (`AffiliateWorkspaceSeeder`: tenant `jmf-system` + application `magazine-voce-afiliados`), `AffiliateProviderInterface` com `ManualAffiliateProvider` (padrão, cadastro manual/CSV) e `MagaluAffiliateProvider` (stub — sem API pública oficial documentada), import de produtos via CSV (`league/csv`, `ImportAffiliateProductsFromCsvAction`, linhas inválidas reportadas sem interromper as demais), permissões `affiliate_programs.*`/`affiliate_products.*`, Policies, CRUD administrativo completo (`/admin/affiliate/programs`, `/admin/affiliate/products`, import CSV) com links na sidebar. 23 novos testes (285/286 na suíte completa, 1 falha pré-existente não relacionada, já registrada nas Fases 13-15). `vendor/bin/pint`, `phpstan analyse` (13 erros pré-existentes inalterados) e `npm run build` sem regressões.
 - **2026-08-09** — Corrigido gap operacional descoberto ao final da Fase 22: migrar as tabelas no banco real (`jmf_ci_homolog`) não recria/sincroniza permissões nem dados de seed — só o banco de testes (`jmf_ci_testing`) reseeda automaticamente via Pest. `RolePermissionSeeder`/`AffiliateWorkspaceSeeder` precisaram ser executados manualmente no banco real após o `migrate --force`, sem o que os novos links da sidebar (`@can(...)`) ficavam invisíveis mesmo para Super Admin. Passo de reseed do banco real incorporado ao checklist de toda fase seguinte (ver Fase 23).
 - **2026-08-09** — Fase 23 concluída: `Watchlist`/`Trend`/`TrendSnapshot` (isolados por `application_id`; `WatchlistTrendSynchronizer` expande palavras-chave/hashtags em `Trend` sem nunca apagar histórico — termos removidos ficam `inactive`), `TrendProviderInterface` com `ManualTrendProvider` (observação manual via UI), `InternalBehaviorProvider` (dados próprios: eventos `product.search`/`product.viewed` do marketplace, Fase 12) e stubs documentados `InstagramTrendProvider`/`GoogleTrendsProvider`/`YouTubeTrendProvider` (sem acesso oficial disponível — App Review da Meta, API pública inexistente do Google Trends, API key não provisionada do YouTube). `CollectTrendSignalsJob` despachado pelo comando agendado `trends:collect` (05:00, encadeado após as demais fases de inteligência). CRUD administrativo de Watchlists e tela de detalhe de tendência com histórico filtrável (7/30/90/365 dias) e gráfico Chart.js. 35 novos testes (312/313 na suíte completa, mesma falha pré-existente não relacionada). Seeders reexecutados no banco real (`jmf_ci_homolog`) antes de considerar a fase visível no painel, conforme lição registrada acima.
+- **2026-08-09** — Fase 24 concluída: `TrendScoreCalculator` (regras: crescimento/volume/recorrência/estabilidade, engajamento com peso redistribuído quando ausente; sazonalidade deliberadamente fora da fórmula por falta de histórico comparável de 1+ ano) persistindo `trend_score`/`trend_score_breakdown`/`trend_score_computed_at` em `Trend`; `CalculateTrendScoresAction` síncrona (sem Job — mesmo padrão da Fase 13) via comando agendado `trends:calculate-scores` (05:30); badge de score (`<x-trend-score-badge>`) e breakdown na Watchlist e no detalhe da tendência, com botão de recálculo sob demanda. 23 novos testes, incluindo verificação manual byte a byte da fórmula (325/326 na suíte completa, mesma falha pré-existente não relacionada).

@@ -285,9 +285,11 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 22 — Affiliate Intelligence (fundação)** concluída — primeira fase da evolução Trend Intelligence/Affiliate Intelligence (Fases 22-31), validada por um caso de uso real (Influenciador Magalu/Magazine Você): `AffiliateProgram`/`AffiliateProduct` isolados por `application_id`, `AffiliateProviderInterface` (`ManualAffiliateProvider` padrão + stub Magalu), import de produtos via CSV, `IntegrationLog`, CRUD administrativo completo (`/admin/affiliate/programs`, `/admin/affiliate/products`).
 
-✅ **Fase 23 — Trend Intelligence (fundação)** concluída: `Watchlist`/`Trend`/`TrendSnapshot`, `TrendProviderInterface` (`ManualTrendProvider` + `InternalBehaviorProvider`, dados próprios do marketplace; stubs documentados Instagram/Google Trends/YouTube), coleta agendada (`trends:collect`) e CRUD administrativo com histórico filtrável e gráfico (`/admin/trends/watchlists`). Ver seção "Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine" acima e Fases 22-31 do [`ROADMAP.md`](ROADMAP.md).
+✅ **Fase 23 — Trend Intelligence (fundação)** concluída: `Watchlist`/`Trend`/`TrendSnapshot`, `TrendProviderInterface` (`ManualTrendProvider` + `InternalBehaviorProvider`, dados próprios do marketplace; stubs documentados Instagram/Google Trends/YouTube), coleta agendada (`trends:collect`) e CRUD administrativo com histórico filtrável e gráfico (`/admin/trends/watchlists`).
 
-📋 **Fase 24 — Trend Score** próxima.
+✅ **Fase 24 — Trend Score** concluída: `TrendScoreCalculator` (regras baseadas em crescimento, volume, recorrência, estabilidade e engajamento quando disponível) gera uma pontuação 0-100 por tendência, recalculada diariamente (`trends:calculate-scores`) ou sob demanda no painel — exibida como badge colorido com breakdown dos fatores em `/admin/trends/watchlists` e no detalhe da tendência. Ver seção "Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine" acima e Fases 22-31 do [`ROADMAP.md`](ROADMAP.md).
+
+📋 **Fase 25 — Product Matcher** próxima.
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 
