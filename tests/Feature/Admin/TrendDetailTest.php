@@ -60,3 +60,18 @@ test('usuário sem permissão não acessa o detalhe da tendência', function () 
         ->get(route('admin.trends.show', $trend))
         ->assertForbidden();
 });
+
+test('recalcular score atualiza o trend score a partir dos snapshots existentes', function () {
+    $admin = superAdmin();
+    $trend = Trend::factory()->create();
+    TrendSnapshot::factory()->for($trend)->create(['mentions' => 40, 'velocity' => 20]);
+
+    expect($trend->trend_score)->toBeNull();
+
+    Livewire::actingAs($admin)
+        ->test(TrendShow::class, ['trend' => $trend])
+        ->call('recalculateScore')
+        ->assertHasNoErrors();
+
+    expect($trend->fresh()->trend_score)->not->toBeNull();
+});

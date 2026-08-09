@@ -29,6 +29,9 @@ class Trend extends Model
         'type',
         'status',
         'last_collected_at',
+        'trend_score',
+        'trend_score_breakdown',
+        'trend_score_computed_at',
     ];
 
     /**
@@ -36,6 +39,9 @@ class Trend extends Model
      */
     protected $casts = [
         'last_collected_at' => 'datetime',
+        'trend_score' => 'decimal:2',
+        'trend_score_breakdown' => 'array',
+        'trend_score_computed_at' => 'datetime',
     ];
 
     /**

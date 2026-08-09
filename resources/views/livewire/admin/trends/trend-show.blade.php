@@ -5,6 +5,7 @@
         <x-help-modal title="Ajuda — Detalhe da Tendência">
             <p>Histórico de coleta desta tendência. "Coletar agora" busca sinais automaticamente nas fontes já configuradas (dados próprios da plataforma) sem esperar o agendamento diário.</p>
             <p>Quando uma fonte não tem coleta automática disponível (ex.: observação feita manualmente no Instagram), registre-a no formulário abaixo — vira um snapshot com origem "manual".</p>
+            <p><strong>Trend Score</strong> (0-100) mede apenas nível de interesse/tendência — não é oportunidade comercial (isso vem na Fase 26, Product Opportunity Engine). "Recalcular score" reprocessa a partir dos snapshots já coletados, sem esperar o agendamento diário.</p>
         </x-help-modal>
     </x-slot:help>
 
@@ -13,12 +14,43 @@
             <span>Watchlist: <a href="{{ route('admin.trends.watchlists.show', $trend->watchlist) }}" class="text-amber-400 hover:text-amber-300">{{ $trend->watchlist->name }}</a></span>
             <span>·</span>
             <span>Tipo: {{ $trend->type }}</span>
+            <span>·</span>
+            <span class="flex items-center gap-1.5">Trend Score: <x-trend-score-badge :score="$trend->trend_score" /></span>
         </div>
-        <button type="button" wire:click="collectNow" wire:loading.attr="disabled"
-                class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-300">
-            Coletar agora
-        </button>
+        <div class="flex items-center gap-2">
+            <button type="button" wire:click="recalculateScore" wire:loading.attr="disabled"
+                    class="rounded-lg border border-amber-400 px-4 py-2 text-sm font-semibold text-amber-400 hover:bg-amber-400/10">
+                Recalcular score
+            </button>
+            <button type="button" wire:click="collectNow" wire:loading.attr="disabled"
+                    class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-300">
+                Coletar agora
+            </button>
+        </div>
     </div>
+
+    @if ($trend->trend_score_breakdown)
+        <div class="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-4">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+                Fatores considerados (janela de {{ $trend->trend_score_breakdown['window_size'] }} snapshots, calculado {{ $trend->trend_score_computed_at?->diffForHumans() }})
+            </p>
+            <div class="flex flex-wrap gap-4 text-sm">
+                @foreach ($trend->trend_score_breakdown['factors'] as $factor => $value)
+                    <div>
+                        <span class="text-slate-500">{{ match ($factor) {
+                            'growth' => 'Crescimento',
+                            'volume' => 'Volume',
+                            'recurrence' => 'Recorrência',
+                            'stability' => 'Estabilidade',
+                            'engagement' => 'Engajamento',
+                            default => $factor,
+                        } }}:</span>
+                        <span class="text-slate-200 font-medium">{{ number_format($value, 0) }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     <div class="mb-4 flex items-center gap-2">
         @foreach ([7 => '7 dias', 30 => '30 dias', 90 => '90 dias', 365 => '1 ano'] as $days => $label)

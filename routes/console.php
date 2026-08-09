@@ -17,3 +17,6 @@ Schedule::command('intelligence:generate-recommendations')->dailyAt('04:00');
 
 // Fase 23 — Trend Intelligence
 Schedule::command('trends:collect')->dailyAt('05:00');
+
+// Fase 24 — Trend Score
+Schedule::command('trends:calculate-scores')->dailyAt('05:30');

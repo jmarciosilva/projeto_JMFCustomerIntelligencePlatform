@@ -18,6 +18,7 @@
                 <tr class="text-left text-xs font-medium uppercase tracking-wide text-slate-500">
                     <th class="px-4 py-3">Termo</th>
                     <th class="px-4 py-3">Tipo</th>
+                    <th class="px-4 py-3">Trend Score</th>
                     <th class="px-4 py-3">Snapshots</th>
                     <th class="px-4 py-3">Última coleta</th>
                     <th class="px-4 py-3">Status</th>
@@ -31,6 +32,7 @@
                             <a href="{{ route('admin.trends.show', $trend) }}" class="hover:text-amber-400">{{ $trend->term }}</a>
                         </td>
                         <td class="px-4 py-3 text-slate-400">{{ $trend->type }}</td>
+                        <td class="px-4 py-3"><x-trend-score-badge :score="$trend->trend_score" /></td>
                         <td class="px-4 py-3 text-slate-400">{{ $trend->snapshots_count }}</td>
                         <td class="px-4 py-3 text-slate-400">{{ $trend->last_collected_at?->diffForHumans() ?? '—' }}</td>
                         <td class="px-4 py-3">
@@ -50,7 +52,7 @@
                     </tr>
                 @empty
                     <tr class="bg-slate-900/60">
-                        <td class="px-4 py-6 text-center text-slate-500" colspan="6">Nenhuma tendência cadastrada — edite a watchlist para adicionar palavras-chave/hashtags.</td>
+                        <td class="px-4 py-6 text-center text-slate-500" colspan="7">Nenhuma tendência cadastrada — edite a watchlist para adicionar palavras-chave/hashtags.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -85,6 +85,18 @@ test('watchlist show lista as trends e permite coletar agora', function () {
     expect($trend->fresh()->last_collected_at)->not->toBeNull();
 });
 
+test('watchlist show exibe o trend score já calculado', function () {
+    $admin = superAdmin();
+    $watchlist = Watchlist::factory()->create(['keywords' => ['cafeteira'], 'hashtags' => []]);
+    (new WatchlistTrendSynchronizer)->sync($watchlist);
+    $trend = Trend::where('watchlist_id', $watchlist->id)->first();
+    $trend->update(['trend_score' => 87.5]);
+
+    Livewire::actingAs($admin)
+        ->test(WatchlistShow::class, ['watchlist' => $watchlist])
+        ->assertSee('88');
+});
+
 test('administrador só consegue visualizar watchlists, não criar', function () {
     $manager = administrador();
 

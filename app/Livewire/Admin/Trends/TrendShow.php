@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Trends;
 
+use App\Application\Trends\Actions\CalculateTrendScoresAction;
 use App\Application\Trends\Actions\CollectTrendSignalsAction;
 use App\Application\Trends\Actions\RegisterManualTrendSnapshotAction;
 use App\Models\Trend;
@@ -38,6 +39,15 @@ class TrendShow extends Component
         $this->authorize('update', $this->trend);
 
         $action->handle($this->trend);
+    }
+
+    public function recalculateScore(CalculateTrendScoresAction $action): void
+    {
+        $this->authorize('update', $this->trend);
+
+        $action->handleOne($this->trend);
+
+        $this->trend->refresh();
     }
 
     /**
