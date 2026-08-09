@@ -7,9 +7,7 @@ use App\Events\EventWasIngested;
 
 class ProcessMarketplaceEventListener
 {
-    public function __construct(private ProcessMarketplaceEventAction $action)
-    {
-    }
+    public function __construct(private ProcessMarketplaceEventAction $action) {}
 
     public function handle(EventWasIngested $event): void
     {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Application;
+use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Tenant;
 
@@ -51,7 +52,7 @@ test('get top products returns products sorted by views', function () {
 });
 
 test('customer journey shows correct event sequence', function () {
-    $contact = \App\Models\Contact::factory()->for($this->tenant)->create();
+    $contact = Contact::factory()->for($this->tenant)->create();
 
     // Create a journey sequence
     Event::factory()->for($this->application)->create([

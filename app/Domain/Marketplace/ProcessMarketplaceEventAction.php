@@ -4,13 +4,12 @@ namespace App\Domain\Marketplace;
 
 use App\Models\Event;
 use App\Models\MarketplaceMetric;
-use Carbon\Carbon;
 
 class ProcessMarketplaceEventAction
 {
     public function handle(Event $event): void
     {
-        if (!$this->isMarketplaceEvent($event->event_name)) {
+        if (! $this->isMarketplaceEvent($event->event_name)) {
             return;
         }
 
@@ -18,7 +17,7 @@ class ProcessMarketplaceEventAction
         $sellerId = $this->extractSellerId($event);
         $productId = $this->extractProductId($event);
 
-        if (!$sellerId) {
+        if (! $sellerId) {
             return;
         }
 
@@ -82,7 +81,7 @@ class ProcessMarketplaceEventAction
             'checkout.started' => $updates['checkout_starts'] = \DB::raw('checkout_starts + 1'),
             'purchase.completed' => [
                 $updates['purchases'] = \DB::raw('purchases + 1'),
-                $updates['revenue'] = \DB::raw('revenue + ' . ($event->properties['total_value'] ?? 0)),
+                $updates['revenue'] = \DB::raw('revenue + '.($event->properties['total_value'] ?? 0)),
             ],
             'review.submitted' => $updates['reviews'] = \DB::raw('reviews + 1'),
             default => null,

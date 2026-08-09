@@ -7,9 +7,13 @@ use App\Models\Contact;
 class SegmentationEngine
 {
     public const SEGMENT_VIP = 'vip';
+
     public const SEGMENT_ENGAGED = 'engaged';
+
     public const SEGMENT_CONVERTED = 'converted';
+
     public const SEGMENT_INACTIVE = 'inactive';
+
     public const SEGMENT_NEW = 'new';
 
     public function segment(Contact $contact, array $scores): string
@@ -27,7 +31,7 @@ class SegmentationEngine
         // New: First seen in last 7 days AND active
         if ($contact->first_identified_at && $contact->first_identified_at->diffInDays(now()) <= 7) {
             // Make sure it's not inactive
-            if (!$contact->last_seen_at || $contact->last_seen_at->diffInDays(now()) < 30) {
+            if (! $contact->last_seen_at || $contact->last_seen_at->diffInDays(now()) < 30) {
                 return self::SEGMENT_NEW;
             }
         }

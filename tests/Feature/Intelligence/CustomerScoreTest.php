@@ -20,7 +20,7 @@ class CustomerScoreTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new CustomerScoreCalculator();
+        $this->calculator = new CustomerScoreCalculator;
     }
 
     public function test_customer_score_calculated_correctly_for_active_buyer(): void

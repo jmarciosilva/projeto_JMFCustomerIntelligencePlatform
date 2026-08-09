@@ -44,7 +44,7 @@ class CustomerScoreCalculator
 
     private function calculateRecencyScore(Contact $contact, Carbon $now): int
     {
-        if (!$contact->last_seen_at) {
+        if (! $contact->last_seen_at) {
             return 0;
         }
 

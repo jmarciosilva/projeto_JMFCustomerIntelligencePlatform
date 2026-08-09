@@ -21,7 +21,7 @@ class SegmentationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->engine = new SegmentationEngine();
+        $this->engine = new SegmentationEngine;
     }
 
     public function test_vip_segment_identified_correctly(): void
@@ -127,7 +127,7 @@ class SegmentationTest extends TestCase
         $tenant = Tenant::factory()->create();
         Contact::factory()->count(10)->create(['tenant_id' => $tenant->id]);
 
-        $calculator = new CustomerScoreCalculator();
+        $calculator = new CustomerScoreCalculator;
         $action = new SegmentContactsAction($calculator, $this->engine);
         $updated = $action->execute($tenant->id);
 
@@ -142,7 +142,7 @@ class SegmentationTest extends TestCase
         $tenant = Tenant::factory()->create();
         $contact = Contact::factory()->create(['tenant_id' => $tenant->id]);
 
-        $calculator = new CustomerScoreCalculator();
+        $calculator = new CustomerScoreCalculator;
         $action = new SegmentContactsAction($calculator, $this->engine);
         $action->execute($tenant->id);
 

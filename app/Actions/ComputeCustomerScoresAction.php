@@ -4,7 +4,6 @@ namespace App\Actions;
 
 use App\Domain\Intelligence\CustomerScoreCalculator;
 use App\Models\Contact;
-use Illuminate\Support\Facades\DB;
 
 class ComputeCustomerScoresAction
 {

@@ -83,7 +83,7 @@ class CustomerJourneyController extends Controller
             $stages[] = 'review_given';
         }
 
-        if (in_array('cart.abandoned', $eventNames) && !in_array('purchase.completed', $eventNames)) {
+        if (in_array('cart.abandoned', $eventNames) && ! in_array('purchase.completed', $eventNames)) {
             $stages[] = 'cart_abandoned';
         }
 

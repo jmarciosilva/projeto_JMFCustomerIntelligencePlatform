@@ -2,6 +2,7 @@
 
 use App\Events\EventWasIngested;
 use App\Models\Application;
+use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Tenant;
 
@@ -93,7 +94,7 @@ test('customer journey shows only authenticated application data', function () {
 
     $token1 = $app1->createToken('test')->plainTextToken;
 
-    $contact = \App\Models\Contact::factory()->for($tenant)->create();
+    $contact = Contact::factory()->for($tenant)->create();
 
     // Create events in app1
     Event::factory()->for($app1)->create([

@@ -2,9 +2,7 @@
 
 use App\Models\Application;
 use App\Models\Event;
-use App\Models\MarketplaceMetric;
 use App\Models\Tenant;
-use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
     $this->tenant = Tenant::factory()->create();
@@ -15,21 +13,21 @@ beforeEach(function () {
 test('captures product viewed event', function () {
     $response = $this->withHeader('Authorization', "Bearer {$this->token}")
         ->postJson('/api/v1/events', [
-        'event_id' => 'test-product-viewed-1',
-        'event_name' => 'product.viewed',
-        'visitor_id' => 'visitor-123',
-        'occurred_at' => now()->toIso8601String(),
-        'properties' => [
-            'product_id' => 42,
-            'seller_id' => 5,
-            'category' => 'Artesanato',
-            'price' => 49.90,
-        ],
-        'context' => [
-            'page_url' => '/produtos/42',
-            'referrer' => 'https://google.com',
-        ],
-    ]);
+            'event_id' => 'test-product-viewed-1',
+            'event_name' => 'product.viewed',
+            'visitor_id' => 'visitor-123',
+            'occurred_at' => now()->toIso8601String(),
+            'properties' => [
+                'product_id' => 42,
+                'seller_id' => 5,
+                'category' => 'Artesanato',
+                'price' => 49.90,
+            ],
+            'context' => [
+                'page_url' => '/produtos/42',
+                'referrer' => 'https://google.com',
+            ],
+        ]);
 
     expect($response->status())->toBe(202);
     expect(Event::where('event_name', 'product.viewed')->count())->toBe(1);
@@ -38,7 +36,7 @@ test('captures product viewed event', function () {
 test('captures cart abandoned event', function () {
     // Using token authentication
 
-    $response = $this->withHeader("Authorization", "Bearer {$this->token}")->postJson('/api/v1/events', [
+    $response = $this->withHeader('Authorization', "Bearer {$this->token}")->postJson('/api/v1/events', [
         'event_id' => 'test-cart-abandoned-1',
         'event_name' => 'cart.abandoned',
         'visitor_id' => 'visitor-123',
@@ -58,7 +56,7 @@ test('captures cart abandoned event', function () {
 test('captures purchase completed event', function () {
     // Using token authentication
 
-    $response = $this->withHeader("Authorization", "Bearer {$this->token}")->postJson('/api/v1/events', [
+    $response = $this->withHeader('Authorization', "Bearer {$this->token}")->postJson('/api/v1/events', [
         'event_id' => 'test-purchase-1',
         'event_name' => 'purchase.completed',
         'visitor_id' => 'visitor-123',
@@ -82,7 +80,7 @@ test('captures purchase completed event', function () {
 test('captures review submitted event', function () {
     // Using token authentication
 
-    $response = $this->withHeader("Authorization", "Bearer {$this->token}")->postJson('/api/v1/events', [
+    $response = $this->withHeader('Authorization', "Bearer {$this->token}")->postJson('/api/v1/events', [
         'event_id' => 'test-review-1',
         'event_name' => 'review.submitted',
         'visitor_id' => 'visitor-123',
