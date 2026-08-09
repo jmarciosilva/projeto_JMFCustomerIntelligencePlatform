@@ -37,8 +37,25 @@ O núcleo já construído (ingestão de eventos, identidade de cliente, analytic
 - **AI Studio** — geração de imagens e vídeos profissionais a partir de fotos simples.
 - **Content Generation** — títulos, descrições, SEO, textos para redes sociais.
 - **Business Intelligence** e **AI Insights** — previsões, tendências e oportunidades comerciais.
+- **Trend Intelligence** — monitoramento de sinais de crescimento de interesse por produtos, categorias, marcas e assuntos em fontes externas (redes sociais, Google Trends, dados próprios), com séries históricas e **Trend Score** (0-100).
+- **Affiliate Intelligence** — cadastro de programas e produtos de afiliados (Magazine Você/Magalu e futuros marketplaces), matching entre tendências e produtos (**Product Matcher**), rastreamento de links, campanhas, conteúdos e conversões.
+- **Product Opportunity Engine** — combina tendência, intenção comercial, preço, comissão, popularidade e conversão histórica em um **Opportunity Score** (0-100) para apontar oportunidades comerciais reais.
+- **Affiliate Analytics** — receita, cliques, CTR, EPC, conversão e desempenho por produto, conteúdo e canal.
+- **Recommendation Engine** (JMF Recommendation) — combina Trend Score, Opportunity Score e Product Performance Score (desempenho real de vendas) para responder "o que divulgar hoje?".
 
 Qualquer sistema desenvolvido pela JMF System poderá consumir um ou mais desses módulos sem precisar reimplementá-los. O **SDK Laravel** (`packages/jmf-system/customer-intelligence-sdk`) continua sendo a principal forma de integração entre aplicações clientes e a plataforma. O isolamento por tenant/aplicação e o desacoplamento entre plataforma e sistemas clientes, já estabelecidos nas fases concluídas, são a base sobre a qual esses módulos serão construídos — nenhuma aplicação cliente fica acoplada a outra, e toda inteligência permanece centralizada aqui.
+
+### Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine
+
+A partir da Fase 22, o JMF Customer Intelligence passa a responder também: **"quais produtos, categorias ou assuntos estão apresentando sinais de crescimento de interesse e podem representar uma oportunidade comercial?"**. Essa evolução nasce de um caso de uso real: o uso da própria plataforma como laboratório de inteligência comercial para uma operação de marketing de afiliados (Influenciador Magalu/Magazine Você), cobrindo o ciclo completo — detectar tendência → selecionar produto → produzir conteúdo → divulgar → medir clique/venda/comissão → aprender.
+
+- **Trend Intelligence** monitora palavras-chave/hashtags/temas cadastrados em **Watchlists**, gera séries históricas (`TrendSnapshot`) e calcula o **Trend Score**. Fontes de dados são sempre oficiais/públicas/permitidas: o Google Trends não possui API pública oficial e o Instagram Graph API exige App Review da Meta para busca de hashtags — por isso o MVP usa apenas `ManualTrendProvider` (observação manual) e `InternalBehaviorProvider` (dados próprios de comportamento já coletados pela plataforma); providers de Instagram/Google/YouTube existem como interface (`TrendProviderInterface`) e stub, prontos para ativação futura quando o acesso oficial for viabilizado.
+- **Affiliate Intelligence** cadastra `AffiliateProgram`/`AffiliateProduct` via `AffiliateProviderInterface` (implementação inicial manual/importação CSV; Magalu, Amazon, Mercado Livre e Shopee como implementações futuras).
+- **Product Matcher** relaciona tendências a produtos de afiliados cadastrados; **Product Opportunity Engine** calcula o Opportunity Score combinando tendência, intenção comercial, preço, comissão, popularidade, concorrência e conversão histórica.
+- **Content & Link Tracking** registra ideias de conteúdo, publicações (`ContentPublication`) e links de rastreamento próprios (`/go/{slug}`) que redirecionam para o link oficial de afiliado sem alterar parâmetros obrigatórios de atribuição de comissão.
+- **Affiliate Analytics** e o **Recommendation Engine** fecham o ciclo, aprendendo quais tendências realmente geram vendas (alta tendência não implica alta conversão).
+
+Essas novas tabelas seguem o mesmo princípio de isolamento por `tenant_id`/`application_id` do restante da plataforma — nenhum dado pessoal de terceiros (ex.: seguidores de redes sociais) é armazenado, apenas contagens agregadas. Detalhes completos nas Fases 22-31 do [`ROADMAP.md`](ROADMAP.md).
 
 > Fornecer inteligência artificial reutilizável para qualquer produto digital desenvolvido pela JMF System, auxiliando empresas, marketplaces e pequenos empreendedores a compreender seus clientes, automatizar marketing, gerar conteúdo, detectar fraudes, recomendar produtos e tomar melhores decisões baseadas em dados.
 
@@ -264,7 +281,11 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 15 — AI Marketing** concluída em 2 sprints (geração de título/descrição/SEO, textos + hashtags para Instagram/Facebook/WhatsApp e campanha de e-mail marketing; driver plugável — `template` sem custo por padrão, `Anthropic Claude API` pronto para ativar via `.env`; conteúdo revisável/editável antes de publicar via `PATCH /api/v1/marketing/content/{id}`; 42 novos testes). Geração de banners fica para a Fase 16.
 
-📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** próxima (2-3 semanas; depende das Fases 20, 12, 13, 14 e 15 — todas concluídas).
+📋 **Fase 21 — Integração com Feira Esquerda Livre (Piloto)** pendente (depende das Fases 20, 12, 13, 14 e 15 — todas concluídas).
+
+✅ **Fase 22 — Affiliate Intelligence (fundação)** concluída — primeira fase da evolução Trend Intelligence/Affiliate Intelligence (Fases 22-31), validada por um caso de uso real (Influenciador Magalu/Magazine Você): `AffiliateProgram`/`AffiliateProduct` isolados por `application_id`, `AffiliateProviderInterface` (`ManualAffiliateProvider` padrão + stub Magalu), import de produtos via CSV, `IntegrationLog`, CRUD administrativo completo (`/admin/affiliate/programs`, `/admin/affiliate/products`). Ver seção "Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine" acima e Fases 22-31 do [`ROADMAP.md`](ROADMAP.md).
+
+📋 **Fase 23 — Trend Intelligence (fundação)** próxima.
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 

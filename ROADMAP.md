@@ -627,6 +627,350 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 
 ---
 
+## Evolução estratégica — Trend Intelligence & Affiliate Intelligence (Fases 22 a 31)
+
+As fases a seguir evoluem o JMF Customer Intelligence de "o que meus clientes estão fazendo?" para também responder "o que as pessoas estão começando a querer, e o que eu deveria divulgar agora?". Elas **não substituem** nem colidem com a Fase 13 (AI Business Intelligence): `Opportunity`/`ProductTrend` (Fase 13) medem oportunidades *internas* de um vendedor dentro de um marketplace cliente, a partir de eventos já coletados daquele tenant; os novos módulos medem tendência *externa* (redes sociais, Google, dados próprios) e oportunidade comercial de afiliado — por isso usam nomes de entidade distintos (`Trend`, `ProductOpportunity`, etc.), namespaces próprios (`App\Domain\Trends`, `App\Domain\Affiliate`) e tabelas próprias.
+
+Validação: caso de uso real do proprietário do JMF Customer Intelligence atuando como **Influenciador Magalu/Magazine Você**, usando a própria plataforma para identificar tendências, selecionar produtos, divulgar links de afiliado e medir vendas/comissão — laboratório vivo, não apenas exercício acadêmico. Arquitetura desenhada para ser reutilizável por outros influenciadores/afiliados/marketplaces no futuro (cada um com sua própria `Application`).
+
+Restrição verificada antes de programar qualquer integração externa (ver `README.md`): Google Trends não tem API pública oficial; Instagram Graph API exige App Review da Meta para busca de hashtag. Por isso o MVP usa apenas providers reais (`ManualTrendProvider`, `InternalBehaviorProvider`); Instagram/Google Trends/YouTube entram apenas como interface + stub, sem inventar endpoints não documentados oficialmente.
+
+Nenhuma fase abaixo é marcada `[x]` sem: Models, Migrations, Services, Repositories (quando aplicável), Jobs (quando aplicável), UI, Tests e Documentation concluídos.
+
+---
+
+## Fase 22 — Affiliate Intelligence (fundação)
+
+**Status:** `[x]` Concluída (2026-08-09)
+
+### Objetivo
+
+Criar a base para cadastro de programas e produtos de afiliados, começando pelo Influenciador Magalu/Magazine Você, com arquitetura genérica para futuros programas (Amazon Associados, Mercado Livre, Shopee).
+
+### Tarefas
+
+- [x] Models: `AffiliateProgram`, `AffiliateProduct`, `IntegrationLog`.
+- [x] Migrations correspondentes, isoladas por `application_id`.
+- [x] Seed de `Tenant`/`Application` internos ("JMF System" / "Magazine Você — Afiliados") para a operação real (`AffiliateWorkspaceSeeder`).
+- [x] Services: `App\Domain\Affiliate\Contracts\AffiliateProviderInterface` + `ManualAffiliateProvider` (cadastro manual, provider padrão) + `MagaluAffiliateProvider` (stub documentado, sem API pública oficial disponível).
+- [x] Import de produtos via CSV (`league/csv`, `ImportAffiliateProductsFromCsvAction`), com log de execução em `IntegrationLog`.
+- [x] Permissões novas no enum `Permission` (`affiliate_programs.*`, `affiliate_products.*`) + `RolePermissionSeeder`.
+- [x] Policies (`AffiliateProgramPolicy`, `AffiliateProductPolicy`), registradas em `AppServiceProvider`.
+- [x] UI: CRUD administrativo (Livewire) de programas (`/admin/affiliate/programs`) e produtos (`/admin/affiliate/products`) de afiliados, com import CSV (`/admin/affiliate/products/import`) e links na sidebar.
+- [x] Tests: CRUD, isolamento por application, provider manual/stub Magalu, import CSV (linhas válidas/inválidas, reimport idempotente por `external_product_id`), `IntegrationLog` (23 novos testes).
+- [x] Documentation: seção "Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine" no `README.md`, nota de LGPD no `SECURITY.md` e este checklist.
+
+### Critérios de aceite
+
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável nesta fase (Eloquent usado diretamente nas Actions, sem persistência complexa o suficiente para justificar um Repository, conforme convenção do `ARCHITECTURE.md`).
+- [x] Jobs — não aplicável nesta fase (import CSV processado de forma síncrona no próprio request administrativo; fases seguintes, com coleta de tendências e integrações externas, é que introduzem Jobs agendados).
+- [x] UI
+- [x] Tests (23 novos testes, 285/286 na suíte completa — a única falha é pré-existente e não relacionada, já registrada nas Fases 13-15)
+- [x] Documentation
+
+### Dependências
+
+Nenhuma dependência de fases pendentes — reaproveita apenas a arquitetura consolidada (Tenant/Application, Policies/Permission enum, padrão de Actions).
+
+---
+
+## Fase 23 — Trend Intelligence (fundação)
+
+**Status:** `[ ]` Pendente · depende da Fase 22
+
+### Objetivo
+
+Monitorar sinais de crescimento de interesse por produtos, categorias, marcas, assuntos, palavras-chave e hashtags, com séries históricas.
+
+### Tarefas
+
+- [ ] Models: `Watchlist`, `Trend`, `TrendSnapshot`.
+- [ ] Migrations correspondentes.
+- [ ] Services: `App\Domain\Trends\Contracts\TrendProviderInterface` + `ManualTrendProvider` + `InternalBehaviorProvider` (reaproveita eventos de marketplace já coletados, ex. `product.viewed`/`product.search`).
+- [ ] Stubs documentados (`InstagramTrendProvider`, `GoogleTrendsProvider`, `YouTubeTrendProvider`) lançando exceção clara de "não configurado", prontos para ativação futura com acesso oficial.
+- [ ] Jobs: `CollectTrendsJob` (por watchlist/provider), agendado.
+- [ ] UI: CRUD de Watchlists, tela de detalhe de tendência com histórico (7/30/90 dias).
+- [ ] Tests: providers, geração de snapshot, isolamento por application.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 22 (padrão de `IntegrationLog`/providers já estabelecido).
+
+---
+
+## Fase 24 — Trend Score
+
+**Status:** `[ ]` Pendente · depende da Fase 23
+
+### Objetivo
+
+Algoritmo baseado em regras que gera uma pontuação de 0 a 100 representando o nível de tendência de um assunto/produto/categoria.
+
+### Tarefas
+
+- [ ] Service: `App\Domain\Trends\TrendScoreCalculator` (fatores: crescimento recente, quantidade de ocorrências, velocidade, recorrência, engajamento, estabilidade, sazonalidade).
+- [ ] Persistência do `trend_score` em `Trend`/`TrendSnapshot`.
+- [ ] Jobs: `CalculateTrendScoresJob`, agendado após a coleta.
+- [ ] UI: exibição do score nas telas de Watchlist/Trend.
+- [ ] Tests: casos de regra isolados (crescimento alto/baixo, estabilidade, dados insuficientes).
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 23 (série histórica de `TrendSnapshot`).
+
+---
+
+## Fase 25 — Product Matcher
+
+**Status:** `[ ]` Pendente · depende das Fases 22 e 24
+
+### Objetivo
+
+Relacionar tendências encontradas com produtos existentes em programas de afiliados.
+
+### Tarefas
+
+- [ ] Model: `TrendProductMatch` (pivot `trend_id` × `affiliate_product_id`, `match_score`).
+- [ ] Migration correspondente.
+- [ ] Service: `App\Domain\Affiliate\ProductMatcher` (palavras-chave, categoria, marca, similaridade textual).
+- [ ] Jobs: `MatchProductsJob`, agendado após cálculo do Trend Score.
+- [ ] UI: exibir produtos correspondentes na tela de detalhe de uma tendência.
+- [ ] Tests: matching por keyword/categoria/marca, ausência de match, múltiplos candidatos ordenados por score.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 22 (produtos de afiliados cadastrados) e da Fase 24 (Trend Score calculado).
+
+---
+
+## Fase 26 — Product Opportunity Engine
+
+**Status:** `[ ]` Pendente · depende da Fase 25
+
+### Objetivo
+
+Calcular se existe oportunidade comercial real, combinando tendência, intenção comercial, preço, comissão, popularidade, concorrência e conversão histórica em um Opportunity Score (0-100).
+
+### Tarefas
+
+- [ ] Model: `ProductOpportunity` (0-100, com breakdown dos fatores).
+- [ ] Migration correspondente.
+- [ ] Services: `App\Domain\Affiliate\CommercialIntentClassifier` (heurística de intenção de compra por palavra-chave) + `App\Domain\Affiliate\OpportunityScoreCalculator`.
+- [ ] Jobs: `CalculateOpportunityScoresJob`, agendado após o Product Matcher.
+- [ ] UI: painel "Oportunidades" (`/admin/affiliate/opportunities`) com filtros (data, categoria, fonte, produto, programa afiliado, score mínimo, faixa de preço, comissão).
+- [ ] Tests: cálculo do score por fator, ranking, filtros do painel.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 25 (Product Matcher).
+
+---
+
+## Fase 27 — Content & Link Tracking
+
+**Status:** `[ ]` Pendente · depende da Fase 26
+
+### Objetivo
+
+Registrar campanhas, ideias e conteúdos publicados, e gerar links de rastreamento próprios que redirecionam para o link oficial de afiliado sem comprometer a atribuição de comissão.
+
+### Tarefas
+
+- [ ] Models: `Campaign`, `ContentPublication`, `AffiliateLink`, `AffiliateClick`.
+- [ ] Migrations correspondentes.
+- [ ] Services: geração de ideias de conteúdo a partir de `ProductOpportunity` (armazenamento apenas, sem publicação automática); geração de slug único de link.
+- [ ] Controller público `GET /go/{slug}` (fora do grupo `admin`, sem autenticação): resolve o link, grava `AffiliateClick` (campaign/content/product/source/medium/UTM, cookie técnico de visitante — sem dado pessoal), redireciona 302 para a URL de afiliado real sem alterar parâmetros obrigatórios.
+- [ ] UI: CRUD de Campanhas, cadastro de conteúdos publicados, geração de link, visualização do funil (tendência → produto → conteúdo → publicação → impressão → clique → visita → compra → comissão).
+- [ ] Tests: geração/resolução de link, registro de clique, redirecionamento correto, preservação de parâmetros de afiliado, isolamento por campanha.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 26 (oportunidades a divulgar) e da Fase 22 (produtos/programas de afiliados).
+
+---
+
+## Fase 28 — Conversões
+
+**Status:** `[ ]` Pendente · depende da Fase 27
+
+### Objetivo
+
+Registrar vendas e comissões provenientes de programas de afiliados.
+
+### Tarefas
+
+- [ ] Model: `AffiliateConversion` (produto, programa, pedido/referência, data, valor, comissão, status, campanha, origem).
+- [ ] Migration correspondente.
+- [ ] Registro manual via UI.
+- [ ] Import CSV (`league/csv`, mesmo padrão da Fase 22) com log em `IntegrationLog`.
+- [ ] UI: tela de registro/listagem de conversões, vinculação a campanha/conteúdo/produto.
+- [ ] Tests: registro manual, import CSV (linhas válidas/inválidas), vinculação a campanha.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 27 (campanhas/conteúdos/links aos quais a conversão se vincula).
+
+---
+
+## Fase 29 — Affiliate Analytics
+
+**Status:** `[ ]` Pendente · depende da Fase 28
+
+### Objetivo
+
+Dashboard consolidado de receita, marketing, produtos e conteúdo do laboratório de afiliados.
+
+### Tarefas
+
+- [ ] Services: Actions de agregação (receita/comissão/ticket médio; impressões/cliques/CTR/EPC; produtos mais clicados/vendidos; conteúdo com mais cliques/vendas/receita).
+- [ ] UI: dashboard Livewire (`/admin/affiliate/analytics`) seguindo o padrão de `Marketplace\Dashboard` (Chart.js via CDN, filtros de período/campanha/produto).
+- [ ] Tests: cada Action de agregação, filtros do dashboard.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 28 (dados de conversão) e da Fase 27 (dados de clique/conteúdo).
+
+---
+
+## Fase 30 — JMF Recommendation Engine
+
+**Status:** `[ ]` Pendente · depende da Fase 29
+
+### Objetivo
+
+Responder "quais produtos devo divulgar hoje?", combinando Trend Score, Opportunity Score e desempenho real de vendas — aprendendo que alta tendência não implica necessariamente alta conversão.
+
+### Tarefas
+
+- [ ] Model/coluna: `ProductPerformanceScore` (CTR, conversão, vendas, comissão, receita, recorrência histórica).
+- [ ] Service: `App\Domain\Affiliate\JmfRecommendationEngine` combinando Trend Score × Opportunity Score × Performance Score em um Confidence Score, com motivos textuais.
+- [ ] Jobs: `RecalculatePerformanceJob`, `GenerateRecommendationsJob`.
+- [ ] UI: painel "Recomendação JMF" com produto, os 3 scores, confidence score e motivos.
+- [ ] Tests: cálculo do Performance Score, combinação dos scores, casos onde tendência alta não implica conversão alta.
+- [ ] Documentation.
+
+### Critérios de aceite
+
+- [ ] Models
+- [ ] Migrations
+- [ ] Services
+- [ ] Repositories
+- [ ] Jobs
+- [ ] UI
+- [ ] Tests
+- [ ] Documentation
+
+### Dependências
+
+Depende da Fase 29 (dados reais de desempenho) e da Fase 26 (Opportunity Score).
+
+---
+
+## Fase 31 — IA e Machine Learning (Trend/Affiliate Intelligence)
+
+**Status:** `[ ]` Pendente · depende da Fase 30
+
+### Objetivo
+
+Substituir as regras do Trend Score/Opportunity Score por modelos estatísticos ou de machine learning, apenas quando existir volume de dados real suficiente.
+
+### Tarefas
+
+Deliberadamente não detalhadas ainda — esta fase só será planejada em detalhe quando as Fases 22-30 estiverem em produção com dados reais suficientes para treinar/validar um modelo.
+
+### Dependências
+
+Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
+
+---
+
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
@@ -647,3 +991,5 @@ Depende da Fase 20 (Plugin UI) e da Fase 06 (Analytics MVP).
 - **2026-08-08** — Corrigidos 11 models (`Tenant`, `DailyMetric`, `Application`, `AuditLog`, `VisitorSession`, `ProductAffinity`, `Event`, `ContactConsent`, `Visitor`, `User`, `Contact`) que usavam a sintaxe `casts(): array` (método, Laravel 11+) não reconhecida pelo Larastan desta versão — causava dezenas de falsos positivos no PHPStan em toda a aplicação (tipo inferido como `string|null` em vez de array/Carbon/bool reais). Convertidos para `protected $casts` (propriedade), comportamento idêntico em runtime; PHPStan caiu de 51 para 13 erros restantes (avisos legítimos de código defensivo agora provado desnecessário, nenhum bug real). Descoberta uma propriedade inexistente (`$contact->last_event_at` em `ListContactsController`) fora de escopo por afetar contrato de API já publicado (SDK).
 - **2026-08-08** — Fase 14 concluída em 2 sprints: **Sprint 1** — motor de recomendações textuais para o expositor (`BusinessAdvisor`, 4 detectores: queda de vendas, oportunidade de kit, preço fora da média, horário ideal de venda; tabela `business_recommendations`; comando agendado `intelligence:generate-recommendations`); **Sprint 2** — API de consumo (`GET /api/v1/marketplace/sellers/{seller_id}/recommendations`). 22 novos testes (223/224 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
 - **2026-08-08** — Fase 15 concluída em 2 sprints: **Sprint 1** — arquitetura de geração de conteúdo com driver plugável (`ContentGenerator`, `TemplateContentGenerator` padrão sem custo, `AnthropicContentGenerator` pronto porém inativo até configurar `ANTHROPIC_API_KEY`), modelo `MarketingContent` (draft/approved/rejected); **Sprint 2** — geração de redes sociais (Instagram/Facebook/WhatsApp + hashtags) e e-mail marketing, 3 endpoints REST (`POST /api/v1/marketing/generate`, `GET /api/v1/marketing/content`, `PATCH /api/v1/marketing/content/{id}`). Geração de banners adiada para a Fase 16 (decisão registrada com o usuário, evita duplicar motor de imagem). 42 novos testes (249/250 na suíte completa, 1 falha pré-existente não relacionada da Fase 20).
+- **2026-08-09** — Adicionadas as Fases 22-31 (Trend Intelligence & Affiliate Intelligence), evolução estratégica validada por um caso de uso real (Influenciador Magalu/Magazine Você): Affiliate Intelligence (22), Trend Intelligence (23), Trend Score (24), Product Matcher (25), Product Opportunity Engine (26), Content & Link Tracking (27), Conversões (28), Affiliate Analytics (29), JMF Recommendation Engine (30), IA/ML futura (31). Decisão registrada: nomes de entidade distintos dos existentes na Fase 13 (`Trend`/`ProductOpportunity` vs `ProductTrend`/`Opportunity`) para não confundir tendência/oportunidade *interna* de marketplace cliente com tendência/oportunidade *externa* de afiliados; sem API pública oficial do Google Trends e sem acesso liberado ao Instagram Graph API (exige App Review da Meta), o MVP usa apenas `ManualTrendProvider`/`InternalBehaviorProvider`, com os demais providers como interface + stub. Fase 22 iniciada.
+- **2026-08-09** — Fase 22 concluída: `AffiliateProgram`/`AffiliateProduct`/`IntegrationLog` (isolados por `application_id`), workspace interno seedado (`AffiliateWorkspaceSeeder`: tenant `jmf-system` + application `magazine-voce-afiliados`), `AffiliateProviderInterface` com `ManualAffiliateProvider` (padrão, cadastro manual/CSV) e `MagaluAffiliateProvider` (stub — sem API pública oficial documentada), import de produtos via CSV (`league/csv`, `ImportAffiliateProductsFromCsvAction`, linhas inválidas reportadas sem interromper as demais), permissões `affiliate_programs.*`/`affiliate_products.*`, Policies, CRUD administrativo completo (`/admin/affiliate/programs`, `/admin/affiliate/products`, import CSV) com links na sidebar. 23 novos testes (285/286 na suíte completa, 1 falha pré-existente não relacionada, já registrada nas Fases 13-15). `vendor/bin/pint`, `phpstan analyse` (13 erros pré-existentes inalterados) e `npm run build` sem regressões.

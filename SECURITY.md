@@ -34,6 +34,14 @@
 - Política de retenção de dados será definida e documentada antes da Fase 11 (Produção).
 - Dados pessoais não são compartilhados entre tenants nem entre aplicações sem base legal e finalidade explícitas.
 
+### Trend Intelligence e Affiliate Intelligence (Fases 22-31)
+
+- Fontes de tendência (Instagram, Google Trends, redes sociais em geral) só são integradas via API oficial, feed público ou dataset legalmente utilizável — nunca via scraping agressivo ou mecanismos que violem termos de uso. Ver `README.md` para as restrições verificadas (Google Trends sem API pública; Instagram Graph API exige App Review da Meta).
+- Nenhum dado pessoal de terceiros (nome, perfil, foto, conteúdo de seguidores de redes sociais) é armazenado — `TrendSnapshot` guarda apenas contagens agregadas (menções, engajamento público, frequência) por palavra-chave/hashtag, nunca identidade de quem publicou ou interagiu.
+- `AffiliateClick` (rastreamento de link de afiliado, `/go/{slug}`) grava apenas um identificador técnico de visitante (cookie, para deduplicação) e metadados da campanha/conteúdo/produto/UTM — nenhum dado pessoal do visitante do link é coletado ou requerido.
+- Links de rastreamento próprios nunca alteram, substituem ou mascaram parâmetros obrigatórios do programa de afiliados de forma que comprometa a atribuição de comissão.
+- Import de produtos/conversões via CSV é processado e descartado (arquivo não retido além do necessário para auditoria via `IntegrationLog`, que registra apenas metadados da execução — quantidade de linhas, sucesso/erro — nunca o conteúdo pessoal de terceiros).
+
 ## Boas práticas de desenvolvimento
 
 - Nunca commitar credenciais, `.env` ou segredos no repositório.
