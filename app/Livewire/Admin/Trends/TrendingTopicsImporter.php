@@ -90,7 +90,11 @@ class TrendingTopicsImporter extends Component
             if ($topic) {
                 Trend::firstOrCreate(
                     ['watchlist_id' => $watchlist->id, 'term' => $topic->topic],
-                    ['description' => $topic->description, 'status' => 'active']
+                    [
+                        'application_id' => $app->id,
+                        'description' => $topic->description,
+                        'status' => 'active',
+                    ]
                 );
                 $count++;
             }
@@ -114,9 +118,12 @@ class TrendingTopicsImporter extends Component
             return;
         }
 
+        $app = auth()->user()->application ?? Application::first();
+
         Trend::firstOrCreate(
             ['watchlist_id' => $this->watchlist->id, 'term' => $topic->topic],
             [
+                'application_id' => $app->id,
                 'description' => $topic->description,
                 'status' => 'active',
             ]
@@ -132,13 +139,19 @@ class TrendingTopicsImporter extends Component
             return;
         }
 
+        $app = auth()->user()->application ?? Application::first();
+
         $count = 0;
         foreach ($ids as $id) {
             $topic = TrendingTopic::find($id);
             if ($topic) {
                 Trend::firstOrCreate(
                     ['watchlist_id' => $this->watchlist->id, 'term' => $topic->topic],
-                    ['description' => $topic->description, 'status' => 'active']
+                    [
+                        'application_id' => $app->id,
+                        'description' => $topic->description,
+                        'status' => 'active',
+                    ]
                 );
                 $count++;
             }
