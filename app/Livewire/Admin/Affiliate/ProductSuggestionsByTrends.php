@@ -186,7 +186,13 @@ class ProductSuggestionsByTrends extends Component
         $this->selectedProducts = [];
         $this->selectedProgramId = '';
         $this->showImportForm = false;
-        $this->dispatch('toast', message: "{$count} produtos importados com sucesso!", type: 'success');
+        $this->suggestions = [];
+
+        $this->dispatch('toast', message: "{$count} produtos importados com sucesso! 🎉", type: 'success');
+
+        // Redirecionar para produtos importados
+        sleep(1);
+        redirect()->route('admin.affiliate.products.index')->with('message', "{$count} produtos importados com sucesso!");
     }
 
     public function render()

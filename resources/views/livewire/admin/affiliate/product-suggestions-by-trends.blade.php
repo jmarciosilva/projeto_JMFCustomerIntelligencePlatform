@@ -99,7 +99,7 @@
             </div>
 
             <!-- Botão de Importação -->
-            <div wire:poll.5000ms>
+            <div>
                 @if (count($selectedProducts) > 0)
                     <div class="bg-slate-900 border-2 border-amber-600 rounded-lg p-6 space-y-4">
                         <h2 class="text-lg font-bold text-white">
@@ -151,4 +151,23 @@
             <p class="text-slate-400 text-sm mt-2">Tente com diferentes keywords ou categorias</p>
         </div>
     @endif
+
+    <!-- Próximos Passos -->
+    <div class="bg-amber-600/10 border border-amber-600/30 rounded-lg p-6">
+        <h2 class="text-lg font-bold text-amber-300 mb-4">📋 Próximos Passos</h2>
+        <div class="space-y-3 text-slate-300 text-sm">
+            <p>
+                ✅ <strong>Produtos Importados?</strong> Vá em <a href="{{ route('admin.affiliate.products.index') }}" class="text-amber-400 hover:underline">Setup → 📦 Produtos</a> para visualizar.
+            </p>
+            <p>
+                📋 <strong>Criar Campanha?</strong> Vá em <a href="{{ route('admin.affiliate.campaigns.index') }}" class="text-amber-400 hover:underline">Campanhas & Conteúdo → 📋 Campanhas</a>.
+            </p>
+            <p>
+                🔗 <strong>Gerar Links?</strong> Vá em <a href="{{ route('admin.affiliate.links.index') }}" class="text-amber-400 hover:underline">Campanhas & Conteúdo → 🔗 Links</a>.
+            </p>
+            <p>
+                📊 <strong>Ver Recomendações?</strong> Vá em <a href="{{ route('admin.affiliate.recommendations.index') }}" class="text-amber-400 hover:underline">Performance & Conversões → 🎯 Recomendações</a>.
+            </p>
+        </div>
+    </div>
 </div>
