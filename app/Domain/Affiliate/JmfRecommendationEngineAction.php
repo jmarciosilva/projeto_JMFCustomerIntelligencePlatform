@@ -10,7 +10,11 @@ class JmfRecommendationEngineAction
 {
     public function execute(Application $application, int $limit = 10): array
     {
-        $recommendations = ProductOpportunity::where('application_id', $application->id)
+        $trendIds = \App\Models\Trend::whereHas('watchlist', function ($query) use ($application) {
+            $query->where('application_id', $application->id);
+        })->pluck('id');
+
+        $recommendations = ProductOpportunity::whereIn('trend_id', $trendIds)
             ->with(['product', 'trend'])
             ->get()
             ->map(function ($opportunity) use ($application) {
