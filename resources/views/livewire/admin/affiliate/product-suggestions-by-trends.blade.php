@@ -109,14 +109,19 @@
                     <div class="space-y-2">
                         <label class="block text-sm font-bold text-slate-300">Importar para qual programa?</label>
                         <select
-                            wire:model="selectedProgramId"
+                            wire:model.live="selectedProgramId"
                             class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-amber-400 focus:outline-none"
                         >
                             <option value="">-- Selecione um programa --</option>
-                            @foreach ($programs as $p)
-                                <option value="{{ $p->id }}">{{ $p->name }} ({{ $p->website }})</option>
-                            @endforeach
+                            @forelse ($programs as $p)
+                                <option value="{{ $p->id }}">{{ $p->name }}</option>
+                            @empty
+                                <option disabled>Nenhum programa encontrado</option>
+                            @endforelse
                         </select>
+                        @if (empty($programs))
+                            <p class="text-xs text-amber-400">⚠️ Nenhum programa de afiliado ativo. Crie um em Setup → Programas</p>
+                        @endif
                     </div>
 
                     <button
