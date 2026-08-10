@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Application\Affiliate\Actions\CalculateOpportunitiesAction;
 use App\Application\Trends\Actions\CalculateTrendScoresAction;
 use App\Application\Trends\Actions\MatchTrendProductsAction;
 use Illuminate\Console\Command;
@@ -10,10 +11,13 @@ class CalculateTrendScoresCommand extends Command
 {
     protected $signature = 'trends:calculate-scores {--application-id=}';
 
-    protected $description = 'Recalcula o Trend Score (0-100) e relaciona com produtos de afiliados';
+    protected $description = 'Recalcula Trend Score, Product Matcher e Opportunity Score';
 
-    public function handle(CalculateTrendScoresAction $calculateAction, MatchTrendProductsAction $matchAction): int
-    {
+    public function handle(
+        CalculateTrendScoresAction $calculateAction,
+        MatchTrendProductsAction $matchAction,
+        CalculateOpportunitiesAction $opportunityAction
+    ): int {
         $applicationId = $this->option('application-id');
         $applicationId = $applicationId ? (int) $applicationId : null;
 
@@ -22,6 +26,9 @@ class CalculateTrendScoresCommand extends Command
 
         $matched = $matchAction->handle($applicationId);
         $this->info("✅ {$matched} produto(s) relacionado(s) a tendências.");
+
+        $opportunities = $opportunityAction->handle($applicationId);
+        $this->info("✅ {$opportunities} oportunidade(s) calculada(s).");
 
         return self::SUCCESS;
     }
