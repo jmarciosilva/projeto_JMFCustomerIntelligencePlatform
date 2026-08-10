@@ -23,6 +23,6 @@ class RecommendationDashboard extends Component
 
     public function render()
     {
-        return view('livewire.admin.affiliate.recommendation-dashboard');
+        return view('livewire.admin.affiliate.recommendation-dashboard')->layout('layouts.admin', ['header' => 'Administração']);
     }
 }

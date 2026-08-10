@@ -32,6 +32,6 @@ class CampaignIndex extends Component
 
         return view('livewire.admin.affiliate.campaign-index', [
             'campaigns' => $campaigns,
-        ]);
+        ])->layout('layouts.admin', ['header' => 'Administração']);
     }
 }

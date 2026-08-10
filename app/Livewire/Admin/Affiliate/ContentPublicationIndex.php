@@ -52,6 +52,6 @@ class ContentPublicationIndex extends Component
         return view('livewire.admin.affiliate.content-publication-index', [
             'contents' => $contents,
             'campaigns' => $campaigns,
-        ]);
+        ])->layout('layouts.admin', ['header' => 'Administração']);
     }
 }

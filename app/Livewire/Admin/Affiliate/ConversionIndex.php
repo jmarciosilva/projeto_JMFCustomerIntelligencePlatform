@@ -62,6 +62,6 @@ class ConversionIndex extends Component
 
         return view('livewire.admin.affiliate.conversion-index', [
             'conversions' => $conversions,
-        ]);
+        ])->layout('layouts.admin', ['header' => 'Administração']);
     }
 }

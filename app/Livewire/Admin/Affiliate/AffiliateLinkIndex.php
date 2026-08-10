@@ -49,6 +49,6 @@ class AffiliateLinkIndex extends Component
 
         return view('livewire.admin.affiliate.affiliate-link-index', [
             'links' => $links,
-        ]);
+        ])->layout('layouts.admin', ['header' => 'Administração']);
     }
 }
