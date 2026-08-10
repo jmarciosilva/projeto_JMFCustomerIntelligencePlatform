@@ -749,7 +749,7 @@ Depende da Fase 23 (série histórica de `TrendSnapshot`).
 
 ## Fase 25 — Product Matcher
 
-**Status:** `[ ]` Pendente · depende das Fases 22 e 24
+**Status:** `[x]` Concluída (2026-08-10)
 
 ### Objetivo
 
@@ -757,28 +757,28 @@ Relacionar tendências encontradas com produtos existentes em programas de afili
 
 ### Tarefas
 
-- [ ] Model: `TrendProductMatch` (pivot `trend_id` × `affiliate_product_id`, `match_score`).
-- [ ] Migration correspondente.
-- [ ] Service: `App\Domain\Affiliate\ProductMatcher` (palavras-chave, categoria, marca, similaridade textual).
-- [ ] Jobs: `MatchProductsJob`, agendado após cálculo do Trend Score.
-- [ ] UI: exibir produtos correspondentes na tela de detalhe de uma tendência.
-- [ ] Tests: matching por keyword/categoria/marca, ausência de match, múltiplos candidatos ordenados por score.
-- [ ] Documentation.
+- [x] Model: `TrendProductMatch` (pivot `trend_id` × `affiliate_product_id`, `match_score`).
+- [x] Migration correspondente.
+- [x] Service: `App\Domain\Trends\ProductMatcher` (palavras-chave 40%, categoria 35%, marca 25%, similaridade textual via levenshtein).
+- [x] Action: `MatchTrendProductsAction`, integrada ao comando `trends:calculate-scores`.
+- [x] UI: Componente Livewire `TrendProductMatches` exibindo produtos relacionados com scores e breakdown.
+- [x] Tests: matching por keyword/categoria/marca (14 testes), ausência de match, múltiplos candidatos ordenados, isolamento, idempotência.
+- [x] Documentation: histórico atualizado abaixo.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável (Eloquent direto nas Actions)
+- [x] Jobs — não aplicável (integrado em MatchTrendProductsAction, sem fila — matching é síncrono após score calculado)
+- [x] UI
+- [x] Tests (14 novos, 100% passando; suíte 339/340 total)
+- [x] Documentation
 
 ### Dependências
 
-Depende da Fase 22 (produtos de afiliados cadastrados) e da Fase 24 (Trend Score calculado).
+Depende da Fase 22 (produtos de afiliados cadastrados) e da Fase 24 (Trend Score calculado) — ambas concluídas.
 
 ---
 
@@ -996,3 +996,4 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-09** — Corrigido gap operacional descoberto ao final da Fase 22: migrar as tabelas no banco real (`jmf_ci_homolog`) não recria/sincroniza permissões nem dados de seed — só o banco de testes (`jmf_ci_testing`) reseeda automaticamente via Pest. `RolePermissionSeeder`/`AffiliateWorkspaceSeeder` precisaram ser executados manualmente no banco real após o `migrate --force`, sem o que os novos links da sidebar (`@can(...)`) ficavam invisíveis mesmo para Super Admin. Passo de reseed do banco real incorporado ao checklist de toda fase seguinte (ver Fase 23).
 - **2026-08-09** — Fase 23 concluída: `Watchlist`/`Trend`/`TrendSnapshot` (isolados por `application_id`; `WatchlistTrendSynchronizer` expande palavras-chave/hashtags em `Trend` sem nunca apagar histórico — termos removidos ficam `inactive`), `TrendProviderInterface` com `ManualTrendProvider` (observação manual via UI), `InternalBehaviorProvider` (dados próprios: eventos `product.search`/`product.viewed` do marketplace, Fase 12) e stubs documentados `InstagramTrendProvider`/`GoogleTrendsProvider`/`YouTubeTrendProvider` (sem acesso oficial disponível — App Review da Meta, API pública inexistente do Google Trends, API key não provisionada do YouTube). `CollectTrendSignalsJob` despachado pelo comando agendado `trends:collect` (05:00, encadeado após as demais fases de inteligência). CRUD administrativo de Watchlists e tela de detalhe de tendência com histórico filtrável (7/30/90/365 dias) e gráfico Chart.js. 35 novos testes (312/313 na suíte completa, mesma falha pré-existente não relacionada). Seeders reexecutados no banco real (`jmf_ci_homolog`) antes de considerar a fase visível no painel, conforme lição registrada acima.
 - **2026-08-09** — Fase 24 concluída: `TrendScoreCalculator` (regras: crescimento/volume/recorrência/estabilidade, engajamento com peso redistribuído quando ausente; sazonalidade deliberadamente fora da fórmula por falta de histórico comparável de 1+ ano) persistindo `trend_score`/`trend_score_breakdown`/`trend_score_computed_at` em `Trend`; `CalculateTrendScoresAction` síncrona (sem Job — mesmo padrão da Fase 13) via comando agendado `trends:calculate-scores` (05:30); badge de score (`<x-trend-score-badge>`) e breakdown na Watchlist e no detalhe da tendência, com botão de recálculo sob demanda. 23 novos testes, incluindo verificação manual byte a byte da fórmula (325/326 na suíte completa, mesma falha pré-existente não relacionada).
+- **2026-08-10** — Fase 25 concluída: `TrendProductMatch` (pivot trend_id × affiliate_product_id, `match_score` 0-100, `match_breakdown` JSON); `App\Domain\Trends\ProductMatcher` com algoritmo de similaridade ponderado (palavra-chave 40% via levenshtein, categoria 35% exact/partial, marca 25% exact/partial); `MatchTrendProductsAction` integrada ao comando `trends:calculate-scores`, executada sincrona após cálculo de scores (idempotente, updateOrCreate); componente Livewire `TrendProductMatches` exibindo produtos relacionados com score/breakdown/preço/comissão/programa, paginação (10 itens), badges com cores (verde ≥75, âmbar 50-75, vermelho <50). 14 novos testes de ProductMatcher (matching por factor isolado, múltiplos candidatos, ausência de match, isolamento, idempotência) + MatchTrendProductsAction (batch, individual, ignora inativos) — suíte 339/340 testes passando, mesma falha pré-existente não relacionada do Plugin E2E da Fase 20.

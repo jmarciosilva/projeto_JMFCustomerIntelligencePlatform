@@ -289,7 +289,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 24 — Trend Score** concluída: `TrendScoreCalculator` (regras baseadas em crescimento, volume, recorrência, estabilidade e engajamento quando disponível) gera uma pontuação 0-100 por tendência, recalculada diariamente (`trends:calculate-scores`) ou sob demanda no painel — exibida como badge colorido com breakdown dos fatores em `/admin/trends/watchlists` e no detalhe da tendência. Ver seção "Trend Intelligence, Affiliate Intelligence e Product Opportunity Engine" acima e Fases 22-31 do [`ROADMAP.md`](ROADMAP.md).
 
-📋 **Fase 25 — Product Matcher** próxima.
+✅ **Fase 25 — Product Matcher** concluída: `TrendProductMatch` (pivot trend × affiliate_product, `match_score` 0-100) com `ProductMatcher` service (similaridade ponderada: palavra-chave 40% + categoria 35% + marca 25%), integrada ao comando `trends:calculate-scores`, UI em Livewire exibindo produtos relacionados com scores/breakdown/preço/comissão. Resolvida a pergunta: **"Que produtos devo divulgar quando essa tendência surge?"**.
+
+📋 **Fase 26 — Product Opportunity Engine** próxima: combinar Trend Score + Match Score + Intenção Comercial para calcular oportunidades reais de venda.
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 
