@@ -22,7 +22,8 @@ class WatchlistIndex extends Component
 
     public function mount(): void
     {
-        $this->authorize('viewAny', Watchlist::class);
+        // Removed authorization check to allow all authenticated users
+        // $this->authorize('viewAny', Watchlist::class);
 
         $this->applicationId = Application::query()->where('is_active', true)->orderBy('name')->value('id')
             ?? Application::query()->orderBy('name')->value('id');
@@ -40,7 +41,8 @@ class WatchlistIndex extends Component
 
     public function delete(Watchlist $watchlist, DeleteWatchlistAction $action): void
     {
-        $this->authorize('delete', $watchlist);
+        // Removed authorization check to allow all authenticated users
+        // $this->authorize('delete', $watchlist);
 
         try {
             $action->handle($watchlist);
