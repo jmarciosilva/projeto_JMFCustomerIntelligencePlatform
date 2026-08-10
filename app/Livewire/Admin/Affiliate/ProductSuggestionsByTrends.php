@@ -6,25 +6,27 @@ use App\Models\Application;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
 use App\Models\Watchlist;
-use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class ProductSuggestionsByTrends extends Component
 {
-    #[Reactive]
     public ?int $watchlist = null;
-
     public array $suggestions = [];
-
-    #[Reactive]
     public array $selectedProducts = [];
-
     public ?int $selectedProgramId = null;
     public bool $showImportForm = false;
 
     public function mount(): void
     {
         // Initialize
+    }
+
+    public function updated($name, $value): void
+    {
+        if ($name === 'watchlist') {
+            $this->suggestions = [];
+            $this->selectedProducts = [];
+        }
     }
 
     public function loadSuggestions(): void
