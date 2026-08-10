@@ -1,13 +1,13 @@
 <div class="space-y-4">
     <div class="flex items-center justify-between">
         <h2 class="text-2xl font-bold">Campanhas</h2>
-        <a href="{{ route('admin.affiliate.campaigns.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <a href="{{ route('admin.affiliate.campaigns.create') }}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
             Nova Campanha
         </a>
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
@@ -24,7 +24,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b">
+                <thead class="bg-slate-800 border-b">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Nome</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
@@ -35,18 +35,18 @@
                 </thead>
                 <tbody class="divide-y">
                     @foreach ($campaigns as $campaign)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-slate-800">
                             <td class="px-6 py-4 font-medium">{{ $campaign->name }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-sm font-medium
-                                    {{ $campaign->status === 'active' ? 'bg-green-100 text-green-800' : '' }}
-                                    {{ $campaign->status === 'paused' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $campaign->status === 'archived' ? 'bg-gray-100 text-gray-800' : '' }}
+                                    {{ $campaign->status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : '' }}
+                                    {{ $campaign->status === 'paused' ? 'bg-yellow-500/20 text-yellow-300' : '' }}
+                                    {{ $campaign->status === 'archived' ? 'bg-slate-800/50 text-gray-800' : '' }}
                                 ">
                                     {{ ucfirst($campaign->status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">
+                            <td class="px-6 py-4 text-sm text-slate-400">
                                 {{ $campaign->start_date?->format('d/m/Y') ?? '-' }} até {{ $campaign->end_date?->format('d/m/Y') ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm">

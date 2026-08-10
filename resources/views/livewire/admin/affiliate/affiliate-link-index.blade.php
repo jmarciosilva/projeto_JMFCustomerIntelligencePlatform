@@ -1,13 +1,13 @@
 <div class="space-y-4">
     <div class="flex items-center justify-between">
         <h2 class="text-2xl font-bold">Links de Afiliado</h2>
-        <a href="{{ route('admin.affiliate.links.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <a href="{{ route('admin.affiliate.links.create') }}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
             Novo Link
         </a>
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
@@ -39,7 +39,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b">
+                <thead class="bg-slate-800 border-b">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Slug</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Produto</th>
@@ -51,7 +51,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($links as $link)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-slate-800">
                             <td class="px-6 py-4 font-mono text-sm">
                                 <a href="{{ route('affiliate.redirect', ['slug' => $link->slug]) }}" target="_blank" class="text-blue-600 hover:text-blue-800">
                                     {{ $link->slug }}
@@ -62,9 +62,9 @@
                             <td class="px-6 py-4 text-sm font-medium">{{ $link->clicks ?? 0 }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-sm font-medium
-                                    {{ $link->status === 'active' ? 'bg-green-100 text-green-800' : '' }}
-                                    {{ $link->status === 'paused' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $link->status === 'archived' ? 'bg-gray-100 text-gray-800' : '' }}
+                                    {{ $link->status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : '' }}
+                                    {{ $link->status === 'paused' ? 'bg-yellow-500/20 text-yellow-300' : '' }}
+                                    {{ $link->status === 'archived' ? 'bg-slate-800/50 text-gray-800' : '' }}
                                 ">
                                     {{ ucfirst($link->status) }}
                                 </span>
@@ -73,7 +73,7 @@
                                 <a href="{{ route('admin.affiliate.links.edit', $link) }}" class="text-blue-600 hover:text-blue-800">
                                     Editar
                                 </a>
-                                <button wire:click="copySlug('{{ $link->slug }}')" class="text-green-600 hover:text-green-800 text-sm">
+                                <button wire:click="copySlug('{{ $link->slug }}')" class="text-green-600 hover:text-emerald-300 text-sm">
                                     Copiar
                                 </button>
                                 <button wire:click="delete({{ $link->id }})" onclick="return confirm('Tem certeza?')" class="text-red-600 hover:text-red-800">

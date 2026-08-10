@@ -6,7 +6,7 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg mb-6">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg mb-6">
             {{ session('message') }}
         </div>
     @endif
@@ -133,10 +133,10 @@
         </div>
 
         <div class="flex gap-3">
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <button type="submit" class="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                 {{ $content ? 'Atualizar' : 'Criar' }} Conteúdo
             </button>
-            <a href="{{ route('admin.affiliate.content.index') }}" class="px-6 py-2 border rounded-lg hover:bg-gray-50">
+            <a href="{{ route('admin.affiliate.content.index') }}" class="px-6 py-2 border rounded-lg hover:bg-slate-800">
                 Cancelar
             </a>
         </div>

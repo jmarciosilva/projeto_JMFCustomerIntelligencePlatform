@@ -2,17 +2,17 @@
     <div class="flex items-center justify-between">
         <h2 class="text-2xl font-bold">Conversões</h2>
         <div class="flex gap-2">
-            <a href="{{ route('admin.affiliate.conversions.import') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <a href="{{ route('admin.affiliate.conversions.import') }}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                 Importar CSV
             </a>
-            <a href="{{ route('admin.affiliate.conversions.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <a href="{{ route('admin.affiliate.conversions.create') }}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                 Nova Conversão
             </a>
         </div>
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
@@ -39,7 +39,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b">
+                <thead class="bg-slate-800 border-b">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Referência</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Produto</th>
@@ -52,7 +52,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($conversions as $conversion)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-slate-800">
                             <td class="px-6 py-4 font-mono text-sm">{{ $conversion->order_reference }}</td>
                             <td class="px-6 py-4 text-sm">{{ $conversion->affiliateProduct->product_name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm">{{ $conversion->order_date->format('d/m/Y') }}</td>
@@ -62,9 +62,9 @@
                             </td>
                             <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-sm font-medium
-                                    {{ $conversion->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                                    {{ $conversion->status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' : '' }}
                                     {{ $conversion->status === 'approved' ? 'bg-blue-100 text-blue-800' : '' }}
-                                    {{ $conversion->status === 'paid' ? 'bg-green-100 text-green-800' : '' }}
+                                    {{ $conversion->status === 'paid' ? 'bg-emerald-500/20 text-emerald-300' : '' }}
                                     {{ $conversion->status === 'cancelled' ? 'bg-red-100 text-red-800' : '' }}
                                 ">
                                     {{ ucfirst($conversion->status) }}
@@ -77,7 +77,7 @@
                                     </button>
                                 @endif
                                 @if ($conversion->isApproved())
-                                    <button wire:click="markAsPaid({{ $conversion->id }})" class="text-green-600 hover:text-green-800 text-sm">
+                                    <button wire:click="markAsPaid({{ $conversion->id }})" class="text-green-600 hover:text-emerald-300 text-sm">
                                         Marcar Pago
                                     </button>
                                 @endif

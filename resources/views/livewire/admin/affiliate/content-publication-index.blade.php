@@ -1,13 +1,13 @@
 <div class="space-y-4">
     <div class="flex items-center justify-between">
         <h2 class="text-2xl font-bold">Conteúdos Publicados</h2>
-        <a href="{{ route('admin.affiliate.content.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <a href="{{ route('admin.affiliate.content.create') }}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
             Novo Conteúdo
         </a>
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg">
             {{ session('message') }}
         </div>
     @endif
@@ -33,7 +33,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 border-b">
+                <thead class="bg-slate-800 border-b">
                     <tr>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Título</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold">Campanha</th>
@@ -45,7 +45,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($contents as $content)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-slate-800">
                             <td class="px-6 py-4 font-medium">{{ $content->title }}</td>
                             <td class="px-6 py-4">{{ $content->campaign->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm">
@@ -63,8 +63,8 @@
                             <td class="px-6 py-4 text-sm capitalize">{{ $content->platform }}</td>
                             <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-sm font-medium
-                                    {{ $content->status === 'published' ? 'bg-green-100 text-green-800' : '' }}
-                                    {{ $content->status === 'draft' ? 'bg-gray-100 text-gray-800' : '' }}
+                                    {{ $content->status === 'published' ? 'bg-emerald-500/20 text-emerald-300' : '' }}
+                                    {{ $content->status === 'draft' ? 'bg-slate-800/50 text-gray-800' : '' }}
                                     {{ $content->status === 'archived' ? 'bg-red-100 text-red-800' : '' }}
                                 ">
                                     {{ ucfirst($content->status) }}

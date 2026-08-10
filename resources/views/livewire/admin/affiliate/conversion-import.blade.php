@@ -4,7 +4,7 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-100 text-green-800 rounded-lg mb-6">
+        <div class="p-4 bg-emerald-500/20 text-emerald-300 rounded-lg mb-6">
             {{ session('message') }}
         </div>
     @endif
@@ -43,10 +43,10 @@
             </div>
 
             <div class="flex gap-3">
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <button type="submit" class="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                     Importar
                 </button>
-                <a href="{{ route('admin.affiliate.conversions.index') }}" class="px-6 py-2 border rounded-lg hover:bg-gray-50">
+                <a href="{{ route('admin.affiliate.conversions.index') }}" class="px-6 py-2 border rounded-lg hover:bg-slate-800">
                     Cancelar
                 </a>
             </div>
@@ -76,8 +76,8 @@
 
         <div class="border-t pt-6">
             <h3 class="text-lg font-semibold mb-4">Formato do CSV</h3>
-            <p class="text-sm text-gray-600 mb-4">O arquivo deve conter as seguintes colunas (cabeçalho obrigatório):</p>
-            <div class="bg-gray-50 p-4 rounded overflow-x-auto">
+            <p class="text-sm text-slate-400 mb-4">O arquivo deve conter as seguintes colunas (cabeçalho obrigatório):</p>
+            <div class="bg-slate-800 p-4 rounded overflow-x-auto">
                 <code class="text-xs">order_reference,product_name,order_date,product_price,commission_rate,commission_value,campaign_name,notes</code>
             </div>
             <div class="mt-4 space-y-2">
