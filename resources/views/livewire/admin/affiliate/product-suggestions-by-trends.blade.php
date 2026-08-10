@@ -73,12 +73,11 @@
                 @foreach ($suggestions as $product)
                     <div
                         class="bg-slate-900 border-2 rounded-lg p-4 cursor-pointer transition {{ in_array($product['id'], $selectedProducts) ? 'border-amber-600 bg-amber-600/10' : 'border-slate-800 hover:border-slate-700' }}"
-                        wire:click="toggleProduct('{{ $product['id'] }}')"
                     >
                         <div class="flex items-start gap-3">
                             <input
                                 type="checkbox"
-                                @change="$wire.toggleProduct('{{ $product['id'] }}')"
+                                wire:click="toggleProduct('{{ $product['id'] }}')"
                                 {{ in_array($product['id'], $selectedProducts) ? 'checked' : '' }}
                                 class="mt-1 w-5 h-5 rounded border-slate-600 bg-slate-800 text-amber-600 focus:ring-amber-500 cursor-pointer"
                             >
