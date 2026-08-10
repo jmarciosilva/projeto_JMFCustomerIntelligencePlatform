@@ -51,6 +51,6 @@ class PlatformSettingsForm extends Component
     {
         return view('livewire.admin.settings.platform-settings-form', [
             'regions' => ['BR' => 'Brasil', 'US' => 'Estados Unidos', 'GLOBAL' => 'Global'],
-        ]);
+        ])->layout('layouts.admin', ['header' => '⚙️ Configurações da Plataforma']);
     }
 }
