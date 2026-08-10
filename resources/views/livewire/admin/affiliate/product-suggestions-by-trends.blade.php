@@ -99,9 +99,9 @@
             </div>
 
             <!-- Botão de Importação -->
-            <div wire:key="import-section-{{ count($selectedProducts) }}" class="{{ empty($selectedProducts) ? 'opacity-50 pointer-events-none' : '' }}">
-                @if (!empty($selectedProducts) || true)
-                    <div class="bg-slate-900 border-2 {{ empty($selectedProducts) ? 'border-slate-700' : 'border-amber-600' }} rounded-lg p-6 space-y-4">
+            <div wire:poll.5000ms>
+                @if (count($selectedProducts) > 0)
+                    <div class="bg-slate-900 border-2 border-amber-600 rounded-lg p-6 space-y-4">
                         <h2 class="text-lg font-bold text-white">
                             📦 {{ count($selectedProducts) }} Produto(s) Selecionado(s)
                         </h2>
@@ -126,6 +126,10 @@
                     >
                         ✅ Importar Produtos para {{ $selectedProgramId ? $programs->find($selectedProgramId)?->name : 'Programa' }}
                     </button>
+                    </div>
+                @else
+                    <div class="bg-slate-900 border-2 border-slate-700 rounded-lg p-6 text-center opacity-50">
+                        <p class="text-slate-400">Selecione produtos acima para importar</p>
                     </div>
                 @endif
             </div>

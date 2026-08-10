@@ -6,13 +6,19 @@ use App\Models\Application;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
 use App\Models\Watchlist;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class ProductSuggestionsByTrends extends Component
 {
+    #[Reactive]
     public ?int $watchlist = null;
+
     public array $suggestions = [];
+
+    #[Reactive]
     public array $selectedProducts = [];
+
     public ?int $selectedProgramId = null;
     public bool $showImportForm = false;
 
@@ -112,13 +118,14 @@ class ProductSuggestionsByTrends extends Component
 
     public function toggleProduct(string $productId): void
     {
-        if (in_array($productId, $this->selectedProducts)) {
-            $this->selectedProducts = array_filter($this->selectedProducts, fn($id) => $id !== $productId);
+        $key = array_search($productId, $this->selectedProducts);
+
+        if ($key !== false) {
+            unset($this->selectedProducts[$key]);
+            $this->selectedProducts = array_values($this->selectedProducts);
         } else {
             $this->selectedProducts[] = $productId;
         }
-
-        $this->dispatch('productsUpdated');
     }
 
     public function importSelected(): void
