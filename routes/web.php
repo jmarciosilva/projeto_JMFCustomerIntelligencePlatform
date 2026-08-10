@@ -3,6 +3,12 @@
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Affiliate\LinkRedirectController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Affiliate\AffiliateLinkForm;
+use App\Livewire\Admin\Affiliate\AffiliateLinkIndex;
+use App\Livewire\Admin\Affiliate\CampaignForm;
+use App\Livewire\Admin\Affiliate\CampaignIndex;
+use App\Livewire\Admin\Affiliate\ContentPublicationForm;
+use App\Livewire\Admin\Affiliate\ContentPublicationIndex;
 use App\Livewire\Admin\Affiliate\ProductForm as AffiliateProductForm;
 use App\Livewire\Admin\Affiliate\ProductImport as AffiliateProductImport;
 use App\Livewire\Admin\Affiliate\ProductIndex as AffiliateProductIndex;
@@ -80,7 +86,7 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     // Fase 15 — AI Marketing
     Route::get('/marketing', ContentDashboard::class)->name('marketing.dashboard');
 
-    // Fase 22 — Affiliate Intelligence
+    // Fase 22 — Affiliate Intelligence / Fase 27 — Content & Link Tracking
     Route::prefix('affiliate')->name('affiliate.')->group(function (): void {
         Route::get('/programs', AffiliateProgramIndex::class)->name('programs.index');
         Route::get('/programs/create', AffiliateProgramForm::class)->name('programs.create');
@@ -90,6 +96,19 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/products/import', AffiliateProductImport::class)->name('products.import');
         Route::get('/products/create', AffiliateProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', AffiliateProductForm::class)->name('products.edit');
+
+        // Fase 27 — Content & Link Tracking
+        Route::get('/campaigns', CampaignIndex::class)->name('campaigns.index');
+        Route::get('/campaigns/create', CampaignForm::class)->name('campaigns.create');
+        Route::get('/campaigns/{campaign}/edit', CampaignForm::class)->name('campaigns.edit');
+
+        Route::get('/content', ContentPublicationIndex::class)->name('content.index');
+        Route::get('/content/create', ContentPublicationForm::class)->name('content.create');
+        Route::get('/content/{content}/edit', ContentPublicationForm::class)->name('content.edit');
+
+        Route::get('/links', AffiliateLinkIndex::class)->name('links.index');
+        Route::get('/links/create', AffiliateLinkForm::class)->name('links.create');
+        Route::get('/links/{link}/edit', AffiliateLinkForm::class)->name('links.edit');
     });
 
     // Fase 23 — Trend Intelligence
