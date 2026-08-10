@@ -77,7 +77,7 @@ class AffiliateLinkForm extends Component
         if ($this->product_opportunity_id) {
             $opportunity = ProductOpportunity::find($this->product_opportunity_id);
             if ($opportunity) {
-                $this->slug = $this->generator->generateSlug($opportunity->product_name);
+                $this->slug = $this->generator->generateSlug($opportunity->product->name);
                 $this->updatePreview();
             }
         }
@@ -157,7 +157,7 @@ class AffiliateLinkForm extends Component
             ->orderByDesc('opportunity_score')
             ->get();
 
-        $affiliateProducts = AffiliateProduct::orderBy('product_name')->get();
+        $affiliateProducts = AffiliateProduct::orderBy('name')->get();
 
         return view('livewire.admin.affiliate.affiliate-link-form', [
             'campaigns' => $campaigns,

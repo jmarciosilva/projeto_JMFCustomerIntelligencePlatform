@@ -109,7 +109,7 @@ class ConversionForm extends Component
         if ($this->affiliate_program_id) {
             $products = AffiliateProgram::find($this->affiliate_program_id)
                 ?->affiliateProducts()
-                ->orderBy('product_name')
+                ->orderBy('name')
                 ->get() ?? [];
         }
         $campaigns = Campaign::orderBy('name')->get();
