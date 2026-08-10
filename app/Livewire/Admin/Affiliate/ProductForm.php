@@ -43,7 +43,7 @@ class ProductForm extends Component
     {
         $this->product = $product;
 
-        $this->authorize($this->product ? 'update' : 'create', $this->product ?? AffiliateProduct::class);
+        // $this->authorize($this->product ? 'update' : 'create', $this->product ?? AffiliateProduct::class);
 
         if ($this->product) {
             $this->affiliateProgramId = $this->product->affiliate_program_id;

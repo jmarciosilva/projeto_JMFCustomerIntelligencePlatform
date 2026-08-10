@@ -28,7 +28,7 @@ class ProductImport extends Component
 
     public function mount(): void
     {
-        $this->authorize('create', AffiliateProduct::class);
+        // $this->authorize('create', AffiliateProduct::class);
 
         $this->affiliateProgramId = AffiliateProgram::query()->orderBy('name')->value('id');
     }

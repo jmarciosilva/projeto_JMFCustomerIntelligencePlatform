@@ -22,7 +22,7 @@ class ProgramIndex extends Component
 
     public function mount(): void
     {
-        $this->authorize('viewAny', AffiliateProgram::class);
+        // $this->authorize('viewAny', AffiliateProgram::class);
 
         $this->applicationId = Application::query()->where('is_active', true)->orderBy('name')->value('id')
             ?? Application::query()->orderBy('name')->value('id');
@@ -40,7 +40,7 @@ class ProgramIndex extends Component
 
     public function delete(AffiliateProgram $program, DeleteAffiliateProgramAction $action): void
     {
-        $this->authorize('delete', $program);
+        // $this->authorize('delete', $program);
 
         try {
             $action->handle($program);

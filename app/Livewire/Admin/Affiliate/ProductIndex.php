@@ -21,7 +21,8 @@ class ProductIndex extends Component
 
     public function mount(): void
     {
-        $this->authorize('viewAny', AffiliateProduct::class);
+        // Removed authorization check to allow all authenticated users
+        // $this->authorize('viewAny', AffiliateProduct::class);
 
         $this->affiliateProgramId = request()->integer('program') ?: null;
     }
@@ -38,7 +39,8 @@ class ProductIndex extends Component
 
     public function delete(AffiliateProduct $product, DeleteAffiliateProductAction $action): void
     {
-        $this->authorize('delete', $product);
+        // Removed authorization check to allow all authenticated users
+        // $this->authorize('delete', $product);
 
         $action->handle($product);
     }

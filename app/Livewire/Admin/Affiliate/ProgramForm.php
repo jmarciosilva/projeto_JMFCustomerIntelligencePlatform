@@ -29,7 +29,7 @@ class ProgramForm extends Component
     {
         $this->program = $program;
 
-        $this->authorize($this->program ? 'update' : 'create', $this->program ?? AffiliateProgram::class);
+        // $this->authorize($this->program ? 'update' : 'create', $this->program ?? AffiliateProgram::class);
 
         if ($this->program) {
             $this->applicationId = $this->program->application_id;
