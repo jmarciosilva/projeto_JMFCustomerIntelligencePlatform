@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Affiliate\LinkRedirectController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Affiliate\AnalyticsDashboard as AffiliateAnalyticsDashboard;
 use App\Livewire\Admin\Affiliate\AffiliateLinkForm;
 use App\Livewire\Admin\Affiliate\AffiliateLinkIndex;
 use App\Livewire\Admin\Affiliate\CampaignForm;
@@ -117,6 +118,8 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/conversions/create', ConversionForm::class)->name('conversions.create');
         Route::get('/conversions/{conversion}/edit', ConversionForm::class)->name('conversions.edit');
         Route::get('/conversions/import', ConversionImport::class)->name('conversions.import');
+
+        Route::get('/analytics', AffiliateAnalyticsDashboard::class)->name('analytics.index');
     });
 
     // Fase 23 — Trend Intelligence
