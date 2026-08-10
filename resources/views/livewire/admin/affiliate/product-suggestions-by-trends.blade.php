@@ -99,11 +99,12 @@
             </div>
 
             <!-- Botão de Importação -->
-            @if (!empty($selectedProducts))
-                <div class="bg-slate-900 border-2 border-amber-600 rounded-lg p-6 space-y-4">
-                    <h2 class="text-lg font-bold text-white">
-                        📦 {{ count($selectedProducts) }} Produto(s) Selecionado(s)
-                    </h2>
+            <div wire:key="import-section-{{ count($selectedProducts) }}" class="{{ empty($selectedProducts) ? 'opacity-50 pointer-events-none' : '' }}">
+                @if (!empty($selectedProducts) || true)
+                    <div class="bg-slate-900 border-2 {{ empty($selectedProducts) ? 'border-slate-700' : 'border-amber-600' }} rounded-lg p-6 space-y-4">
+                        <h2 class="text-lg font-bold text-white">
+                            📦 {{ count($selectedProducts) }} Produto(s) Selecionado(s)
+                        </h2>
 
                     <div class="space-y-2">
                         <label class="block text-sm font-bold text-slate-300">Importar para qual programa?</label>
@@ -125,8 +126,9 @@
                     >
                         ✅ Importar Produtos para {{ $selectedProgramId ? $programs->find($selectedProgramId)?->name : 'Programa' }}
                     </button>
-                </div>
-            @endif
+                    </div>
+                @endif
+            </div>
         </div>
     @elseif (count($suggestions) === 0 && $watchlist)
         <div class="bg-slate-900 border border-slate-800 rounded-lg p-8 text-center">

@@ -117,6 +117,8 @@ class ProductSuggestionsByTrends extends Component
         } else {
             $this->selectedProducts[] = $productId;
         }
+
+        $this->dispatch('productsUpdated');
     }
 
     public function importSelected(): void
