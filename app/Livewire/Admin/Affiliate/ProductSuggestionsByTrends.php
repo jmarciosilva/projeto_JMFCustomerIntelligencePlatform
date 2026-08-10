@@ -13,7 +13,7 @@ class ProductSuggestionsByTrends extends Component
     public ?int $watchlist = null;
     public array $suggestions = [];
     public array $selectedProducts = [];
-    public ?int $selectedProgramId = null;
+    public $selectedProgramId = null;
     public bool $showImportForm = false;
 
     public function mount(): void
@@ -132,9 +132,12 @@ class ProductSuggestionsByTrends extends Component
 
     public function importSelected(): void
     {
+        $programId = (int) $this->selectedProgramId;
+
         \Log::info('importSelected called', [
             'selectedProducts' => $this->selectedProducts,
             'selectedProgramId' => $this->selectedProgramId,
+            'castProgramId' => $programId,
         ]);
 
         if (empty($this->selectedProducts)) {
@@ -142,13 +145,13 @@ class ProductSuggestionsByTrends extends Component
             return;
         }
 
-        if (!$this->selectedProgramId) {
-            $this->dispatch('toast', message: 'Selecione um programa de afiliado', type: 'error');
+        if ($programId <= 0) {
+            $this->dispatch('toast', message: 'Selecione um programa de afiliado válido', type: 'error');
             return;
         }
 
         $app = auth()->user()->application ?? Application::first();
-        $program = AffiliateProgram::find($this->selectedProgramId);
+        $program = AffiliateProgram::find($programId);
 
         if (!$program) {
             $this->dispatch('toast', message: 'Programa não encontrado', type: 'error');
@@ -165,7 +168,7 @@ class ProductSuggestionsByTrends extends Component
                         ['name' => $product['name']],
                         [
                             'application_id' => $app->id,
-                            'affiliate_program_id' => $this->selectedProgramId,
+                            'affiliate_program_id' => $programId,
                             'category' => $product['category'],
                             'affiliate_url' => $program->website ?? 'https://www.influenciadormagalu.com.br/taemalta',
                             'status' => 'active',
@@ -181,7 +184,7 @@ class ProductSuggestionsByTrends extends Component
         }
 
         $this->selectedProducts = [];
-        $this->selectedProgramId = null;
+        $this->selectedProgramId = '';
         $this->showImportForm = false;
         $this->dispatch('toast', message: "{$count} produtos importados com sucesso!", type: 'success');
     }

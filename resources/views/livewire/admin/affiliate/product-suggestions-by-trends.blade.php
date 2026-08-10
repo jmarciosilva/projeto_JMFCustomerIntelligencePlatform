@@ -126,10 +126,16 @@
 
                     <button
                         wire:click="importSelected"
-                        @disabled(!$selectedProgramId)
-                        class="w-full px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:bg-slate-700 disabled:text-slate-400 transition font-bold"
+                        type="button"
+                        {{ (int)$selectedProgramId > 0 ? '' : 'disabled' }}
+                        class="w-full px-6 py-3 {{ (int)$selectedProgramId > 0 ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-700 cursor-not-allowed' }} text-white rounded-lg transition font-bold"
                     >
-                        ✅ Importar Produtos para {{ $selectedProgramId ? $programs->find($selectedProgramId)?->name : 'Programa' }}
+                        ✅ Importar Produtos
+                        @if ((int)$selectedProgramId > 0)
+                            para {{ $programs->find($selectedProgramId)?->name }}
+                        @else
+                            (selecione um programa)
+                        @endif
                     </button>
                     </div>
                 @else
