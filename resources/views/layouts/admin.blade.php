@@ -16,6 +16,14 @@
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+                <!-- Guia do Laboratório -->
+                <div class="mb-6">
+                    <a href="{{ route('admin.affiliate.guide') }}"
+                       class="block rounded-lg px-4 py-3 bg-gradient-to-r from-amber-600/30 to-amber-500/20 border border-amber-600/40 text-amber-300 font-semibold text-sm hover:from-amber-600/40 hover:to-amber-500/30 transition-all">
+                        📚 Guia do Laboratório
+                    </a>
+                </div>
+
                 <!-- Sistema Principal -->
                 <div class="space-y-1">
                     <p class="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema Principal</p>
@@ -160,13 +168,6 @@
                         </div>
                     @endcan
 
-                    <!-- Manual -->
-                    <div class="space-y-1 border-t border-slate-700 pt-3">
-                        <a href="{{ route('admin.affiliate.guide') }}"
-                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.guide') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                            📚 Guia do Laboratório
-                        </a>
-                    </div>
                 </div>
 
                 <!-- Admin -->
