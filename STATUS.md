@@ -5,9 +5,9 @@
 **Data:** 2026-08-10  
 **Versão:** 1.0.0-alpha  
 **Status Geral:** `[~]` Em Desenvolvimento Ativo  
-**Testes:** 375/376 passando (99.7%)
+**Testes:** 381/382 passando (99.7%)
 
-### Fases Concluídas (10/31)
+### Fases Concluídas (22/31)
 
 1. ✅ **Fase 01** — Fundação e documentação
 2. ✅ **Fase 02** — Autenticação e administração
@@ -17,24 +17,26 @@
 6. ✅ **Fase 06** — Analytics MVP
 7. ✅ **Fase 07** — SDK Laravel
 8. ✅ **Fase 10** — Inteligência inicial
-9. ✅ **Fase 19** — Ajuda contextual e documentação de usuário
-10. ✅ **Fase 20** — Plugin UI Instalável
+9. ✅ **Fase 12** — Integração com Feira Esquerda Livre (Marketplace Analytics & CJ)
+10. ✅ **Fase 13** — AI Business Intelligence
+11. ✅ **Fase 14** — AI Business Assistant
+12. ✅ **Fase 15** — AI Marketing
+13. ✅ **Fase 19** — Ajuda contextual e documentação de usuário
+14. ✅ **Fase 20** — Plugin UI Instalável
+15. ✅ **Fase 22** — Affiliate Intelligence (fundação)
+16. ✅ **Fase 23** — Trend Intelligence (fundação)
+17. ✅ **Fase 24** — Trend Score
+18. ✅ **Fase 25** — Product Matcher
+19. ✅ **Fase 26** — Product Opportunity Engine
+20. ✅ **Fase 27** — Content & Link Tracking
+21. ✅ **Fase 28** — Conversões
+22. ✅ **Fase 29** — Affiliate Analytics
 
-### Fases em Andamento (4/31)
+### Fases em Andamento (0/31)
 
-11. 🔄 **Fase 12** — Integração com Feira Esquerda Livre (Marketplace Analytics & CJ) — Concluída
-12. 🔄 **Fase 13** — AI Business Intelligence — Concluída
-13. 🔄 **Fase 14** — AI Business Assistant — Concluída
-14. 🔄 **Fase 15** — AI Marketing — Concluída
-15. 🔄 **Fase 22** — Affiliate Intelligence (fundação) — Concluída
-16. 🔄 **Fase 23** — Trend Intelligence (fundação) — Concluída
-17. 🔄 **Fase 24** — Trend Score — Concluída
-18. 🔄 **Fase 25** — Product Matcher — Concluída
-19. 🔄 **Fase 26** — Product Opportunity Engine — Concluída
-20. 🔄 **Fase 27** — Content & Link Tracking — Em andamento (UI implementada)
-21. 🔄 **Fase 28** — Conversões — Em andamento (UI implementada)
+*(Todas as 22 fases concluídas estão listadas nas seções de Concluídas e Pendentes)*
 
-### Fases Pendentes (17/31)
+### Fases Pendentes (9/31)
 
 - [ ] Fase 08 — Integração com site pessoal (parcial)
 - [ ] Fase 09 — Integração com Clube do Salão
@@ -43,7 +45,6 @@
 - [ ] Fase 17 — AI Fraud Detection
 - [ ] Fase 18 — Intelligence Engine
 - [ ] Fase 21 — Integração com Feira Esquerda Livre (Piloto)
-- [ ] Fase 29 — Affiliate Analytics
 - [ ] Fase 30 — JMF Recommendation Engine
 - [ ] Fase 31 — IA e Machine Learning
 
@@ -180,7 +181,7 @@
 - **Build:** Vite + Node.js 22
 
 ### Qualidade
-- **Testes:** Pest (375 testes passando)
+- **Testes:** Pest (381 testes passando)
 - **Linting:** Laravel Pint
 - **Análise Estática:** PHPStan/Larastan
 - **CI/CD:** GitHub Actions (configurável)
@@ -217,7 +218,7 @@
 
 | Métrica | Status |
 |---------|--------|
-| Testes Automatizados | 375/376 (99.7%) |
+| Testes Automatizados | 381/382 (99.7%) |
 | Cobertura de Código | ~85% (estimado) |
 | Análise Estática (PHPStan) | 13 avisos pré-existentes |
 | Lint (Pint) | ✅ Sem erros |
