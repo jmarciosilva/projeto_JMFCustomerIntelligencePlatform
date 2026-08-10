@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AdminUserSeeder::class,
             AffiliateWorkspaceSeeder::class,
+            Phase22AffiliateIntelligenceSeeder::class,
+            Phase23TrendIntelligenceSeeder::class,
+            Phase24TrendScoreSeeder::class,
         ]);
     }
 }
