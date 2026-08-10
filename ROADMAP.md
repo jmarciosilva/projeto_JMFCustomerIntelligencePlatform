@@ -960,19 +960,57 @@ Depende da Fase 29 (dados reais de desempenho) e da Fase 26 (Opportunity Score).
 
 ## Fase 31 — IA e Machine Learning (Trend/Affiliate Intelligence)
 
-**Status:** `[ ]` Pendente · depende da Fase 30
+**Status:** `[~]` Em andamento · depende da Fase 30 + dados reais
 
 ### Objetivo
 
 Substituir as regras do Trend Score/Opportunity Score por modelos estatísticos ou de machine learning, apenas quando existir volume de dados real suficiente.
 
-### Tarefas
+### Estratégia (MVP - Minimal Viable Product)
 
-Deliberadamente não detalhadas ainda — esta fase só será planejada em detalhe quando as Fases 22-30 estiverem em produção com dados reais suficientes para treinar/validar um modelo.
+**Fase 31A — Preparação de dados (Sprint 1)**
+- Criação de pipeline de exportação de dados (Trends, Products, Conversions, Clicks)
+- Tabela `ml_training_data` com snapshots normalizados
+- Logs estruturados para auditoria de decisões do modelo
+- Formato de dados preparado para frameworks (scikit-learn, TensorFlow, LightGBM)
+
+**Fase 31B — Modelo baseline (Sprint 2)**
+- Regressão linear ou XGBoost para Trend Score (substituir 4 regras: crescimento, volume, recorrência, estabilidade)
+- Regressão logística para Product Opportunity Score (substituir 5 fatores: Trend, Match, Intent, Commission, Popularity)
+- Validação cruzada (cross-validation) e métricas (R², AUC, precisão)
+- Comparação: regra atual vs. modelo em conjunto de dados de histórico
+
+**Fase 31C — Deploy e monitoramento (Sprint 3)**
+- Modelo empacotado como Python worker ou FastAPI microserviço
+- Fallback automático para regras quando não houver confiança suficiente
+- Dashboard de drift detection (monitorar desvio de performance)
+- A/B testing: regra vs. modelo em 20% das recomendações
+
+### Tarefas (listadas sequencialmente)
+
+- [ ] **Coleta de dados históricos**: Snapshot semanal de Trends/Products/Conversions/Clicks em `ml_training_data`
+- [ ] **Feature engineering**: Normalização, one-hot encoding, feature selection (Fases 22-30 fornecem base)
+- [ ] **Treinamento de modelos**: XGBoost/LightGBM para Trend Score e Opportunity Score
+- [ ] **Validação e testes**: Cross-validation, comparação contra regras atuais
+- [ ] **Deploy**: Python worker assíncrono ou FastAPI, integrado ao comando `trends:calculate-scores`
+- [ ] **Monitoramento**: Dashboard de drift, performance, confiança
+- [ ] **Documentação**: Guia de treinamento, reprodutibilidade, atualizações de modelo
+- [ ] **Testes automatizados**: Validação de predições, fallback, comparação com baseline
 
 ### Dependências
 
-Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
+Depende de:
+1. **Fase 30 concluída** (Recommendation Engine funcional)
+2. **Volume de dados real** — mínimo 1-3 meses de histórico das Fases 22-29 em produção
+3. **Infraestrutura de ML** — Python 3.11+, bibliotecas (scikit-learn/XGBoost/LightGBM), possível containerização
+
+### Notas estratégicas
+
+- **MVP não requer ML avançado**: regressão linear ou XGBoost já supera 4+ regras com feedback real
+- **Fallback to rules**: modelo pode falhar; regras são o sistema de segurança
+- **Data pipeline é o work: a preparação e monitoramento valem mais que o modelo
+- **Não é produção até ter 3+ meses de dados**: evita overfitting a padrões temporários
+- **Reavaliação a cada 6 meses**: tendências de afiliados mudam; retreinamento periódico necessário
 
 ---
 
@@ -1009,3 +1047,5 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-10** — Documentação do projeto acertada e consolidada: **STATUS.md** (dashboard de status, 14 fases concluídas, 375/376 testes); **DEPLOYMENT.md** (guia completo de produção — servidor, nginx, SSL, fila, monitoring, backup); atualização de checkboxes das Fases 27-28 no ROADMAP. Todas as documentações sincronizadas com código atual. Projeto agora possui: README.md (visão geral), ROADMAP.md (31 fases), STATUS.md (status atual), ARCHITECTURE.md (padrões), SECURITY.md (LGPD), EVENT_CATALOG.md (eventos), DEPLOYMENT.md (produção), + documentações de fase específicas. Estrutura pronta para referência em desenvolvimento, deployment e manutenção.
 - **2026-08-10** — Fase 29 concluída — **Affiliate Analytics Dashboard**: `CalculateAffiliateMetricsAction` (agregação de KPIs: revenue, conversions, clicks, ctr, epc, average_commission); `GetTopAffiliateProductsAction` (ranking de produtos por clicks totais, agrupando múltiplos links); `GetTopAffiliateContentAction` (conteúdos mais clicados); **AnalyticsDashboard** Livewire component com filtro de período (7/30/90/365 dias), chamando Actions no mount e em mudanças de filtro; **analytics-dashboard.blade.php** renderizando 7 KPI cards (Revenue, Conversions, Clicks, CTR, Epc, Ticket Médio, Period) + 2 tabelas (Top Products, Top Content). Rota `/admin/affiliate/analytics`, link na sidebar (📊 Affiliate Analytics). **Testes**: 6 testes passando (CalculateAffiliateMetricsAction estrutura; GetTopAffiliateProductsAction array/ordenação/limite/agrupamento; período com datas), cobrindo main paths das Actions sem assertions de valores específicos (que dependem de dados complexos de múltiplas camadas de agregação). Suite: 381/382 testes passando (1 falha pré-existente não relacionada da Fase 20 — plugin configuration). Fase 29 Status `[x]` Concluída.
 - **2026-08-10** — Fase 29 iniciada — **Affiliate Analytics Dashboard**: `CalculateAffiliateMetricsAction` (KPIs: receita, conversões, clicks, CTR, EPC); `GetTopAffiliateProductsAction` (ranking de produtos por clicks); `GetTopAffiliateContentAction` (conteúdos mais clicados); **AnalyticsDashboard** componente Livewire com filtro de período (7/30/90/365 dias); view com 7 cards de métricas + tabelas de top products/content. Rotas: `/admin/affiliate/analytics`, link na sidebar (📊 Affiliate Analytics). 375/376 testes passando. Fase 29 alcançou Status `[~]` Em andamento.
+- **2026-08-10** — Fase 30 concluída — **JMF Recommendation Engine**: `ProductPerformanceScore` model (armazena CTR, conversão, recorrência); `CalculateProductPerformanceScoreAction` (agregação de performance de produtos, 4 scores componentes); `JmfRecommendationEngineAction` (combina Trend Score 35% + Opportunity Score 45% + Performance Score 20% = Confidence Score 0-100); **RecommendationDashboard** Livewire component com 15 cards (padrão) exibindo produto, 3 scores, confidence score e razões textuais; rota `/admin/affiliate/recommendations`, link na sidebar (🎯 Recomendações JMF). **Testes**: 5 testes passando (array de recomendações, confidence score combinado, ordenação descendente, limite, razões baseadas em scores). Suite: 386/387 testes passando (1 falha pré-existente não relacionada da Fase 20). Fase 30 Status `[x]` Concluída.
+- **2026-08-10** — Fase 31 iniciada — **IA e Machine Learning (estratégia MVP)**: Deliberadamente não codificada ainda. Planejamento de 3 sprints: (1) Preparação de dados — tabela `ml_training_data`, pipeline de exportação, logs estruturados; (2) Modelo baseline — regressão linear ou XGBoost para Trend Score e Opportunity Score, validação cruzada; (3) Deploy — microserviço Python/FastAPI, fallback a regras, A/B testing, monitoramento de drift. Dependências: Fase 30 funcional + 1-3 meses de dados reais das Fases 22-29. Milestone: não em produção até ter histórico suficiente (evita overfitting). Fase 31 alcançou Status `[~]` Em andamento.
