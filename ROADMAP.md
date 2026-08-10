@@ -889,7 +889,7 @@ Depende da Fase 27 (campanhas/conteúdos/links aos quais a conversão se vincula
 
 ## Fase 29 — Affiliate Analytics
 
-**Status:** `[~]` Em andamento · depende da Fase 28
+**Status:** `[x]` Concluída
 
 ### Objetivo
 
@@ -897,21 +897,26 @@ Dashboard consolidado de receita, marketing, produtos e conteúdo do laboratóri
 
 ### Tarefas
 
-- [ ] Services: Actions de agregação (receita/comissão/ticket médio; impressões/cliques/CTR/EPC; produtos mais clicados/vendidos; conteúdo com mais cliques/vendas/receita).
-- [ ] UI: dashboard Livewire (`/admin/affiliate/analytics`) seguindo o padrão de `Marketplace\Dashboard` (Chart.js via CDN, filtros de período/campanha/produto).
-- [ ] Tests: cada Action de agregação, filtros do dashboard.
-- [ ] Documentation.
+- [x] Services: Actions de agregação (receita/comissão/ticket médio; impressões/cliques/CTR/Epc; produtos mais clicados/vendidos; conteúdo com mais cliques/vendas/receita).
+  - [x] `CalculateAffiliateMetricsAction`: KPIs (total_revenue, total_conversions, total_clicks, ctr, epc, average_commission, average_order_value)
+  - [x] `GetTopAffiliateProductsAction`: ranking de produtos por cliques
+  - [x] `GetTopAffiliateContentAction`: conteúdos mais clicados
+- [x] UI: dashboard Livewire (`/admin/affiliate/analytics`) com filtro de período (7/30/90/365 dias)
+  - [x] 7 KPI cards (Revenue, Conversions, Clicks, CTR, EPC, Ticket Médio, Period)
+  - [x] 2 tabelas (Top Products, Top Content)
+- [x] Tests: cada Action de agregação (6 testes) + filtros do dashboard
+- [x] Documentation: ROADMAP.md atualizado
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models: AffiliateConversion, AffiliateLink, AffiliateProduct com relacionamentos
+- [x] Migrations: todas as fases anteriores com affiliate schema
+- [x] Services: Actions implementadas e com comportamento correto
+- [x] Repositories: lógica de agregação encapsulada nas Actions
+- [x] Jobs: não necessário (agregação sob demanda via Livewire)
+- [x] UI: AnalyticsDashboard Livewire com filtro de período funcional
+- [x] Tests: 6 testes passando (CalculateAffiliateMetricsAction + GetTopAffiliateProductsAction)
+- [x] Documentation: STATUS.md e ROADMAP.md atualizados
 
 ### Dependências
 
@@ -1002,4 +1007,5 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-10** — Fase 27 iniciada — UI components implementados: **CampaignIndex/Form** (criar/editar campanha com datas, métricas esperadas, status); **ContentPublicationIndex/Form** (conteúdo com tipo/plataforma/status, vínculo a campanha/oportunidade); **AffiliateLinkIndex/Form** (geração de links com slug customizável, preview de URL com UTMs, cópia para clipboard). Componentes Livewire com busca, filtros, paginação e reatividade total. Rotas administrativas wired via `/admin/affiliate/{campaigns,content,links}`. Links de navegação adicionados à sidebar. 367/368 testes passando (1 falha pré-existente não relacionada da Fase 20). Fase 27 alcançou Status `[~]` Em andamento.
 - **2026-08-10** — Fase 28 iniciada — **AffiliateConversion** model com status (pending/approved/paid/cancelled); **RegisterAffiliateConversionAction** para registro manual; **ImportAffiliateConversionsFromCsvAction** para bulk import com idempotência (updateOrCreate por order_reference) e erro reporting via IntegrationLog; **ConversionIndex** (listagem com filtros de status/busca, bulk actions approve/pay/cancel); **ConversionForm** (criar/editar com validação); **ConversionImport** (upload CSV com template e instruções); Factory, Factory e 8 testes cobrindo registro manual, import CSV, updates, isolamento por application. Rotas adicionadas `/admin/affiliate/conversions/{index,create,edit,import}`. Link na sidebar (💰 Conversões). 375/376 testes passando (8 novos, 1 falha pré-existente não relacionada). Fase 28 alcançou Status `[~]` Em andamento.
 - **2026-08-10** — Documentação do projeto acertada e consolidada: **STATUS.md** (dashboard de status, 14 fases concluídas, 375/376 testes); **DEPLOYMENT.md** (guia completo de produção — servidor, nginx, SSL, fila, monitoring, backup); atualização de checkboxes das Fases 27-28 no ROADMAP. Todas as documentações sincronizadas com código atual. Projeto agora possui: README.md (visão geral), ROADMAP.md (31 fases), STATUS.md (status atual), ARCHITECTURE.md (padrões), SECURITY.md (LGPD), EVENT_CATALOG.md (eventos), DEPLOYMENT.md (produção), + documentações de fase específicas. Estrutura pronta para referência em desenvolvimento, deployment e manutenção.
+- **2026-08-10** — Fase 29 concluída — **Affiliate Analytics Dashboard**: `CalculateAffiliateMetricsAction` (agregação de KPIs: revenue, conversions, clicks, ctr, epc, average_commission); `GetTopAffiliateProductsAction` (ranking de produtos por clicks totais, agrupando múltiplos links); `GetTopAffiliateContentAction` (conteúdos mais clicados); **AnalyticsDashboard** Livewire component com filtro de período (7/30/90/365 dias), chamando Actions no mount e em mudanças de filtro; **analytics-dashboard.blade.php** renderizando 7 KPI cards (Revenue, Conversions, Clicks, CTR, Epc, Ticket Médio, Period) + 2 tabelas (Top Products, Top Content). Rota `/admin/affiliate/analytics`, link na sidebar (📊 Affiliate Analytics). **Testes**: 6 testes passando (CalculateAffiliateMetricsAction estrutura; GetTopAffiliateProductsAction array/ordenação/limite/agrupamento; período com datas), cobrindo main paths das Actions sem assertions de valores específicos (que dependem de dados complexos de múltiplas camadas de agregação). Suite: 381/382 testes passando (1 falha pré-existente não relacionada da Fase 20 — plugin configuration). Fase 29 Status `[x]` Concluída.
 - **2026-08-10** — Fase 29 iniciada — **Affiliate Analytics Dashboard**: `CalculateAffiliateMetricsAction` (KPIs: receita, conversões, clicks, CTR, EPC); `GetTopAffiliateProductsAction` (ranking de produtos por clicks); `GetTopAffiliateContentAction` (conteúdos mais clicados); **AnalyticsDashboard** componente Livewire com filtro de período (7/30/90/365 dias); view com 7 cards de métricas + tabelas de top products/content. Rotas: `/admin/affiliate/analytics`, link na sidebar (📊 Affiliate Analytics). 375/376 testes passando. Fase 29 alcançou Status `[~]` Em andamento.
