@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\LogoutController;
+use App\Http\Controllers\Affiliate\LinkRedirectController;
 use App\Http\Controllers\StatusController;
 use App\Livewire\Admin\Affiliate\ProductForm as AffiliateProductForm;
 use App\Livewire\Admin\Affiliate\ProductImport as AffiliateProductImport;
@@ -35,6 +36,9 @@ use App\Livewire\Marketplace\Dashboard as MarketplaceDashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', StatusController::class)->name('status');
+
+// Rota pública para redirecionamento de links de afiliados (Fase 27)
+Route::get('/go/{slug}', [LinkRedirectController::class, 'redirect'])->name('affiliate.redirect');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/admin/login', Login::class)
