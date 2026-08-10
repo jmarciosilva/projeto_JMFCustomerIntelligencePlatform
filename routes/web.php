@@ -6,6 +6,7 @@ use App\Http\Controllers\StatusController;
 use App\Livewire\Admin\Affiliate\AnalyticsDashboard as AffiliateAnalyticsDashboard;
 use App\Livewire\Admin\Affiliate\RecommendationDashboard as AffiliateRecommendationDashboard;
 use App\Livewire\Admin\Affiliate\LabGuide;
+use App\Livewire\Admin\Affiliate\ProductSuggestionsByTrends;
 use App\Livewire\Admin\Affiliate\AffiliateLinkForm;
 use App\Livewire\Admin\Affiliate\AffiliateLinkIndex;
 use App\Livewire\Admin\Affiliate\CampaignForm;
@@ -102,6 +103,7 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
 
         Route::get('/products', AffiliateProductIndex::class)->name('products.index');
         Route::get('/products/import', AffiliateProductImport::class)->name('products.import');
+        Route::get('/products/suggestions', ProductSuggestionsByTrends::class)->name('products.suggestions');
         Route::get('/products/create', AffiliateProductForm::class)->name('products.create');
         Route::get('/products/{product}/edit', AffiliateProductForm::class)->name('products.edit');
 

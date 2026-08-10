@@ -111,6 +111,11 @@
                                class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                                 📦 Produtos
                             </a>
+
+                            <a href="{{ route('admin.affiliate.products.suggestions') }}"
+                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.suggestions') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                                ✨ Sugestões por Trends
+                            </a>
                         @endcan
                     </div>
 
