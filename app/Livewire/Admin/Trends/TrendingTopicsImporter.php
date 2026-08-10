@@ -95,6 +95,6 @@ class TrendingTopicsImporter extends Component
         return view('livewire.admin.trends.trending-topics-importer', [
             'watchlists' => Watchlist::where('application_id', auth()->user()->application_id)->get(),
             'categories' => ['Fashion', 'Technology', 'Business', 'Entertainment', 'Sports', 'Health', 'Food', 'Travel', 'Other'],
-        ]);
+        ])->layout('layouts.admin', ['header' => '📊 Google Trends Importer']);
     }
 }
