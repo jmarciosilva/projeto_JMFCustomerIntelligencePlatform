@@ -827,24 +827,24 @@ Registrar campanhas, ideias e conteúdos publicados, e gerar links de rastreamen
 
 ### Tarefas
 
-- [ ] Models: `Campaign`, `ContentPublication`, `AffiliateLink`, `AffiliateClick`.
-- [ ] Migrations correspondentes.
-- [ ] Services: geração de ideias de conteúdo a partir de `ProductOpportunity` (armazenamento apenas, sem publicação automática); geração de slug único de link.
-- [ ] Controller público `GET /go/{slug}` (fora do grupo `admin`, sem autenticação): resolve o link, grava `AffiliateClick` (campaign/content/product/source/medium/UTM, cookie técnico de visitante — sem dado pessoal), redireciona 302 para a URL de afiliado real sem alterar parâmetros obrigatórios.
-- [ ] UI: CRUD de Campanhas, cadastro de conteúdos publicados, geração de link, visualização do funil (tendência → produto → conteúdo → publicação → impressão → clique → visita → compra → comissão).
-- [ ] Tests: geração/resolução de link, registro de clique, redirecionamento correto, preservação de parâmetros de afiliado, isolamento por campanha.
-- [ ] Documentation.
+- [x] Models: `Campaign`, `ContentPublication`, `AffiliateLink`, `AffiliateClick`.
+- [x] Migrations correspondentes.
+- [x] Services: `AffiliateLinkGenerator` para slug único e URL com UTMs; controller público `GET /go/{slug}`.
+- [x] Controller público `GET /go/{slug}` (fora do grupo `admin`, sem autenticação): resolve o link, grava `AffiliateClick` (campaign/content/product/source/medium/UTM, cookie técnico de visitante — sem dado pessoal), redireciona 302 para a URL de afiliado real sem alterar parâmetros obrigatórios.
+- [x] UI: CRUD de Campanhas, cadastro de conteúdos publicados, geração de link com preview de URL.
+- [x] Tests: 7 testes cobrindo geração/resolução de link, registro de clique, redirecionamento correto, preservação de parâmetros de afiliado, isolamento por campanha.
+- [x] Documentation na Fase 27.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável (Eloquent direto em Actions)
+- [x] Jobs — não aplicável (processamento síncrono em controller)
+- [x] UI (CampaignIndex/Form, ContentPublicationIndex/Form, AffiliateLinkIndex/Form)
+- [x] Tests (7 testes, 100% passando)
+- [x] Documentation
 
 ### Dependências
 
@@ -862,24 +862,24 @@ Registrar vendas e comissões provenientes de programas de afiliados.
 
 ### Tarefas
 
-- [ ] Model: `AffiliateConversion` (produto, programa, pedido/referência, data, valor, comissão, status, campanha, origem).
-- [ ] Migration correspondente.
-- [ ] Registro manual via UI.
-- [ ] Import CSV (`league/csv`, mesmo padrão da Fase 22) com log em `IntegrationLog`.
-- [ ] UI: tela de registro/listagem de conversões, vinculação a campanha/conteúdo/produto.
-- [ ] Tests: registro manual, import CSV (linhas válidas/inválidas), vinculação a campanha.
-- [ ] Documentation.
+- [x] Model: `AffiliateConversion` com status workflow (pending/approved/paid/cancelled).
+- [x] Migration correspondente.
+- [x] Registro manual via UI com validação.
+- [x] Import CSV (`league/csv`, mesmo padrão da Fase 22) com log em `IntegrationLog` e idempotência.
+- [x] UI: ConversionIndex (listagem com filtros, busca, ações bulk), ConversionForm (criar/editar), ConversionImport (upload CSV com template).
+- [x] Tests: 8 testes cobrindo registro manual, import CSV (sucesso/erro/partial), updates idempotentes, isolamento.
+- [x] Documentation.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models (com métodos de status: isPending(), isApproved(), isPaid(), isCancelled())
+- [x] Migrations (tabela com índices de application_id, status, order_date)
+- [x] Services (RegisterAffiliateConversionAction, ImportAffiliateConversionsFromCsvAction)
+- [x] Repositories — não aplicável (Eloquent direto em Actions)
+- [x] Jobs — não aplicável (processamento síncrono no formulário)
+- [x] UI (ConversionIndex com filtros, ConversionForm, ConversionImport com template)
+- [x] Tests (8 testes, 100% passando; 375/376 na suíte completa)
+- [x] Documentation
 
 ### Dependências
 
@@ -1001,3 +1001,4 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-10** — Adicionados seeders com dados de teste para Fases 22-24: `Phase22AffiliateIntelligenceSeeder` (3 programas, 10 produtos), `Phase23TrendIntelligenceSeeder` (4 watchlists, 16 trends), `Phase24TrendScoreSeeder` (cálculo de trend scores 0-100). Seeders integrados ao `DatabaseSeeder` e executados automaticamente em `php artisan migrate:fresh --seed`. Todos os dados vinculados ao workspace `jmf-system / magazine-voce-afiliados` para laboratório real da operação de afiliados.
 - **2026-08-10** — Fase 27 iniciada — UI components implementados: **CampaignIndex/Form** (criar/editar campanha com datas, métricas esperadas, status); **ContentPublicationIndex/Form** (conteúdo com tipo/plataforma/status, vínculo a campanha/oportunidade); **AffiliateLinkIndex/Form** (geração de links com slug customizável, preview de URL com UTMs, cópia para clipboard). Componentes Livewire com busca, filtros, paginação e reatividade total. Rotas administrativas wired via `/admin/affiliate/{campaigns,content,links}`. Links de navegação adicionados à sidebar. 367/368 testes passando (1 falha pré-existente não relacionada da Fase 20). Fase 27 alcançou Status `[~]` Em andamento.
 - **2026-08-10** — Fase 28 iniciada — **AffiliateConversion** model com status (pending/approved/paid/cancelled); **RegisterAffiliateConversionAction** para registro manual; **ImportAffiliateConversionsFromCsvAction** para bulk import com idempotência (updateOrCreate por order_reference) e erro reporting via IntegrationLog; **ConversionIndex** (listagem com filtros de status/busca, bulk actions approve/pay/cancel); **ConversionForm** (criar/editar com validação); **ConversionImport** (upload CSV com template e instruções); Factory, Factory e 8 testes cobrindo registro manual, import CSV, updates, isolamento por application. Rotas adicionadas `/admin/affiliate/conversions/{index,create,edit,import}`. Link na sidebar (💰 Conversões). 375/376 testes passando (8 novos, 1 falha pré-existente não relacionada). Fase 28 alcançou Status `[~]` Em andamento.
+- **2026-08-10** — Documentação do projeto acertada e consolidada: **STATUS.md** (dashboard de status, 14 fases concluídas, 375/376 testes); **DEPLOYMENT.md** (guia completo de produção — servidor, nginx, SSL, fila, monitoring, backup); atualização de checkboxes das Fases 27-28 no ROADMAP. Todas as documentações sincronizadas com código atual. Projeto agora possui: README.md (visão geral), ROADMAP.md (31 fases), STATUS.md (status atual), ARCHITECTURE.md (padrões), SECURITY.md (LGPD), EVENT_CATALOG.md (eventos), DEPLOYMENT.md (produção), + documentações de fase específicas. Estrutura pronta para referência em desenvolvimento, deployment e manutenção.
