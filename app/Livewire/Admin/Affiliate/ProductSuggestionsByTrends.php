@@ -120,13 +120,15 @@ class ProductSuggestionsByTrends extends Component
 
     public function toggleProduct(string $productId): void
     {
-        $key = array_search($productId, $this->selectedProducts);
+        $key = array_search($productId, $this->selectedProducts, true);
 
         if ($key !== false) {
             unset($this->selectedProducts[$key]);
             $this->selectedProducts = array_values($this->selectedProducts);
+            \Log::info('Product deselected', ['productId' => $productId, 'totalSelected' => count($this->selectedProducts)]);
         } else {
             $this->selectedProducts[] = $productId;
+            \Log::info('Product selected', ['productId' => $productId, 'totalSelected' => count($this->selectedProducts)]);
         }
     }
 
@@ -183,16 +185,14 @@ class ProductSuggestionsByTrends extends Component
             }
         }
 
+        // Limpa apenas os selecionados, não reseta tudo
         $this->selectedProducts = [];
         $this->selectedProgramId = '';
-        $this->showImportForm = false;
-        $this->suggestions = [];
 
         $this->dispatch('toast', message: "{$count} produtos importados com sucesso! 🎉", type: 'success');
 
-        // Redirecionar para produtos importados
-        sleep(1);
-        redirect()->route('admin.affiliate.products.index')->with('message', "{$count} produtos importados com sucesso!");
+        // Não redireciona mais, permite múltiplos imports
+        // Ao terminar todas as importações, o usuário clica no botão "Ver Produtos Importados"
     }
 
     public function render()
