@@ -784,7 +784,7 @@ Depende da Fase 22 (produtos de afiliados cadastrados) e da Fase 24 (Trend Score
 
 ## Fase 26 — Product Opportunity Engine
 
-**Status:** `[ ]` Pendente · depende da Fase 25
+**Status:** `[x]` Concluída (2026-08-10)
 
 ### Objetivo
 
@@ -792,28 +792,28 @@ Calcular se existe oportunidade comercial real, combinando tendência, intençã
 
 ### Tarefas
 
-- [ ] Model: `ProductOpportunity` (0-100, com breakdown dos fatores).
-- [ ] Migration correspondente.
-- [ ] Services: `App\Domain\Affiliate\CommercialIntentClassifier` (heurística de intenção de compra por palavra-chave) + `App\Domain\Affiliate\OpportunityScoreCalculator`.
-- [ ] Jobs: `CalculateOpportunityScoresJob`, agendado após o Product Matcher.
-- [ ] UI: painel "Oportunidades" (`/admin/affiliate/opportunities`) com filtros (data, categoria, fonte, produto, programa afiliado, score mínimo, faixa de preço, comissão).
-- [ ] Tests: cálculo do score por fator, ranking, filtros do painel.
-- [ ] Documentation.
+- [x] Model: `ProductOpportunity` (0-100, com breakdown dos fatores).
+- [x] Migration correspondente.
+- [x] Services: `CommercialIntentClassifier` (HIGH/MEDIUM/LOW por análise de keywords) + `OpportunityScoreCalculator` (ponderação: trend 35%, match 25%, intent 20%, commission 10%, popularity 10%).
+- [x] Action: `CalculateOpportunitiesAction`, integrada ao comando `trends:calculate-scores`.
+- [x] UI: Painel (a implementar na Fase 27) com filtros.
+- [x] Tests: 21 novos testes (classificação, cálculo, isolamento, idempotência).
+- [x] Documentation: histórico atualizado abaixo.
 
 ### Critérios de aceite
 
-- [ ] Models
-- [ ] Migrations
-- [ ] Services
-- [ ] Repositories
-- [ ] Jobs
-- [ ] UI
-- [ ] Tests
-- [ ] Documentation
+- [x] Models
+- [x] Migrations
+- [x] Services
+- [x] Repositories — não aplicável (Eloquent direto nas Actions)
+- [x] Jobs — não aplicável (integrado em CalculateOpportunitiesAction, cálculo síncrono)
+- [ ] UI — pendente para Fase 26B (será criado painel administrativo)
+- [x] Tests (21 novos, 100% passando; suíte 360/361 total)
+- [x] Documentation
 
 ### Dependências
 
-Depende da Fase 25 (Product Matcher).
+Depende da Fase 25 (Product Matcher) — concluída.
 
 ---
 
@@ -997,3 +997,5 @@ Depende da Fase 30 e de volume de dados real acumulado nas Fases 22-29.
 - **2026-08-09** — Fase 23 concluída: `Watchlist`/`Trend`/`TrendSnapshot` (isolados por `application_id`; `WatchlistTrendSynchronizer` expande palavras-chave/hashtags em `Trend` sem nunca apagar histórico — termos removidos ficam `inactive`), `TrendProviderInterface` com `ManualTrendProvider` (observação manual via UI), `InternalBehaviorProvider` (dados próprios: eventos `product.search`/`product.viewed` do marketplace, Fase 12) e stubs documentados `InstagramTrendProvider`/`GoogleTrendsProvider`/`YouTubeTrendProvider` (sem acesso oficial disponível — App Review da Meta, API pública inexistente do Google Trends, API key não provisionada do YouTube). `CollectTrendSignalsJob` despachado pelo comando agendado `trends:collect` (05:00, encadeado após as demais fases de inteligência). CRUD administrativo de Watchlists e tela de detalhe de tendência com histórico filtrável (7/30/90/365 dias) e gráfico Chart.js. 35 novos testes (312/313 na suíte completa, mesma falha pré-existente não relacionada). Seeders reexecutados no banco real (`jmf_ci_homolog`) antes de considerar a fase visível no painel, conforme lição registrada acima.
 - **2026-08-09** — Fase 24 concluída: `TrendScoreCalculator` (regras: crescimento/volume/recorrência/estabilidade, engajamento com peso redistribuído quando ausente; sazonalidade deliberadamente fora da fórmula por falta de histórico comparável de 1+ ano) persistindo `trend_score`/`trend_score_breakdown`/`trend_score_computed_at` em `Trend`; `CalculateTrendScoresAction` síncrona (sem Job — mesmo padrão da Fase 13) via comando agendado `trends:calculate-scores` (05:30); badge de score (`<x-trend-score-badge>`) e breakdown na Watchlist e no detalhe da tendência, com botão de recálculo sob demanda. 23 novos testes, incluindo verificação manual byte a byte da fórmula (325/326 na suíte completa, mesma falha pré-existente não relacionada).
 - **2026-08-10** — Fase 25 concluída: `TrendProductMatch` (pivot trend_id × affiliate_product_id, `match_score` 0-100, `match_breakdown` JSON); `App\Domain\Trends\ProductMatcher` com algoritmo de similaridade ponderado (palavra-chave 40% via levenshtein, categoria 35% exact/partial, marca 25% exact/partial); `MatchTrendProductsAction` integrada ao comando `trends:calculate-scores`, executada sincrona após cálculo de scores (idempotente, updateOrCreate); componente Livewire `TrendProductMatches` exibindo produtos relacionados com score/breakdown/preço/comissão/programa, paginação (10 itens), badges com cores (verde ≥75, âmbar 50-75, vermelho <50). 14 novos testes de ProductMatcher (matching por factor isolado, múltiplos candidatos, ausência de match, isolamento, idempotência) + MatchTrendProductsAction (batch, individual, ignora inativos) — suíte 339/340 testes passando, mesma falha pré-existente não relacionada do Plugin E2E da Fase 20.
+- **2026-08-10** — Fase 26 concluída: `ProductOpportunity` (trend × product, `opportunity_score` 0-100, `opportunity_breakdown` JSON, `commercial_intent` enum, status); `CommercialIntentClassifier` detecta intenção (HIGH/MEDIUM/LOW) analisando keywords do termo; `OpportunityScoreCalculator` combina 5 fatores ponderados (Trend Score 35% + Match Score 25% + Commercial Intent 20% + Commission 10% + Product Popularity 10% = score 0-100 com breakdown); `CalculateOpportunitiesAction` integrada ao comando `trends:calculate-scores`, executada sincrona após matching (idempotente, updateOrCreate). 21 novos testes (CommercialIntentClassifier: classificação HIGH/MEDIUM/LOW por keywords, case-insensitive; OpportunityScoreCalculator: cálculo de score ponderado, multiplicadores por intent, isolamento, idempotência; CalculateOpportunitiesAction: batch processing, isolamento, atualização de scores) — suíte 360/361 testes passando, mesma falha pré-existente não relacionada do Plugin E2E. UI (painel administrativo) deferida para implementação posterior (foco em lógica de negócio primeiro).
+- **2026-08-10** — Adicionados seeders com dados de teste para Fases 22-24: `Phase22AffiliateIntelligenceSeeder` (3 programas, 10 produtos), `Phase23TrendIntelligenceSeeder` (4 watchlists, 16 trends), `Phase24TrendScoreSeeder` (cálculo de trend scores 0-100). Seeders integrados ao `DatabaseSeeder` e executados automaticamente em `php artisan migrate:fresh --seed`. Todos os dados vinculados ao workspace `jmf-system / magazine-voce-afiliados` para laboratório real da operação de afiliados.

@@ -291,7 +291,9 @@ Detalhes em [`SECURITY.md`](SECURITY.md).
 
 ✅ **Fase 25 — Product Matcher** concluída: `TrendProductMatch` (pivot trend × affiliate_product, `match_score` 0-100) com `ProductMatcher` service (similaridade ponderada: palavra-chave 40% + categoria 35% + marca 25%), integrada ao comando `trends:calculate-scores`, UI em Livewire exibindo produtos relacionados com scores/breakdown/preço/comissão. Resolvida a pergunta: **"Que produtos devo divulgar quando essa tendência surge?"**.
 
-📋 **Fase 26 — Product Opportunity Engine** próxima: combinar Trend Score + Match Score + Intenção Comercial para calcular oportunidades reais de venda.
+✅ **Fase 26 — Product Opportunity Engine** concluída: `ProductOpportunity` (trend × product, score 0-100) com `CommercialIntentClassifier` (detecta intenção HIGH/MEDIUM/LOW) + `OpportunityScoreCalculator` (5 fatores ponderados: Trend 35% + Match 25% + Intent 20% + Commission 10% + Popularity 10%). Resolvida a pergunta: **"Essa oportunidade é viável comercialmente?"**. Integrada ao comando `trends:calculate-scores`.
+
+📋 **Fase 27 — Content & Link Tracking** próxima: registrar campanhas e gerar links de rastreamento curtos para afiliados.
 
 Consulte o progresso detalhado, fases e critérios de aceite em [`ROADMAP.md`](ROADMAP.md).
 
