@@ -33,6 +33,7 @@ use App\Livewire\Admin\Marketing\ContentDashboard;
 use App\Livewire\Admin\Profile;
 use App\Livewire\Admin\Tenants\TenantForm;
 use App\Livewire\Admin\Tenants\TenantIndex;
+use App\Livewire\Admin\Trends\TrendingTopicsImporter;
 use App\Livewire\Admin\Trends\TrendShow;
 use App\Livewire\Admin\Trends\WatchlistForm;
 use App\Livewire\Admin\Trends\WatchlistIndex;
@@ -131,6 +132,7 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/watchlists/create', WatchlistForm::class)->name('watchlists.create');
         Route::get('/watchlists/{watchlist}/edit', WatchlistForm::class)->name('watchlists.edit');
         Route::get('/watchlists/{watchlist}', WatchlistShow::class)->name('watchlists.show');
+        Route::get('/google-trends', TrendingTopicsImporter::class)->name('google-trends');
         Route::get('/{trend}', TrendShow::class)->name('show');
     });
 
