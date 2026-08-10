@@ -48,7 +48,11 @@ class FetchGoogleTrendsAction
 
     private function fetchFromSerpAPI(): array
     {
-        $apiKey = config('services.serpapi.key');
+        $apiKey = \App\Models\PlatformSetting::get('serpapi_key');
+        if (!$apiKey) {
+            return $this->getMockTrends();
+        }
+
         $gl = $this->region === 'BR' ? 'br' : ($this->region === 'US' ? 'us' : 'br');
 
         try {

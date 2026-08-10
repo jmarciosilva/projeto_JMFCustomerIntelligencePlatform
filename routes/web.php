@@ -31,6 +31,7 @@ use App\Livewire\Admin\Intelligence\BusinessIntelligenceDashboard;
 use App\Livewire\Admin\Intelligence\RecommendationsDashboard;
 use App\Livewire\Admin\Marketing\ContentDashboard;
 use App\Livewire\Admin\Profile;
+use App\Livewire\Admin\Settings\PlatformSettingsForm;
 use App\Livewire\Admin\Tenants\TenantForm;
 use App\Livewire\Admin\Tenants\TenantIndex;
 use App\Livewire\Admin\Trends\TrendingTopicsImporter;
@@ -142,6 +143,8 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
     Route::get('/auditoria', AuditLogIndex::class)->name('audit.index');
 
     Route::get('/perfil', Profile::class)->name('profile');
+
+    Route::get('/configuracoes', PlatformSettingsForm::class)->name('settings');
 
     Route::get('/guia', UserGuide::class)->name('guide');
 

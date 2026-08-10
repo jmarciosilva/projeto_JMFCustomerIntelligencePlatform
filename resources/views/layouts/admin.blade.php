@@ -134,6 +134,11 @@
                     </a>
                 @endcan
 
+                <a href="{{ route('admin.settings') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.settings') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    ⚙️ Configurações
+                </a>
+
                 <a href="{{ route('admin.guide') }}"
                    class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.guide') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                     Guia do usuário
