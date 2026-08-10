@@ -7,6 +7,9 @@ use App\Livewire\Admin\Affiliate\AffiliateLinkForm;
 use App\Livewire\Admin\Affiliate\AffiliateLinkIndex;
 use App\Livewire\Admin\Affiliate\CampaignForm;
 use App\Livewire\Admin\Affiliate\CampaignIndex;
+use App\Livewire\Admin\Affiliate\ConversionForm;
+use App\Livewire\Admin\Affiliate\ConversionImport;
+use App\Livewire\Admin\Affiliate\ConversionIndex;
 use App\Livewire\Admin\Affiliate\ContentPublicationForm;
 use App\Livewire\Admin\Affiliate\ContentPublicationIndex;
 use App\Livewire\Admin\Affiliate\ProductForm as AffiliateProductForm;
@@ -109,6 +112,11 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/links', AffiliateLinkIndex::class)->name('links.index');
         Route::get('/links/create', AffiliateLinkForm::class)->name('links.create');
         Route::get('/links/{link}/edit', AffiliateLinkForm::class)->name('links.edit');
+
+        Route::get('/conversions', ConversionIndex::class)->name('conversions.index');
+        Route::get('/conversions/create', ConversionForm::class)->name('conversions.create');
+        Route::get('/conversions/{conversion}/edit', ConversionForm::class)->name('conversions.edit');
+        Route::get('/conversions/import', ConversionImport::class)->name('conversions.import');
     });
 
     // Fase 23 — Trend Intelligence

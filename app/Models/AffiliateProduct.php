@@ -65,4 +65,9 @@ class AffiliateProduct extends Model
     {
         return $this->belongsTo(AffiliateProgram::class);
     }
+
+    public function getProductNameAttribute(): string
+    {
+        return $this->name;
+    }
 }
