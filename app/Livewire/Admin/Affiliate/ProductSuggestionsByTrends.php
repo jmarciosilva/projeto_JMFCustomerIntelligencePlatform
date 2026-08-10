@@ -132,6 +132,11 @@ class ProductSuggestionsByTrends extends Component
 
     public function importSelected(): void
     {
+        \Log::info('importSelected called', [
+            'selectedProducts' => $this->selectedProducts,
+            'selectedProgramId' => $this->selectedProgramId,
+        ]);
+
         if (empty($this->selectedProducts)) {
             $this->dispatch('toast', message: 'Selecione pelo menos um produto', type: 'error');
             return;
@@ -144,22 +149,34 @@ class ProductSuggestionsByTrends extends Component
 
         $app = auth()->user()->application ?? Application::first();
         $program = AffiliateProgram::find($this->selectedProgramId);
+
+        if (!$program) {
+            $this->dispatch('toast', message: 'Programa não encontrado', type: 'error');
+            return;
+        }
+
         $count = 0;
 
         foreach ($this->selectedProducts as $productId) {
             $product = collect($this->suggestions)->firstWhere('id', $productId);
             if ($product) {
-                AffiliateProduct::firstOrCreate(
-                    ['name' => $product['name']],
-                    [
-                        'application_id' => $app->id,
-                        'affiliate_program_id' => $this->selectedProgramId,
-                        'category' => $product['category'],
-                        'affiliate_url' => $program->website ?? 'https://www.influenciadormagalu.com.br/taemalta',
-                        'status' => 'active',
-                    ]
-                );
-                $count++;
+                try {
+                    AffiliateProduct::firstOrCreate(
+                        ['name' => $product['name']],
+                        [
+                            'application_id' => $app->id,
+                            'affiliate_program_id' => $this->selectedProgramId,
+                            'category' => $product['category'],
+                            'affiliate_url' => $program->website ?? 'https://www.influenciadormagalu.com.br/taemalta',
+                            'status' => 'active',
+                        ]
+                    );
+                    $count++;
+                } catch (\Exception $e) {
+                    \Log::error('Error importing product', ['error' => $e->getMessage()]);
+                    $this->dispatch('toast', message: 'Erro ao importar: ' . $e->getMessage(), type: 'error');
+                    return;
+                }
             }
         }
 
