@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow">
+    <div class="bg-slate-900 rounded-lg shadow">
         <div class="p-4 border-b">
             <input
                 type="text"

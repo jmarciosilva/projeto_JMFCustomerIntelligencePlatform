@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow">
+    <div class="bg-slate-900 rounded-lg shadow">
         <div class="p-4 border-b space-y-3">
             <input
                 type="text"
@@ -81,7 +81,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-400">
                                 Nenhum conteúdo encontrado
                             </td>
                         </tr>

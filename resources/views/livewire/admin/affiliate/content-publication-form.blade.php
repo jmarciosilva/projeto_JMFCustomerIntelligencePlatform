@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <form wire:submit="save" class="space-y-6 bg-white rounded-lg shadow p-6">
+    <form wire:submit="save" class="space-y-6 bg-slate-900 rounded-lg shadow p-6">
         <div>
             <label class="block text-sm font-medium mb-2">Campanha *</label>
             <select

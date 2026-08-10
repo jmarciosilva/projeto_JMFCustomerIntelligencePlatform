@@ -159,6 +159,14 @@
                             </a>
                         </div>
                     @endcan
+
+                    <!-- Manual -->
+                    <div class="space-y-1 border-t border-slate-700 pt-3">
+                        <a href="{{ route('admin.affiliate.guide') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.guide') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            📚 Guia do Laboratório
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Admin -->

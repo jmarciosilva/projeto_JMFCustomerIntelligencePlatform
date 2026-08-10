@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow p-6 space-y-6">
+    <div class="bg-slate-900 rounded-lg shadow p-6 space-y-6">
         <form wire:submit="import" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-2">Programa de Afiliado *</label>
@@ -81,14 +81,14 @@
                 <code class="text-xs">order_reference,product_name,order_date,product_price,commission_rate,commission_value,campaign_name,notes</code>
             </div>
             <div class="mt-4 space-y-2">
-                <p class="text-sm text-gray-700"><strong>order_reference</strong> — Identificador único do pedido (ex: PED-001)</p>
-                <p class="text-sm text-gray-700"><strong>product_name</strong> — Nome do produto (buscado por similaridade)</p>
-                <p class="text-sm text-gray-700"><strong>order_date</strong> — Data do pedido (formato: YYYY-MM-DD)</p>
-                <p class="text-sm text-gray-700"><strong>product_price</strong> — Preço do produto</p>
-                <p class="text-sm text-gray-700"><strong>commission_rate</strong> — Taxa de comissão em %</p>
-                <p class="text-sm text-gray-700"><strong>commission_value</strong> — Valor da comissão</p>
-                <p class="text-sm text-gray-700"><strong>campaign_name</strong> — Nome da campanha (opcional, buscado por nome exato)</p>
-                <p class="text-sm text-gray-700"><strong>notes</strong> — Notas adicionais (opcional)</p>
+                <p class="text-sm text-slate-300"><strong>order_reference</strong> — Identificador único do pedido (ex: PED-001)</p>
+                <p class="text-sm text-slate-300"><strong>product_name</strong> — Nome do produto (buscado por similaridade)</p>
+                <p class="text-sm text-slate-300"><strong>order_date</strong> — Data do pedido (formato: YYYY-MM-DD)</p>
+                <p class="text-sm text-slate-300"><strong>product_price</strong> — Preço do produto</p>
+                <p class="text-sm text-slate-300"><strong>commission_rate</strong> — Taxa de comissão em %</p>
+                <p class="text-sm text-slate-300"><strong>commission_value</strong> — Valor da comissão</p>
+                <p class="text-sm text-slate-300"><strong>campaign_name</strong> — Nome da campanha (opcional, buscado por nome exato)</p>
+                <p class="text-sm text-slate-300"><strong>notes</strong> — Notas adicionais (opcional)</p>
             </div>
         </div>
     </div>
