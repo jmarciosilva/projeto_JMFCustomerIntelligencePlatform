@@ -108,6 +108,11 @@
                     📊 Affiliate Analytics
                 </a>
 
+                <a href="{{ route('admin.affiliate.recommendations.index') }}"
+                   class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.affiliate.recommendations.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    🎯 Recomendações JMF
+                </a>
+
                 @can('watchlists.view')
                     <a href="{{ route('admin.trends.watchlists.index') }}"
                        class="block rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.trends.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
