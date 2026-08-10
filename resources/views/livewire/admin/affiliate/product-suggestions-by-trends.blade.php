@@ -20,27 +20,36 @@
         <div class="space-y-2">
             <label class="block text-sm font-bold text-slate-300">Selecione uma Watchlist</label>
             <select
-                wire:model="watchlist"
+                wire:model.live="watchlist"
                 class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-amber-400 focus:outline-none"
             >
                 <option value="">-- Escolha uma Watchlist --</option>
-                @foreach ($watchlists as $w)
+                @forelse ($watchlists as $w)
                     <option value="{{ $w->id }}">
                         {{ $w->name }} ({{ $w->trends()->count() }} trends)
                     </option>
-                @endforeach
+                @empty
+                    <option disabled>Nenhuma Watchlist encontrada</option>
+                @endforelse
             </select>
             @if ($watchlist)
-                <div class="mt-2 text-sm text-slate-300">
-                    <p class="font-semibold">📌 Trends nesta Watchlist:</p>
-                    <div class="flex flex-wrap gap-2 mt-1">
-                        @foreach ($watchlist->trends()->where('status', 'active')->get() as $trend)
-                            <span class="bg-amber-600/20 border border-amber-600/50 px-3 py-1 rounded-full text-amber-300 text-xs">
-                                #{{ $trend->term }}
-                            </span>
-                        @endforeach
+                @php
+                    $selectedWatchlist = \App\Models\Watchlist::find($watchlist);
+                @endphp
+                @if ($selectedWatchlist)
+                    <div class="mt-2 text-sm text-slate-300">
+                        <p class="font-semibold">📌 Trends nesta Watchlist:</p>
+                        <div class="flex flex-wrap gap-2 mt-1">
+                            @forelse ($selectedWatchlist->trends()->where('status', 'active')->get() as $trend)
+                                <span class="bg-amber-600/20 border border-amber-600/50 px-3 py-1 rounded-full text-amber-300 text-xs">
+                                    #{{ $trend->term }}
+                                </span>
+                            @empty
+                                <span class="text-slate-400 text-xs">Nenhum trend nesta Watchlist ainda</span>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
         </div>
 

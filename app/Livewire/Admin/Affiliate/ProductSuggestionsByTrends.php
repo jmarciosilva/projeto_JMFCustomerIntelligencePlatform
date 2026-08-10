@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class ProductSuggestionsByTrends extends Component
 {
-    public ?Watchlist $watchlist = null;
+    public ?int $watchlist = null;
     public array $suggestions = [];
     public array $selectedProducts = [];
     public ?int $selectedProgramId = null;
@@ -17,7 +17,7 @@ class ProductSuggestionsByTrends extends Component
 
     public function mount(): void
     {
-        // Load watchlists
+        // Initialize
     }
 
     public function loadSuggestions(): void
@@ -29,8 +29,14 @@ class ProductSuggestionsByTrends extends Component
 
         $this->dispatch('show-loading', message: 'Buscando produtos relacionados aos trends...');
 
+        $watchlistModel = Watchlist::find($this->watchlist);
+        if (!$watchlistModel) {
+            $this->dispatch('toast', message: 'Watchlist não encontrada', type: 'error');
+            return;
+        }
+
         // Get trends from watchlist
-        $trends = $this->watchlist->trends()->where('status', 'active')->pluck('term')->toArray();
+        $trends = $watchlistModel->trends()->where('status', 'active')->pluck('term')->toArray();
 
         if (empty($trends)) {
             $this->dispatch('toast', message: 'Nenhum trend ativo nesta Watchlist', type: 'error');
@@ -151,11 +157,13 @@ class ProductSuggestionsByTrends extends Component
 
     public function render()
     {
-        $watchlists = Watchlist::where('application_id', auth()->user()->application_id)
-            ->where('status', 'active')
+        $app = auth()->user()->application;
+
+        $watchlists = Watchlist::where('application_id', $app?->id)
+            ->orderByDesc('created_at')
             ->get();
 
-        $programs = AffiliateProgram::where('application_id', auth()->user()->application_id)
+        $programs = AffiliateProgram::where('application_id', $app?->id)
             ->where('status', 'active')
             ->get();
 
