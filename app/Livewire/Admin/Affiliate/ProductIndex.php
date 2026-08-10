@@ -47,7 +47,10 @@ class ProductIndex extends Component
 
     public function render(): View
     {
+        $app = auth()->user()->application ?? \App\Models\Application::first();
+
         $products = AffiliateProduct::query()
+            ->where('application_id', $app->id)
             ->when($this->affiliateProgramId, fn ($query) => $query->where('affiliate_program_id', $this->affiliateProgramId))
             ->when($this->search !== '', function ($query): void {
                 $query->where('name', 'like', "%{$this->search}%");
@@ -58,7 +61,7 @@ class ProductIndex extends Component
 
         return view('livewire.admin.affiliate.product-index', [
             'products' => $products,
-            'programs' => AffiliateProgram::query()->orderBy('name')->get(),
+            'programs' => AffiliateProgram::query()->where('application_id', $app->id)->orderBy('name')->get(),
         ]);
     }
 }
