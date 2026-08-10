@@ -142,15 +142,17 @@ class ProductSuggestionsByTrends extends Component
             return;
         }
 
+        $app = auth()->user()->application ?? Application::first();
         $program = AffiliateProgram::find($this->selectedProgramId);
         $count = 0;
-        
+
         foreach ($this->selectedProducts as $productId) {
             $product = collect($this->suggestions)->firstWhere('id', $productId);
             if ($product) {
                 AffiliateProduct::firstOrCreate(
                     ['name' => $product['name']],
                     [
+                        'application_id' => $app->id,
                         'affiliate_program_id' => $this->selectedProgramId,
                         'category' => $product['category'],
                         'affiliate_url' => $program->website ?? 'https://www.influenciadormagalu.com.br/taemalta',
