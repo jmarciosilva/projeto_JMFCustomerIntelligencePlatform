@@ -78,8 +78,8 @@
                         <div class="flex items-start gap-3">
                             <input
                                 type="checkbox"
-                                wire:model="selectedProducts"
-                                value="{{ $product['id'] }}"
+                                @change="$wire.toggleProduct('{{ $product['id'] }}')"
+                                {{ in_array($product['id'], $selectedProducts) ? 'checked' : '' }}
                                 class="mt-1 w-5 h-5 rounded border-slate-600 bg-slate-800 text-amber-600 focus:ring-amber-500 cursor-pointer"
                             >
                             <div class="flex-1">
