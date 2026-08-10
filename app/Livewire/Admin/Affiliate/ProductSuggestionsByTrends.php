@@ -157,13 +157,13 @@ class ProductSuggestionsByTrends extends Component
 
     public function render()
     {
-        $app = auth()->user()->application;
+        $app = auth()->user()->application ?? Application::first();
 
-        $watchlists = Watchlist::where('application_id', $app?->id)
+        $watchlists = Watchlist::where('application_id', $app->id)
             ->orderByDesc('created_at')
             ->get();
 
-        $programs = AffiliateProgram::where('application_id', $app?->id)
+        $programs = AffiliateProgram::where('application_id', $app->id)
             ->where('status', 'active')
             ->get();
 
