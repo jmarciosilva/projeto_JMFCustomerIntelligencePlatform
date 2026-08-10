@@ -17,15 +17,15 @@ class GetTopAffiliateProductsAction
             ->pluck('id');
 
         $links = AffiliateLink::whereIn('campaign_id', $campaignIds)
-            ->with('affiliateProduct')
+            ->with('product')
             ->get()
             ->map(function ($link) {
                 return [
                     'product_id' => $link->affiliate_product_id,
-                    'product_name' => $link->affiliateProduct->name,
+                    'product_name' => $link->product->name,
                     'clicks' => $link->clicks,
-                    'price' => $link->affiliateProduct->price,
-                    'commission_rate' => $link->affiliateProduct->commission_percentage,
+                    'price' => $link->product->price,
+                    'commission_rate' => $link->product->commission_percentage,
                 ];
             })
             ->groupBy('product_id')
