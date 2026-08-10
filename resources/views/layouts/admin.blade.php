@@ -99,24 +99,20 @@
                     <!-- Setup -->
                     <div class="space-y-1">
                         <p class="px-3 py-1 text-xs text-slate-500">Setup</p>
-                        @can('affiliate_programs.view')
-                            <a href="{{ route('admin.affiliate.programs.index') }}"
-                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.programs.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                                🤝 Programas
-                            </a>
-                        @endcan
+                        <a href="{{ route('admin.affiliate.programs.index') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.programs.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            🤝 Programas
+                        </a>
 
-                        @can('affiliate_products.view')
-                            <a href="{{ route('admin.affiliate.products.index') }}"
-                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                                📦 Produtos
-                            </a>
+                        <a href="{{ route('admin.affiliate.products.index') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            📦 Produtos
+                        </a>
 
-                            <a href="{{ route('admin.affiliate.products.suggestions') }}"
-                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.suggestions') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                                ✨ Sugestões por Trends
-                            </a>
-                        @endcan
+                        <a href="{{ route('admin.affiliate.products.suggestions') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.suggestions') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            ✨ Sugestões por Trends
+                        </a>
                     </div>
 
                     <!-- Campanhas -->
@@ -158,20 +154,18 @@
                     </div>
 
                     <!-- Tendências -->
-                    @can('watchlists.view')
-                        <div class="space-y-1">
-                            <p class="px-3 py-1 text-xs text-slate-500">Curadoria de Tendências</p>
-                            <a href="{{ route('admin.trends.watchlists.index') }}"
-                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.trends.watchlists.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                                📈 Watchlists
-                            </a>
+                    <div class="space-y-1">
+                        <p class="px-3 py-1 text-xs text-slate-500">Curadoria de Tendências</p>
+                        <a href="{{ route('admin.trends.watchlists.index') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.trends.watchlists.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            📈 Watchlists
+                        </a>
 
-                            <a href="{{ route('admin.trends.google-trends') }}"
-                               class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.trends.google-trends') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                                🔍 Google Trends
-                            </a>
-                        </div>
-                    @endcan
+                        <a href="{{ route('admin.trends.google-trends') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.trends.google-trends') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            🔍 Google Trends
+                        </a>
+                    </div>
 
                 </div>
 
