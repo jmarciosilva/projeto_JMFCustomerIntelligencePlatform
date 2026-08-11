@@ -12,6 +12,7 @@ class AffiliateConversion extends Model
 
     protected $fillable = [
         'application_id',
+        'contact_id',
         'provider',
         'external_conversion_id',
         'affiliate_product_id',
