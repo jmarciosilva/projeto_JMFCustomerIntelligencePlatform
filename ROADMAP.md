@@ -960,92 +960,361 @@ Depende da Fase 29 (dados reais de desempenho) e da Fase 26 (Opportunity Score).
 
 ## Fase 32 — Product Opportunity Intelligence (Sprint A)
 
-**Status:** `[~]` Em andamento (A1-A3 concluídas, A4-A6 pendentes)
+**Status:** `[~]` Em andamento (A1-A4 concluídas ✅, A5-A6 pendentes ⏳)
 
-### Objetivo
+**Objetivo Geral:**
 
-Implementar a fundação de Database & Domain para o motor de inteligência de oportunidades de produto. Sprint A MVP: classificação determinística de intenção comercial (0-100, LOW/MEDIUM/HIGH) e scoring de desempenho com redistribuição dinâmica de pesos (CTR + ConversionRate).
+Implementar o fluxo completo de Product Opportunity Intelligence: desde a detecção de sinais de mercado (Trends) até a atribuição de receita (Revenue/Commission). O Sprint A MVP responde a pergunta: "Quais produtos estão começando a ser procurados/desejados, quais representam boas oportunidades de recomendação, e quais realmente geraram resultado econômico?"
 
-### Tarefas (Sprint A — Etapa A1)
+**Fluxo Macro:**
+```
+Trend → Purchase Intent Classification → Product Matching → Opportunity Score → 
+Human Curation → Affiliate Link → Click → Conversion → Attribution → Revenue
+```
 
-- [x] **Domain Classes** (3 arquivos, 27 testes):
-  - `PurchaseIntentTerms` — vocabulário centralizado (4 categorias: INFORMATIONAL, INVESTIGATION, TRANSACTIONAL, INTENSITY_MODIFIERS; 4 constantes de ajuste)
-  - `PurchaseIntentClassifier` — classificação determinística de 0-100 (LOW/MEDIUM/HIGH) com breakdown explicável
-  - `PerformanceScoreCalculator` — scoring de desempenho com redistribuição dinâmica de pesos (faltam dados → peso=0 antes de normalização, não "zero performance")
+---
 
-- [x] **Database Migrations** (7 migrações executadas com sucesso):
-  1. `2026_08_12_000_add_application_id_to_product_opportunities` — tenant isolation
-  2. `2026_08_12_001_update_product_opportunities_add_sprint_a_columns` — 13 colunas + 2 índices (status, scores, lifecycle timestamps)
-  3. `2026_08_12_002_update_affiliate_links_add_opportunity_id` — attribution chain (FK to product_opportunities)
-  4. `2026_08_12_003_update_affiliate_conversions_add_identity_columns` — idempotency (provider, external_conversion_id, product_opportunity_id)
-  5. `2026_08_12_004_create_curation_decisions_table` — audit trail (sem UNIQUE, permite histórico)
-  6. `2026_08_12_005_backfill_affiliate_conversions_provider` — backfill com logging de IDs afetados
-  7. `2026_08_12_006_validate_affiliate_conversions_duplicates` — remoção de duplicatas com logging (pré-constraint)
-  8. `2026_08_12_007_add_unique_constraint_affiliate_conversions` — UNIQUE em (application_id, provider, external_conversion_id)
+### A1 — Database & Domain Foundation
 
-- [x] **Tests** (27 testes, 100% passando):
-  - `tests/Unit/Domain/Affiliate/PurchaseIntentClassifierTest.php` — 15 testes (LOW/MEDIUM/HIGH, bonuses, bounds, breakdown, case-insensitivity)
-  - `tests/Unit/Domain/Affiliate/PerformanceScoreCalculatorTest.php` — 12 testes (dois-fatores/um-fator/sem-fatores, confidence levels, pesos normalizados, edge cases)
+**Status:** ✅ COMPLETO (2026-08-11)
 
-- [x] **Documentation**:
-  - ROADMAP.md atualizado (este checklist)
-  - Status de A1 registrado na memória (`sprint_a_etapa_a1_complete.md`)
-
-### Critérios de aceite
-
-- [x] **Database**: todas as 7 migrações executadas com sucesso em `jmf_ci_homolog` (backup anterior preservado, zero data loss, backward-compatible)
-- [x] **Domain Logic**: 3 classes com regras verificadas e 27 testes unitários 100% passando pré e pós-migrações
-- [x] **Idempotency**: UNIQUE constraint em affiliate_conversions garante que reimportes não criam duplicatas
-- [x] **Logging**: backfill e validação de duplicatas registram todos os IDs afetados em logs de banco de dados
-- [x] **Type Compatibility**: todas as FKs usam `bigint unsigned` (não UUID), matching schema existente
-- [x] **No Breaking Changes**: migrations usam `hasColumn()`/`hasIndex()` checks, roláveis sem perder dados
-- [x] **Commit**: código commitado em `0e0a499` com mensagem descritiva incluindo 3 classes + 7 migrations + 27 testes
-- [x] **Ready for A2**: Domain layer e database layer completos, validados, testados; próximas etapas (A2–A6) bloqueadas até aprovação
-
-### Dependências
-
-Nenhuma dependência de fases pendentes — reaproveita apenas a arquitetura consolidada (Tenant/Application).
-
-### Etapas Sprint A
-
-#### A2 (Models & Relationships) — ✅ Concluído (2026-08-11)
+**Objetivo:**
+Construir a fundação persistente (banco de dados) e as regras de domínio (domain classes) necessárias para Product Opportunity Intelligence funcionar.
 
 **Deliverables:**
-- 4 Models: ProductOpportunity, AffiliateConversion, AffiliateLink, CurationDecision
-- 2 Enums: StatusSprintA, PurchaseIntentLabel
-- 11 Relacionamentos bilaterais
-- 8 Scopes em ProductOpportunity
-- 2 Factories (CurationDecision, ProductOpportunityFactory atualizada)
-- 18 Testes (16 passando)
+- [x] 3 Domain Classes (app/Domain/Affiliate/):
+  - `PurchaseIntentTerms` — Vocabulário centralizado com keywords e bonificadores por intenção
+  - `PurchaseIntentClassifier` — Classificação determinística (0-100) de LOW/MEDIUM/HIGH
+  - `PerformanceScoreCalculator` — Scoring com redistribuição dinâmica de pesos
+- [x] 7 Migrações executadas (aplicadas em jmf_ci_homolog):
+  - application_id isolation
+  - 13 colunas Sprint A em product_opportunities
+  - attribution chain (affiliate_links.product_opportunity_id)
+  - idempotency fields (affiliate_conversions)
+  - curation_decisions audit table
+  - backfill com logging
+  - UNIQUE constraint
+- [x] 27 Testes Unitários (100% passando)
+- [x] Documentação atualizada
 
-**Commit:** `42dd294`
+**Critérios de Aceite:**
+- [x] Domain layer completo e testado
+- [x] Database schema sem breaking changes
+- [x] Idempotência garantida por constraints
+- [x] Tenant isolation funcional
+- [x] 27 testes, 100% passando
+- [x] Commit: `0e0a499`
 
-#### A3 (Service Layer & APIs) — ✅ Concluído (2026-08-11)
+**Testes:**
+```
+tests/Unit/Domain/Affiliate/PurchaseIntentClassifierTest.php — 15 testes ✅
+tests/Unit/Domain/Affiliate/PerformanceScoreCalculatorTest.php — 12 testes ✅
+```
+
+---
+
+### A2 — Models & Relationships
+
+**Status:** ✅ COMPLETO (2026-08-11)
+
+**Objetivo:**
+Materializar as regras de domínio em Models Eloquent com relacionamentos explícitos, scopes utilitários e enumerações tipadas.
 
 **Deliverables:**
-- 4 Actions: CreateProductOpportunityAction, ApproveProductOpportunityAction, RejectProductOpportunityAction, PublishProductOpportunityAction
-- API Controller com 6 endpoints REST
-- 3 Request classes com validação
-- 1 Resource para transformação JSON
-- Rotas integradas em `/api/v1/affiliate/product-opportunities`
-- 12 Testes (7 passando, 5 pendentes fixação de status active)
+- [x] 4 Models com relacionamentos:
+  - ProductOpportunity (13 relacionamentos, 8 scopes)
+  - AffiliateConversion
+  - AffiliateLink
+  - CurationDecision
+- [x] 2 Enumerações:
+  - StatusSprintA (DISCOVERED, ANALYZING, APPROVED, REJECTED, PUBLISHED, EXPIRED) com labels + colors
+  - PurchaseIntentLabel (LOW, MEDIUM, HIGH) com colors
+- [x] 8 Scopes em ProductOpportunity:
+  - byApplication, byStatus, discovered, analyzing, approved, expiringSoon, expired, recentFirst
+- [x] 2 Factories (ProductOpportunity, CurationDecision)
+- [x] 9 Testes de relacionamentos (100% passando após fix)
 
-**Commit:** `3f711a6`
+**Critérios de Aceite:**
+- [x] Relacionamentos bilaterais funcionando
+- [x] Scopes isolados por application_id
+- [x] Enums com labels explicáveis
+- [x] Factories para seeding completas
+- [x] 9 testes, 100% passando
+- [x] Commit: `42dd294`
 
-#### A4-A6 (UI, Integration, E2E) — ⏳ Pendente
+**Testes:**
+```
+tests/Unit/Models/ProductOpportunityRelationshipsTest.php — 9 testes ✅
+```
 
-- **A4**: Componentes Livewire para curadoria (lista, detalhe, ações)
-- **A5**: Painel administrativo integrado
-- **A6**: Testes end-to-end e documentação
+---
 
-### Notas de Implementação
+### A3 — Service Layer & APIs
 
-- **Sprint A MVP Scope**: CTR + ConversionRate factors apenas; Recurrency deliberately null (deferred to Sprint B)
-- **Purchase Intent Deterministic**: sem ML; regras baseadas em keywords com pesos fixos de ajuste
-- **Performance Score Flexibility**: faltam fatores → peso redistribuído entre disponíveis (não assume zero)
-- **Confidence Levels**: Sprint A usa INSUFFICIENT_DATA, LOW (1 fator), MEDIUM (2 fatores) — HIGH (3+ fatores) deferred to Sprint B
-- **Historical Compliance**: no UNIQUE constraint violation detected on validation — all 7 migrations executed without rolling back; no duplicate conversions found in this phase's batch
-- **Total A1-A3**: 78 testes passando (27 A1 + 44 A2 + 7 A3)
+**Status:** ✅ COMPLETO (2026-08-11)
+
+**Objetivo:**
+Implementar Actions (lógica de negócio) e REST API para expor o workflow de curadoria de oportunidades, mantendo a API independente de UI.
+
+**Deliverables:**
+- [x] 4 Actions (app/Actions/Affiliate/):
+  - CreateProductOpportunityAction
+  - ApproveProductOpportunityAction
+  - RejectProductOpportunityAction
+  - PublishProductOpportunityAction
+- [x] API Controller com 6 endpoints REST:
+  - GET /api/v1/affiliate/product-opportunities (LIST com filtros/paginação)
+  - GET /api/v1/affiliate/product-opportunities/{id} (SHOW)
+  - POST /api/v1/affiliate/product-opportunities (CREATE)
+  - POST /api/v1/affiliate/product-opportunities/{id}/approve (APPROVE)
+  - POST /api/v1/affiliate/product-opportunities/{id}/reject (REJECT)
+  - POST /api/v1/affiliate/product-opportunities/{id}/publish (PUBLISH)
+- [x] 3 Request classes com validação (Store, Approve, Reject, Publish)
+- [x] 1 Resource para transformação JSON nested (ProductOpportunityResource)
+- [x] Autenticação via Sanctum + ensure.application.active
+- [x] 5 Testes de Actions (100% passando)
+
+**Critérios de Aceite:**
+- [x] Actions implementam regras de workflow (transições válidas)
+- [x] API preserva tenant isolation
+- [x] Validação de entrada coerente
+- [x] Respostas HTTP com status corretos
+- [x] 5 testes Actions, 100% passando
+- [x] Commit: `3f711a6`
+
+**Testes:**
+```
+tests/Unit/Domain/Affiliate/ProductOpportunityActionsTest.php — 5 testes ✅
+```
+
+---
+
+### A4 — Admin UI / Human-in-the-loop
+
+**Status:** ✅ COMPLETO (2026-08-11, commit fe6884a com tema dark)
+
+**Objetivo:**
+Permitir que um operador humano analise, aprove, rejeite e publique oportunidades detectadas pelo sistema, através de interface intuitiva integrada ao painel administrativo.
+
+**Deliverables:**
+- [x] 3 Componentes Livewire (app/Livewire/Admin/Affiliate/):
+  - ProductOpportunitiesIndex (page component com layout admin)
+  - ProductOpportunitiesList (tabela com lista, filtros, busca, sort)
+  - ProductOpportunityDetail (modal com approve/reject/publish actions)
+- [x] 3 Blade Views com tema dark (slate-900, amber-400):
+  - product-opportunities-index.blade.php
+  - product-opportunities-list.blade.php
+  - product-opportunity-detail.blade.php
+- [x] Integração com sidebar administrativo (link 💎 Oportunidades)
+- [x] Rota web: GET /admin/affiliate/product-opportunities
+- [x] 11 Testes Livewire (100% passando)
+- [x] Tema visual: Dark slate + amber accents (conforme identidade visual do projeto)
+
+**Critérios de Aceite:**
+- [x] UI renderiza lista de oportunidades
+- [x] Filtros funcionais (status, busca, sort)
+- [x] Modal de detalhes com ações inline (approve/reject/publish)
+- [x] Validação de transições (ex: não pode publicar oportunidade não aprovada)
+- [x] Tema escuro correto (slate, não cinza)
+- [x] 11 testes, 100% passando
+- [x] Commit: `fe6884a`
+
+**Testes:**
+```
+tests/Feature/Admin/Affiliate/ProductOpportunitiesListTest.php — 3 testes ✅
+tests/Feature/Admin/Affiliate/ProductOpportunityDetailTest.php — 8 testes ✅
+```
+
+---
+
+### A5 — Integration & End-to-End Workflow
+
+**Status:** ⏳ PENDENTE (Pronto para iniciar)
+
+**Objetivo:**
+Validar e integrar TUDO que foi construído em A1-A4, garantindo que o pipeline funciona corretamente do começo ao fim. A5 NÃO adiciona funcionalidades novas — INTEGRA e TESTA o que já existe.
+
+**Escopo Explícito:**
+
+A5 deve validar obrigatoriamente os seguintes fluxos:
+
+1. **Fluxo Positivo Completo:**
+   - Trend + Product Matching → ProductOpportunity (DISCOVERED)
+   - Operador aprova → APPROVED
+   - Operador publica → PUBLISHED
+   - AffiliateLink associado à oportunidade
+   - Clique no link → AffiliateClick registrado
+   - Conversão importada → AffiliateConversion com product_opportunity_id
+   - Revenue + Commission atribuídos à oportunidade
+   - Verificar relationships íntegros: ProductOpportunity → Link → Click → Conversion
+
+2. **Fluxo de Rejeição:**
+   - DISCOVERED → ANALYZING (manual ou automático)
+   - ANALYZING → REJECTED
+   - Verificar CurationDecision registrada
+   - Verificar ausência de AffiliateLink indevido
+   - Verificar status permanente em REJECTED (não expira)
+
+3. **Expiração Automática:**
+   - DISCOVERED com expires_at vencido → EXPIRED
+   - ANALYZING com expires_at vencido → EXPIRED
+   - APPROVED/REJECTED/PUBLISHED → NÃO expiram automaticamente
+   - EXPIRED permanece EXPIRED (não muda mais)
+
+4. **Idempotência de Conversão:**
+   - Simular importação mesma conversão 2x (provider + external_conversion_id)
+   - Verificar 1 conversão na base
+   - Verificar 1 revenue
+   - Verificar 1 commission
+
+5. **Attribution Chain Explícita:**
+   - ProductOpportunity.id →
+   - AffiliateLink.product_opportunity_id →
+   - AffiliateClick.affiliate_link_id →
+   - AffiliateConversion.product_opportunity_id
+   - Verificar que é possível traçar de volta: Conversão → Link → Oportunidade
+
+6. **Tenant Isolation Multi-Application:**
+   - Criar 2 Applications diferentes (mesma Tenant ou tenants diferentes)
+   - Application A não consulta oportunidades de B
+   - Application A não aprova oportunidades de B
+   - Conversões não atravessam applications
+   - Links não atravessam applications
+
+7. **Workflow Inválido (deve falhar gracefully):**
+   - REJECTED → PUBLISHED ❌
+   - EXPIRED → APPROVED ❌
+   - PUBLISHED → REJECTED ❌
+   - Seguir exatamente as transições do domínio (regras em Actions)
+
+8. **Consistência API × UI × Domain:**
+   - Mesma oportunidade manipulada por API ou UI passa pelas mesmas Actions
+   - Nenhuma regra duplicada entre camadas
+   - Domínio é fonte de verdade única
+
+9. **Auditoria & Histórico:**
+   - Decisões humanas registram em CurationDecision
+   - Campo decision_type, decision_reason, user_id
+   - Histórico nunca é sobrescrito
+   - Possível auditar todas as mudanças de status
+
+10. **Dados Parciais (Edge Case):**
+    - impressions = null → não transforma em zero artificial
+    - conversion_rate = null → não transforma em zero artificial
+    - System comporta-se corretamente com ausência de dados
+
+**Testes Esperados (A5 deve criar):**
+- [ ] FluxoPosivoCompleto (Trend → Match → Opportunity → Approve → Publish → Link → Click → Conversion → Attribution)
+- [ ] FluxoRejeicao (Discovered → Analyzing → Rejected)
+- [ ] ExpiracaoAutomatica (DISCOVERED/ANALYZING com TTL expira; APPROVED/REJECTED/PUBLISHED não expira)
+- [ ] IdempotenciaConversao (importação 2x de mesma conversão = 1 registro na base)
+- [ ] AttributionChainIntegra (ProductOpportunity → Link → Click → Conversion linked)
+- [ ] TenantIsolationMultiApplication (A não acessa B)
+- [ ] WorkflowInvalidoFalhaGracefully (rejeta transições inválidas)
+- [ ] ConsistenciaApiUiDomain (API e UI usam mesmas Actions)
+- [ ] AuditoriaHistorico (CurationDecision registra todas decisões)
+- [ ] DadosParciais (edge cases com null/ausência)
+
+**Deliverables Esperados:**
+- Tests integrados em `tests/Feature/Integration/Sprint A/` ou `tests/Integration/`
+- Fixtures/seeders com dados realistas para cada cenário
+- Documentação do workflow em `SPRINT_A_TESTING.md` (atualizado)
+- Todos os testes passando (100%)
+- Sem regression em A1-A4
+
+**Critérios de Aceite:**
+- [ ] 10+ cenários de integração testados
+- [ ] Todos os testes passando (100%)
+- [ ] Fluxo positivo completo demonstrável
+- [ ] Tenant isolation verificado
+- [ ] Attribution chain funcional
+- [ ] Sem breaking changes em A1-A4
+- [ ] Documentação atualizada
+
+**Dependências:**
+- A1, A2, A3, A4 100% completas ✅
+
+---
+
+### A6 — QA, Hardening & Documentation
+
+**Status:** ⏳ PENDENTE (Bloqueado até A5)
+
+**Objetivo:**
+Preparar o Sprint A para produção: suíte completa de testes, hardening, documentação, revisão de queries/performance, tratamento de erros, logs.
+
+**Deliverables Esperados:**
+- [ ] Suíte completa de testes (unit + integration + feature):
+  - A1: 27 testes (domain classes)
+  - A2: 9 testes (models)
+  - A3: 5 testes (actions)
+  - A4: 11 testes (UI)
+  - A5: 10+ testes (integration)
+  - **Total meta: 62+ testes, 100% passando**
+- [ ] Regressão de fases anteriores (Fases 22-30) sem novos failures
+- [ ] Testes multi-tenant
+- [ ] Testes de autorização (permissões/policies)
+- [ ] Testes de idempotência
+- [ ] Testes de edge cases (null, valores extremos)
+- [ ] Laravel Pint (code formatting)
+- [ ] PHPStan (static analysis, 0 novos erros)
+- [ ] Revisão de queries:
+  - N+1 detectados e corrigidos
+  - Índices confirmados em production
+- [ ] Tratamento de erros:
+  - Exceções próprias do domínio
+  - Http responses coerentes
+  - Logging de failures
+- [ ] Documentação:
+  - README.md atualizado (Sprint A overview)
+  - ROADMAP.md (este arquivo) finalizado
+  - SPRINT_A_TESTING.md (guia passo a passo de testes)
+  - API documentation (endpoints, payloads, responses)
+  - Comentários em código onde necessário (WHY, não WHAT)
+- [ ] Commit final de A6 com tag de release (v1.0.0-alpha)
+
+**Critérios de Aceite:**
+- [ ] 62+ testes, 100% passando
+- [ ] Sem regressão em fases anteriores
+- [ ] Pint + PHPStan sem novos erros
+- [ ] Queries otimizadas (N+1 corrigidos)
+- [ ] Documentação completa
+- [ ] Pronto para demo/produção
+- [ ] Commit final com tag
+
+**Dependências:**
+- A5 100% completa ✅
+
+---
+
+### Notas Importantes
+
+**Princípios imutáveis (NÃO ALTERAR):**
+- JMF CI é genérica; Magazine Você é laboratório, não dependência
+- Sem Machine Learning no Sprint A
+- Sem dados inventados
+- Ausência de dados ≠ zero performance
+- recurrency = null (Sprint B)
+- Opportunity Score historicamente preservado
+- Purchase Intent explicável
+- Scores com breakdown
+- Histórico/auditoria sempre
+- Conversões externas idempotentes
+- DISCOVERED/ANALYZING expiram; APPROVED/REJECTED/PUBLISHED/EXPIRED não
+- AffiliateClick sem product_opportunity_id redundante
+- Attribution segue cadeia: ProductOpportunity → Link → Click → Conversion
+
+**Fora de escopo A5:**
+- Webhooks para sistemas externos
+- Novos dashboards
+- Relatórios/exportação PDF
+- Novas integrações com Magalu/Amazon/Mercado Livre
+- Machine Learning
+- Funcionalidades além do pipeline aprovado
+
+**Total A1-A4 (Completo):** 
+- 49 testes passando (27 A1 + 9 A2 + 5 A3 + 8 A4)
+- Commit histórico: 0e0a499 (A1), 42dd294 (A2), 3f711a6 (A3), fe6884a (A4)
 
 ---
 

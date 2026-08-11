@@ -131,7 +131,7 @@ class ProductOpportunityRelationshipsTest extends TestCase
         ProductOpportunity::factory(2)->for($application)->for($trend)->create(['status_sprint_a' => 'DISCOVERED']);
         ProductOpportunity::factory(1)->for($application)->for($trend)->create(['status_sprint_a' => 'ANALYZING']);
 
-        $this->assertCount(2, ProductOpportunity::discovered()->get());
+        $this->assertCount(2, ProductOpportunity::byApplication($application->id)->discovered()->get());
     }
 
     #[Test]
@@ -144,7 +144,7 @@ class ProductOpportunityRelationshipsTest extends TestCase
         ProductOpportunity::factory(1)->for($application)->for($trend)->create(['status_sprint_a' => 'APPROVED']);
         ProductOpportunity::factory(2)->for($application)->for($trend)->create(['status_sprint_a' => 'REJECTED']);
 
-        $this->assertCount(1, ProductOpportunity::approved()->get());
+        $this->assertCount(1, ProductOpportunity::byApplication($application->id)->approved()->get());
     }
 
     #[Test]
@@ -157,7 +157,7 @@ class ProductOpportunityRelationshipsTest extends TestCase
         $old = ProductOpportunity::factory()->for($application)->for($trend)->create(['created_at' => now()->subDays(10)]);
         $new = ProductOpportunity::factory()->for($application)->for($trend)->create(['created_at' => now()]);
 
-        $results = ProductOpportunity::recentFirst()->get();
+        $results = ProductOpportunity::byApplication($application->id)->recentFirst()->get();
         $this->assertEquals($new->id, $results->first()->id);
         $this->assertEquals($old->id, $results->last()->id);
     }
