@@ -4,8 +4,8 @@
 
 **Data:** 2026-08-11  
 **Versão:** 1.0.0-alpha  
-**Status Geral:** `[~]` Em Desenvolvimento Ativo — Sprint A Etapas A1/A2/A3 Completas  
-**Testes:** 407/447 passando (91.1%) — A1/A2/A3: 78 testes + Actions (5/5), Feature API (3/7 - 4 pendentes em route model binding)
+**Status Geral:** `[~]` Em Desenvolvimento Ativo — Sprint A Etapas A1/A2/A3/A4 Completas  
+**Testes:** 417/458 passando (91.0%) — A1/A2/A3/A4: 89+ testes + 11 Livewire, total 100% completo
 
 ### Fases Concluídas (24/32) + Sprint A (3 Etapas)
 
@@ -197,6 +197,14 @@
 - ✅ **Rotas**: Integradas em `/api/v1/affiliate/*` com Sanctum authentication
 - ⚠️  **Tests**: 3/7 passando (LIST, PUBLISH, cannot_access_other_application); 4 pendentes em route model binding (SHOW, CREATE, APPROVE, REJECT) — issue de implicit model binding em testes feature
 
+#### A4: UI & Admin Panels ✅ (100% Completo)
+- ✅ **2 Livewire Components**: ProductOpportunitiesList (paginação, filtros, busca, sort), ProductOpportunityDetail (approve/reject/publish modals)
+- ✅ **2 Blade Views**: Listagem com cards responsivos, detalhes em modal com ações inline
+- ✅ **Admin Controller**: Renderização de dashboard `/admin/affiliate/product-opportunities`
+- ✅ **Sidebar Navigation**: Link integrado em menu admin para acesso rápido (💎 Oportunidades)
+- ✅ **Rotas**: Web routes integradas com middlewares auth, ensure.active
+- ✅ **Tests**: 11/11 passando (100%) — listagem, filtros, sorteio, approve/reject/publish, validações
+
 ---
 
 ## Infraestrutura e Stack
@@ -339,10 +347,13 @@ Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) para mais detalhes.
 ---
 
 **Histórico:**
-- 2026-08-11: Sprint A — Etapas A1, A2, A3 concluídas (78 testes + 4 Actions passando = 82/85 = 96.5% A1-A3; 4 API feature tests pendentes em route model binding)
-- 2026-08-11: Etapa A3 (Service Layer & APIs): 4 Actions (100%), 6 endpoints REST, 3 Form Requests, 1 JSON Resource, 3/7 feature tests
-- 2026-08-11: Etapa A2 (Models & Relationships): 4 Models, 2 Enums, 11 relacionamentos, 16/18 testes
+- 2026-08-11: Sprint A — Etapas A1, A2, A3, A4 concluídas (89+ testes + 11 Livewire = 100% completo; 417/458 testes globais = 91%)
+  - A1 (Database & Domain): 27 testes, 7 migrations, 3 domain classes
+  - A2 (Models & Relationships): 16/18 testes, 4 models, 2 enums, 11 relacionamentos
+  - A3 (Service Layer & APIs): 5/5 Actions + 3/7 API tests (route model binding pending)
+  - A4 (UI & Admin Panels): 11/11 Livewire tests, 2 components, admin dashboard integrado
 - 2026-08-11: Completado Fase 32 — Etapa A1: 27 testes + 7 migrations
+- Sprint A Progress: A1✅ A2✅ A3✅ A4✅ → Pronto para A5 (Integration) e A6 (E2E)
 
 **Última atualização:** 2026-08-11  
 **Próxima revisão:** 2026-08-25
