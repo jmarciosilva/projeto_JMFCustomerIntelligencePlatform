@@ -26,6 +26,21 @@
         </div>
 
         <div>
+            <label for="confidenceFilter" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Confiança</label>
+            <select
+                id="confidenceFilter"
+                wire:model.live="confidenceFilter"
+                class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+            >
+                <option value="">Todos os níveis</option>
+                <option value="HIGH">⭐ HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+                <option value="INSUFFICIENT_DATA">Sem dados</option>
+            </select>
+        </div>
+
+        <div>
             <label for="sortBy" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Ordenar</label>
             <select
                 id="sortBy"
@@ -43,6 +58,14 @@
             <thead class="border-b border-slate-800 bg-slate-900">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+                        <button wire:click="sort('confidence_level')" class="hover:text-amber-400">
+                            Confiança
+                            @if($sortBy === 'confidence_level')
+                                <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                            @endif
+                        </button>
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
                         <button wire:click="sort('trend_id')" class="hover:text-amber-400">
                             Tendência
                             @if($sortBy === 'trend_id')
@@ -51,6 +74,7 @@
                         </button>
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Produto</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Recurrency</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
                         <button wire:click="sort('discovery_opportunity_score')" class="hover:text-amber-400">
                             Oportunidade
@@ -66,7 +90,28 @@
             </thead>
             <tbody class="divide-y divide-slate-800">
                 @forelse($opportunities as $opp)
-                    <tr class="hover:bg-slate-800/50 transition-colors">
+                    <tr class="hover:bg-slate-800/50 transition-colors {{ $opp->confidence_level === 'HIGH' ? 'border-l-4 border-amber-400' : '' }}">
+                        {{-- Confiança --}}
+                        <td class="px-6 py-4 text-sm">
+                            @if($opp->confidence_level === 'HIGH')
+                                <span class="inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-3 py-1 text-sm font-semibold text-amber-400">
+                                    ⭐ HIGH
+                                </span>
+                            @elseif($opp->confidence_level === 'MEDIUM')
+                                <span class="inline-flex items-center rounded-full bg-slate-700/50 px-3 py-1 text-sm font-medium text-slate-300">
+                                    MEDIUM
+                                </span>
+                            @elseif($opp->confidence_level === 'LOW')
+                                <span class="inline-flex items-center rounded-full bg-slate-700/30 px-3 py-1 text-sm font-medium text-slate-400">
+                                    LOW
+                                </span>
+                            @else
+                                <span class="inline-flex items-center rounded-full bg-slate-700/20 px-3 py-1 text-sm font-medium text-slate-500">
+                                    —
+                                </span>
+                            @endif
+                        </td>
+                        {{-- Tendência --}}
                         <td class="px-6 py-4 text-sm text-slate-100">
                             <button
                                 wire:click="selectOpportunity({{ $opp->id }})"
@@ -75,8 +120,17 @@
                                 {{ $opp->trend->term }}
                             </button>
                         </td>
+                        {{-- Produto --}}
                         <td class="px-6 py-4 text-sm text-slate-400">
                             {{ $opp->affiliateProduct->name }}
+                        </td>
+                        {{-- Recurrency --}}
+                        <td class="px-6 py-4 text-sm">
+                            @if($opp->recurrency_rate !== null)
+                                <span class="font-semibold text-green-400">{{ number_format($opp->recurrency_rate, 2) }}%</span>
+                            @else
+                                <span class="text-slate-500">—</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-sm">
                             <div class="flex items-center">

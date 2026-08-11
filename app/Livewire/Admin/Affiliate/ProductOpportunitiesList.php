@@ -15,6 +15,8 @@ class ProductOpportunitiesList extends Component
 
     public string $statusFilter = '';
 
+    public string $confidenceFilter = '';
+
     public string $sortBy = 'created_at';
 
     public string $sortDirection = 'desc';
@@ -24,6 +26,7 @@ class ProductOpportunitiesList extends Component
     protected $queryString = [
         'search' => ['except' => ''],
         'statusFilter' => ['except' => ''],
+        'confidenceFilter' => ['except' => ''],
         'sortBy' => ['except' => 'created_at'],
         'sortDirection' => ['except' => 'desc'],
     ];
@@ -34,6 +37,11 @@ class ProductOpportunitiesList extends Component
     }
 
     public function updatingStatusFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingConfidenceFilter(): void
     {
         $this->resetPage();
     }
@@ -69,7 +77,16 @@ class ProductOpportunitiesList extends Component
             $query->byStatus($this->statusFilter);
         }
 
-        $query->orderBy($this->sortBy, $this->sortDirection);
+        if ($this->confidenceFilter) {
+            $query->byConfidenceLevel($this->confidenceFilter);
+        }
+
+        // Sort by confidence_level first (HIGH first), then by created_at
+        if ($this->sortBy === 'confidence_level') {
+            $query->orderByRaw("CASE WHEN confidence_level = 'HIGH' THEN 1 WHEN confidence_level = 'MEDIUM' THEN 2 WHEN confidence_level = 'LOW' THEN 3 ELSE 4 END {$this->sortDirection}, created_at desc");
+        } else {
+            $query->orderBy($this->sortBy, $this->sortDirection);
+        }
 
         return $query->paginate(15);
     }
