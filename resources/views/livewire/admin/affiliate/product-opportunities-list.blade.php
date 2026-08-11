@@ -1,78 +1,81 @@
 <div class="space-y-6">
-    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div class="flex flex-wrap items-center gap-4 mb-6">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Oportunidades de Produtos</h1>
-            <p class="mt-2 text-gray-600">Gerencie, aprove e publique oportunidades de afiliação</p>
-        </div>
-    </div>
-
-    <div class="grid gap-4 md:grid-cols-3">
-        <div class="relative">
+            <label for="search" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Buscar</label>
             <input
+                id="search"
                 type="text"
                 wire:model.live="search"
                 placeholder="Buscar por tendência ou produto..."
-                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
+                class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
             >
         </div>
 
-        <select
-            wire:model.live="statusFilter"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-        >
-            <option value="">Todos os status</option>
-            @foreach($statuses as $status)
-                <option value="{{ $status->value }}">{{ $status->label() }}</option>
-            @endforeach
-        </select>
+        <div>
+            <label for="statusFilter" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Status</label>
+            <select
+                id="statusFilter"
+                wire:model.live="statusFilter"
+                class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+            >
+                <option value="">Todos os status</option>
+                @foreach($statuses as $status)
+                    <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                @endforeach
+            </select>
+        </div>
 
-        <select
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-        >
-            <option>Mais recentes</option>
-            <option>Score mais alto</option>
-            <option>Score mais baixo</option>
-        </select>
+        <div>
+            <label for="sortBy" class="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1">Ordenar</label>
+            <select
+                id="sortBy"
+                class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+            >
+                <option>Mais recentes</option>
+                <option>Score mais alto</option>
+                <option>Score mais baixo</option>
+            </select>
+        </div>
     </div>
 
-    <div class="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+    <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
         <table class="w-full">
-            <thead class="border-b border-gray-200 bg-gray-50">
+            <thead class="border-b border-slate-800 bg-slate-900">
                 <tr>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                        <button wire:click="sort('trend_id')" class="hover:text-blue-600">
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+                        <button wire:click="sort('trend_id')" class="hover:text-amber-400">
                             Tendência
                             @if($sortBy === 'trend_id')
                                 <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                             @endif
                         </button>
                     </th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Produto</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">
-                        <button wire:click="sort('discovery_opportunity_score')" class="hover:text-blue-600">
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Produto</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">
+                        <button wire:click="sort('discovery_opportunity_score')" class="hover:text-amber-400">
                             Oportunidade
                             @if($sortBy === 'discovery_opportunity_score')
                                 <span class="ml-1">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
                             @endif
                         </button>
                     </th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Intenção</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Status</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Ações</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Intenção</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500">Ações</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-slate-800">
                 @forelse($opportunities as $opp)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 text-sm text-gray-900">
+                    <tr class="hover:bg-slate-800/50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-slate-100">
                             <button
                                 wire:click="selectOpportunity({{ $opp->id }})"
-                                class="font-medium text-blue-600 hover:underline"
+                                class="font-medium text-amber-400 hover:text-amber-300"
                             >
                                 {{ $opp->trend->term }}
                             </button>
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-600">
+                        <td class="px-6 py-4 text-sm text-slate-400">
                             {{ $opp->affiliateProduct->name }}
                         </td>
                         <td class="px-6 py-4 text-sm">
@@ -80,7 +83,7 @@
                                 <div class="mr-2 h-2 w-2 rounded-full"
                                     :style="{ backgroundColor: '{{ $opp->discovery_opportunity_score > 70 ? '#10b981' : ($opp->discovery_opportunity_score > 40 ? '#f59e0b' : '#ef4444') }}' }}"
                                 ></div>
-                                <span class="font-semibold">{{ $opp->discovery_opportunity_score }}%</span>
+                                <span class="font-semibold text-slate-100">{{ $opp->discovery_opportunity_score }}%</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm">
@@ -100,7 +103,7 @@
                         <td class="px-6 py-4 text-sm">
                             <button
                                 wire:click="selectOpportunity({{ $opp->id }})"
-                                class="text-blue-600 hover:text-blue-900"
+                                class="text-amber-400 hover:text-amber-300 font-medium"
                             >
                                 Curar
                             </button>
@@ -108,7 +111,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
                             Nenhuma oportunidade encontrada
                         </td>
                     </tr>
