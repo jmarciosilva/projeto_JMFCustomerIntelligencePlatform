@@ -25,6 +25,8 @@ class ProductOpportunity extends Model
         'purchase_intent_breakdown',
         'actual_performance_score',
         'performance_score_breakdown',
+        'recurrency_rate',
+        'confidence_level',
         'approved_at',
         'published_at',
         'expired_at',
@@ -49,6 +51,7 @@ class ProductOpportunity extends Model
         'discovery_opportunity_score' => 'integer',
         'purchase_intent_score' => 'integer',
         'actual_performance_score' => 'integer',
+        'recurrency_rate' => 'decimal:2',
         'opportunity_score' => 'decimal:2',
         'approved_at' => 'datetime',
         'published_at' => 'datetime',
@@ -141,5 +144,20 @@ class ProductOpportunity extends Model
     public function scopeByOpportunitScore($query, $order = 'desc')
     {
         return $query->orderBy('opportunity_score', $order);
+    }
+
+    public function scopeByConfidenceLevel($query, string $level)
+    {
+        return $query->where('confidence_level', $level);
+    }
+
+    public function scopeHighConfidence($query)
+    {
+        return $query->where('confidence_level', 'HIGH');
+    }
+
+    public function scopeWithRecurrency($query)
+    {
+        return $query->whereNotNull('recurrency_rate');
     }
 }
