@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\OpportunitiesController;
 use App\Http\Controllers\Api\PingController;
 use App\Http\Controllers\Api\RecommendationsController;
 use App\Http\Controllers\Api\ShowContactController;
+use App\Http\Controllers\Api\V1\ProductOpportunityController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'ensure.application.active'])
@@ -53,5 +54,12 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
                 Route::get('/products/top', TopProductsController::class)->name('api.marketplace.products.top');
                 Route::get('/journey/{contact_id}', CustomerJourneyController::class)->name('api.marketplace.journey');
             });
+        });
+
+        Route::prefix('affiliate')->middleware('throttle:api-application')->group(function (): void {
+            Route::apiResource('product-opportunities', ProductOpportunityController::class);
+            Route::patch('/product-opportunities/{productOpportunity}/approve', [ProductOpportunityController::class, 'approve'])->name('product-opportunities.approve');
+            Route::patch('/product-opportunities/{productOpportunity}/reject', [ProductOpportunityController::class, 'reject'])->name('product-opportunities.reject');
+            Route::patch('/product-opportunities/{productOpportunity}/publish', [ProductOpportunityController::class, 'publish'])->name('product-opportunities.publish');
         });
     });
