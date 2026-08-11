@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             Phase22AffiliateIntelligenceSeeder::class,
             Phase23TrendIntelligenceSeeder::class,
             Phase24TrendScoreSeeder::class,
+            SprintATestDataSeeder::class,
         ]);
     }
 }
