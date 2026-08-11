@@ -2,34 +2,34 @@
 
 namespace App\Models;
 
+use App\Domain\Affiliate\Enums\PurchaseIntentLabel;
+use App\Domain\Affiliate\Enums\StatusSprintA;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductOpportunity extends Model
 {
     use HasFactory;
 
-    public const STATUS_PENDING = 'pending';
-
-    public const STATUS_APPROVED = 'approved';
-
-    public const STATUS_REJECTED = 'rejected';
-
-    public const STATUS_ARCHIVED = 'archived';
-
-    public const INTENT_HIGH = 'high';
-
-    public const INTENT_MEDIUM = 'medium';
-
-    public const INTENT_LOW = 'low';
-
     protected $table = 'product_opportunities';
 
-    /**
-     * @var list<string>
-     */
     protected $fillable = [
+        'application_id',
+        'status_sprint_a',
+        'discovery_opportunity_score',
+        'opportunity_score_breakdown',
+        'purchase_intent_score',
+        'purchase_intent_label',
+        'purchase_intent_breakdown',
+        'actual_performance_score',
+        'performance_score_breakdown',
+        'approved_at',
+        'published_at',
+        'expired_at',
+        'expires_at',
+        'expiration_reason',
         'trend_id',
         'affiliate_product_id',
         'opportunity_score',
@@ -39,54 +39,107 @@ class ProductOpportunity extends Model
         'calculated_at',
     ];
 
-    /**
-     * @var array<string, string>
-     */
     protected $casts = [
+        'status_sprint_a' => StatusSprintA::class,
+        'purchase_intent_label' => PurchaseIntentLabel::class,
+        'opportunity_score_breakdown' => 'json',
+        'purchase_intent_breakdown' => 'json',
+        'performance_score_breakdown' => 'json',
+        'opportunity_breakdown' => 'json',
+        'discovery_opportunity_score' => 'integer',
+        'purchase_intent_score' => 'integer',
+        'actual_performance_score' => 'integer',
         'opportunity_score' => 'decimal:2',
-        'opportunity_breakdown' => 'array',
+        'approved_at' => 'datetime',
+        'published_at' => 'datetime',
+        'expired_at' => 'datetime',
+        'expires_at' => 'datetime',
         'calculated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    /**
-     * @return BelongsTo<Trend, $this>
-     */
-    public function trend(): BelongsTo
+    public function application(): BelongsTo
     {
-        return $this->belongsTo(Trend::class);
+        return $this->belongsTo(Application::class, 'application_id');
     }
 
-    /**
-     * @return BelongsTo<AffiliateProduct, $this>
-     */
-    public function product(): BelongsTo
+    public function trend(): BelongsTo
+    {
+        return $this->belongsTo(Trend::class, 'trend_id');
+    }
+
+    public function affiliateProduct(): BelongsTo
     {
         return $this->belongsTo(AffiliateProduct::class, 'affiliate_product_id');
     }
 
-    /**
-     * Retorna score 0-100 normalizado
-     */
-    public function getScore(): float
+    public function affiliateLinks(): HasMany
     {
-        return (float) $this->opportunity_score;
+        return $this->hasMany(AffiliateLink::class, 'product_opportunity_id');
     }
 
-    /**
-     * Determina cor da badge baseada no score
-     */
-    public function getScoreColor(): string
+    public function affiliateConversions(): HasMany
     {
-        $score = $this->getScore();
+        return $this->hasMany(AffiliateConversion::class, 'product_opportunity_id');
+    }
 
-        if ($score >= 75) {
-            return 'green';
-        }
+    public function curationDecisions(): HasMany
+    {
+        return $this->hasMany(CurationDecision::class, 'product_opportunity_id');
+    }
 
-        if ($score >= 50) {
-            return 'yellow';
-        }
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
-        return 'red';
+    public function scopeByApplication($query, $applicationId)
+    {
+        return $query->where('application_id', $applicationId);
+    }
+
+    public function scopeByStatus($query, StatusSprintA | string $status)
+    {
+        $value = $status instanceof StatusSprintA ? $status->value : $status;
+        return $query->where('status_sprint_a', $value);
+    }
+
+    public function scopeDiscovered($query)
+    {
+        return $query->where('status_sprint_a', StatusSprintA::DISCOVERED->value);
+    }
+
+    public function scopeAnalyzing($query)
+    {
+        return $query->where('status_sprint_a', StatusSprintA::ANALYZING->value);
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status_sprint_a', StatusSprintA::APPROVED->value);
+    }
+
+    public function scopeExpiringSoon($query, $days = 7)
+    {
+        return $query
+            ->whereIn('status_sprint_a', [StatusSprintA::DISCOVERED->value, StatusSprintA::ANALYZING->value])
+            ->where('expires_at', '<=', now()->addDays($days))
+            ->where('expires_at', '>', now());
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->where('status_sprint_a', StatusSprintA::EXPIRED->value);
+    }
+
+    public function scopeRecentFirst($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    public function scopeByOpportunitScore($query, $order = 'desc')
+    {
+        return $query->orderBy('opportunity_score', $order);
     }
 }

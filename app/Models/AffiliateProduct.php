@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AffiliateProduct extends Model
 {
@@ -64,6 +65,14 @@ class AffiliateProduct extends Model
     public function affiliateProgram(): BelongsTo
     {
         return $this->belongsTo(AffiliateProgram::class);
+    }
+
+    /**
+     * @return HasMany<ProductOpportunity, $this>
+     */
+    public function opportunities(): HasMany
+    {
+        return $this->hasMany(ProductOpportunity::class, 'affiliate_product_id');
     }
 
     public function getProductNameAttribute(): string

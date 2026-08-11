@@ -24,6 +24,7 @@ class AffiliateLink extends Model
         'campaign_id',
         'content_publication_id',
         'affiliate_product_id',
+        'product_opportunity_id',
         'slug',
         'affiliate_url',
         'utm_source',
@@ -63,6 +64,22 @@ class AffiliateLink extends Model
     public function clicks(): HasMany
     {
         return $this->hasMany(AffiliateClick::class);
+    }
+
+    /**
+     * @return BelongsTo<ProductOpportunity, $this>
+     */
+    public function opportunity(): BelongsTo
+    {
+        return $this->belongsTo(ProductOpportunity::class, 'product_opportunity_id')->nullable();
+    }
+
+    /**
+     * @return HasMany<AffiliateConversion, $this>
+     */
+    public function conversions(): HasMany
+    {
+        return $this->hasMany(AffiliateConversion::class);
     }
 
     /**

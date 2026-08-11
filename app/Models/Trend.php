@@ -76,6 +76,14 @@ class Trend extends Model
         return $this->hasMany(TrendProductMatch::class);
     }
 
+    /**
+     * @return HasMany<ProductOpportunity, $this>
+     */
+    public function opportunities(): HasMany
+    {
+        return $this->hasMany(ProductOpportunity::class, 'trend_id');
+    }
+
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;

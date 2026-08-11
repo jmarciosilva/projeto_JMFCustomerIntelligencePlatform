@@ -12,10 +12,13 @@ class AffiliateConversion extends Model
 
     protected $fillable = [
         'application_id',
+        'provider',
+        'external_conversion_id',
         'affiliate_product_id',
         'affiliate_program_id',
         'campaign_id',
         'affiliate_link_id',
+        'product_opportunity_id',
         'order_reference',
         'order_date',
         'product_price',
@@ -60,6 +63,11 @@ class AffiliateConversion extends Model
     public function affiliateLink(): BelongsTo
     {
         return $this->belongsTo(AffiliateLink::class)->nullable();
+    }
+
+    public function productOpportunity(): BelongsTo
+    {
+        return $this->belongsTo(ProductOpportunity::class)->nullable();
     }
 
     public function isPending(): bool
