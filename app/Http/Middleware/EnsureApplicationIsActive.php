@@ -18,8 +18,16 @@ class EnsureApplicationIsActive
     {
         $application = $request->user('sanctum');
 
-        if (! $application instanceof Application || ! $application->is_active || ! $application->tenant->is_active) {
-            abort(403, 'Aplicação ou tenant inativos.');
+        if (! $application instanceof Application) {
+            abort(403, 'Aplicação não autenticada.');
+        }
+
+        if (! $application->is_active) {
+            abort(403, 'Aplicação inativa.');
+        }
+
+        if (! $application->tenant || ! $application->tenant->is_active) {
+            abort(403, 'Tenant inativo.');
         }
 
         return $next($request);

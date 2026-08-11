@@ -21,6 +21,12 @@ class ProductOpportunityFactory extends Factory
     {
         return [
             'application_id' => Application::factory(),
+            'trend_id' => fn (array $attributes) => Trend::factory()->create([
+                'application_id' => $attributes['application_id'] ?? Application::factory()->create()->id,
+            ])->id,
+            'affiliate_product_id' => fn (array $attributes) => AffiliateProduct::factory()->create([
+                'application_id' => $attributes['application_id'] ?? Application::factory()->create()->id,
+            ])->id,
             'status_sprint_a' => StatusSprintA::DISCOVERED,
             'discovery_opportunity_score' => $this->faker->numberBetween(0, 100),
             'opportunity_score_breakdown' => [
@@ -36,8 +42,6 @@ class ProductOpportunityFactory extends Factory
                 'base_intent' => $this->faker->randomElement(['INFORMATIONAL', 'INVESTIGATION', 'TRANSACTIONAL']),
                 'adjustments' => [],
             ],
-            'trend_id' => Trend::factory(),
-            'affiliate_product_id' => AffiliateProduct::factory(),
             'opportunity_score' => $this->faker->randomFloat(2, 30, 95),
             'opportunity_breakdown' => [
                 'trend_score' => $this->faker->numberBetween(30, 100),

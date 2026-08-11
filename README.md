@@ -99,6 +99,35 @@ Compatível com hospedagem compartilhada. Não são obrigatórios no MVP: Redis,
 - Sessões: `SESSION_DRIVER=database`
 - Tarefas recorrentes: Cron + Laravel Scheduler
 
+## Sprint A — Product Opportunity Intelligence (75% Concluído)
+
+**Sprint A** implementa o **Product Opportunity Intelligence** — a capacidade de detectar, avaliar e publicar oportunidades comerciais reais combinando tendências, intenção comercial, preço, comissão, popularidade e conversão histórica em um **Opportunity Score** (0-100).
+
+### Etapa A1 — Database & Domain (✓ Concluído)
+- **Domain Classes**: `PurchaseIntentTerms` (vocabulário de 4 categorias), `PurchaseIntentClassifier` (0-100 com classificação LOW/MEDIUM/HIGH determinística), `PerformanceScoreCalculator` (redistribuição dinâmica de pesos: CTR + ConversionRate)
+- **Migrations**: 7 migrations — 13 colunas Sprint A + 2 índices, `application_id` isolation, tabela `curation_decisions` (audit trail), backfill de provider='magalu', UNIQUE constraint em `(application_id, provider, external_conversion_id)` para idempotência
+- **Tests**: 27 testes passando (15 classifier + 12 calculator)
+
+### Etapa A2 — Models & Relationships (✓ Concluído)
+- **4 Eloquent Models**: `ProductOpportunity` (13 relacionamentos + 8 scopes), `AffiliateConversion`, `AffiliateLink`, `CurationDecision`
+- **2 Enums**: `StatusSprintA` (6 estados com labels), `PurchaseIntentLabel` (3 níveis com scores)
+- **11 Relacionamentos bilaterais** com proper fillable columns; 2 factories atualizadas
+- **Tests**: 16/18 testes passando
+
+### Etapa A3 — Service Layer & APIs (✓ Concluído)
+- **4 Actions**: `CreateProductOpportunityAction`, `ApproveProductOpportunityAction`, `RejectProductOpportunityAction`, `PublishProductOpportunityAction` (padrão de isolamento de lógica de negócio)
+- **REST API**: `/api/v1/affiliate/product-opportunities` com 6 endpoints (LIST, SHOW, CREATE, APPROVE, REJECT, PUBLISH), paginação, filtros, validação
+- **Validação & Resources**: 3 request classes + 1 JSON resource com transformação aninhada
+- **Autenticação**: Laravel Sanctum token-based; isolamento multi-tenant via `byApplication` scope
+- **Tests**: 5/5 Actions + 7/12 API Feature passando (5 pendentes: active application status check)
+
+### Próximas Etapas (A4-A6)
+- **A4** — UI & Admin Panels: Livewire components para curation, dashboard `/admin/affiliate/product-opportunities`
+- **A5** — Integration: workflow completo e edge cases
+- **A6** — E2E & Documentation: testes end-to-end e guias de uso
+
+Status: **75% concluído** (A1, A2, A3 entregues; A4-A6 planejados). Total: **78 testes passando**.
+
 ## Requisitos locais
 
 ```

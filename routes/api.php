@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum', 'ensure.application.active'])
         });
 
         Route::prefix('affiliate')->middleware('throttle:api-application')->group(function (): void {
+            Route::model('productOpportunity', \App\Models\ProductOpportunity::class);
             Route::apiResource('product-opportunities', ProductOpportunityController::class);
             Route::patch('/product-opportunities/{productOpportunity}/approve', [ProductOpportunityController::class, 'approve'])->name('product-opportunities.approve');
             Route::patch('/product-opportunities/{productOpportunity}/reject', [ProductOpportunityController::class, 'reject'])->name('product-opportunities.reject');

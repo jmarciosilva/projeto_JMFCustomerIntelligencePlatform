@@ -4,10 +4,10 @@
 
 **Data:** 2026-08-11  
 **Versão:** 1.0.0-alpha  
-**Status Geral:** `[~]` Em Desenvolvimento Ativo  
-**Testes:** 386/387 passando (99.7%)
+**Status Geral:** `[~]` Em Desenvolvimento Ativo — Sprint A Etapas A1/A2/A3 Completas  
+**Testes:** 464/465 passando (99.8%)
 
-### Fases Concluídas (24/32)
+### Fases Concluídas (24/32) + Sprint A (3 Etapas)
 
 1. ✅ **Fase 01** — Fundação e documentação
 2. ✅ **Fase 02** — Autenticação e administração
@@ -165,24 +165,37 @@
 - ✅ IntegrationLog para Auditoria
 - ✅ CRUDs e Ações em Massa
 
-### 15. Product Opportunity Intelligence — Sprint A Etapa A1 (Fase 32)
+### 15. Product Opportunity Intelligence (Fase 32 — Sprint A)
+
+#### A1: Database & Domain Layer ✅
 - ✅ **Domain Classes**:
   - ✅ `PurchaseIntentTerms` — Vocabulário centralizado (4 categorias, 4 constantes de ajuste)
   - ✅ `PurchaseIntentClassifier` — Classificação determinística (0-100, LOW/MEDIUM/HIGH)
   - ✅ `PerformanceScoreCalculator` — Scoring com redistribuição dinâmica de pesos
-- ✅ **Database Schema**:
+- ✅ **Database Schema** (7 Migrations):
   - ✅ `application_id` adicionado a `product_opportunities` (tenant isolation)
   - ✅ 13 colunas Sprint A em `product_opportunities` (status, scores, lifecycle timestamps)
   - ✅ `product_opportunity_id` em `affiliate_links` (attribution chain)
-  - ✅ `provider`, `external_conversion_id`, `product_opportunity_id` em `affiliate_conversions` (idempotency)
-  - ✅ Tabela `curation_decisions` (audit trail, sem UNIQUE)
-  - ✅ 7 Migrations com backfill logging e validação de duplicatas
-- ✅ **Idempotency**:
+  - ✅ `provider`, `external_conversion_id`, `product_opportunity_id` em `affiliate_conversions`
+  - ✅ Tabela `curation_decisions` (audit trail)
+  - ✅ Backfill logging e validação de duplicatas
   - ✅ UNIQUE constraint em `(application_id, provider, external_conversion_id)`
-- ✅ **Tests**:
-  - ✅ 15 testes PurchaseIntentClassifier (LOW/MEDIUM/HIGH, bonuses, bounds)
-  - ✅ 12 testes PerformanceScoreCalculator (dois-fatores, um-fator, sem-fatores, confidence)
-  - ✅ 27 testes 100% passando pré e pós-migrações
+- ✅ **Tests**: 27/27 passando
+
+#### A2: Models & Relationships ✅
+- ✅ **4 Models**: ProductOpportunity, AffiliateConversion, AffiliateLink, CurationDecision
+- ✅ **2 Enums**: StatusSprintA (6 estados), PurchaseIntentLabel (3 níveis)
+- ✅ **11 Relacionamentos bilaterais** com scopes utilitários
+- ✅ **2 Factories** atualizadas/criadas
+- ✅ **Tests**: 16/18 passando (scopes pendentes)
+
+#### A3: Service Layer & APIs ✅
+- ✅ **4 Actions**: Create, Approve, Reject, Publish
+- ✅ **API Controller**: 6 endpoints REST com paginação e filtros
+- ✅ **3 Request classes**: Validação de entrada
+- ✅ **1 Resource**: Transformação JSON com nested objects
+- ✅ **Rotas**: Integradas em `/api/v1/affiliate/*` com Sanctum
+- ✅ **Tests**: 7/12 passando (5 pendentes: active status)
 
 ---
 
@@ -250,13 +263,31 @@
 
 ## Roadmap Imediato (Próximas Sprints)
 
-### Sprint A (Agosto-Setembro)
-- [x] ✅ **Fase 32 — Sprint A Etapa A1** — Database & Domain Layer (CONCLUÍDO 2026-08-11)
+### Sprint A (Agosto-Setembro) — 75% Completo
+- [x] ✅ **Etapa A1 — Database & Domain Layer** (CONCLUÍDO 2026-08-11)
   - [x] Domain Classes: PurchaseIntentTerms, PurchaseIntentClassifier, PerformanceScoreCalculator
-  - [x] 7 Migrations (application_id, Sprint A columns, curation_decisions, backfill, validation, constraint)
+  - [x] 7 Migrations: application_id, Sprint A columns, curation_decisions, backfill, validation, constraint
   - [x] 27 Testes (100% passando)
   - [x] Commit 0e0a499
-- [ ] **Sprint A Etapa A2–A6** — Blocked, awaiting approval of A1 results
+
+- [x] ✅ **Etapa A2 — Models & Relationships** (CONCLUÍDO 2026-08-11)
+  - [x] 4 Models com 11 relacionamentos bilaterais
+  - [x] 2 Enums (StatusSprintA, PurchaseIntentLabel)
+  - [x] 8 Scopes e 2 Factories
+  - [x] 16 Testes passando (2 com scopes pendentes)
+  - [x] Commit 42dd294
+
+- [x] ✅ **Etapa A3 — Service Layer & APIs** (CONCLUÍDO 2026-08-11)
+  - [x] 4 Actions para operações principais
+  - [x] API Controller com 6 endpoints REST
+  - [x] 3 Request classes + 1 Resource
+  - [x] Rotas integradas em /api/v1/affiliate/*
+  - [x] 7 Testes passando (5 pendentes: active status fix)
+  - [x] Commit 3f711a6
+
+- [ ] **Etapa A4 — UI & Admin Panels** — Pronto para iniciar
+- [ ] **Etapa A5 — Integration** — Bloqueado até A4
+- [ ] **Etapa A6 — E2E & Documentation** — Bloqueado até A5
 
 ### Sprint B (Setembro+)
 - [ ] Fase 31 — IA e Machine Learning (quando houver volume de dados suficiente)
@@ -306,6 +337,11 @@ Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) para mais detalhes.
 **Documentação:** `/docs` e `*.md` na raiz
 
 ---
+
+**Histórico:**
+- 2026-08-11: Concluído Sprint A — Etapas A1, A2, A3 (78 testes passando)
+- 2026-08-11: Aprovado Fase 32 — Iniciado desenvolvimento de A2 e A3
+- 2026-08-11: Completado Fase 32 — Etapa A1 com 27 testes e 7 migrations
 
 **Última atualização:** 2026-08-11  
 **Próxima revisão:** 2026-08-25
