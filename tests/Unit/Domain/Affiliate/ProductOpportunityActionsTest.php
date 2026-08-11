@@ -27,7 +27,7 @@ class ProductOpportunityActionsTest extends TestCase
         $trend = Trend::factory()->for($app)->create();
         $product = AffiliateProduct::factory()->for($app)->create();
 
-        $action = new CreateProductOpportunityAction();
+        $action = app(CreateProductOpportunityAction::class);
         $opportunity = $action->execute(
             applicationId: $app->id,
             trend: $trend,
