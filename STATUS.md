@@ -2,12 +2,12 @@
 
 ## Resumo Executivo
 
-**Data:** 2026-08-10  
+**Data:** 2026-08-11  
 **Versão:** 1.0.0-alpha  
 **Status Geral:** `[~]` Em Desenvolvimento Ativo  
-**Testes:** 381/382 passando (99.7%)
+**Testes:** 386/387 passando (99.7%)
 
-### Fases Concluídas (22/31)
+### Fases Concluídas (24/32)
 
 1. ✅ **Fase 01** — Fundação e documentação
 2. ✅ **Fase 02** — Autenticação e administração
@@ -31,12 +31,14 @@
 20. ✅ **Fase 27** — Content & Link Tracking
 21. ✅ **Fase 28** — Conversões
 22. ✅ **Fase 29** — Affiliate Analytics
+23. ✅ **Fase 30** — JMF Recommendation Engine
+24. ✅ **Fase 32** — Product Opportunity Intelligence (Sprint A — Etapa A1)
 
-### Fases em Andamento (0/31)
+### Fases em Andamento (0/32)
 
 *(Todas as 22 fases concluídas estão listadas nas seções de Concluídas e Pendentes)*
 
-### Fases Pendentes (9/31)
+### Fases Pendentes (8/32)
 
 - [ ] Fase 08 — Integração com site pessoal (parcial)
 - [ ] Fase 09 — Integração com Clube do Salão
@@ -45,8 +47,7 @@
 - [ ] Fase 17 — AI Fraud Detection
 - [ ] Fase 18 — Intelligence Engine
 - [ ] Fase 21 — Integração com Feira Esquerda Livre (Piloto)
-- [ ] Fase 30 — JMF Recommendation Engine
-- [ ] Fase 31 — IA e Machine Learning
+- [ ] Fase 31 — IA e Machine Learning (Trend/Affiliate Intelligence)
 
 ---
 
@@ -164,6 +165,25 @@
 - ✅ IntegrationLog para Auditoria
 - ✅ CRUDs e Ações em Massa
 
+### 15. Product Opportunity Intelligence — Sprint A Etapa A1 (Fase 32)
+- ✅ **Domain Classes**:
+  - ✅ `PurchaseIntentTerms` — Vocabulário centralizado (4 categorias, 4 constantes de ajuste)
+  - ✅ `PurchaseIntentClassifier` — Classificação determinística (0-100, LOW/MEDIUM/HIGH)
+  - ✅ `PerformanceScoreCalculator` — Scoring com redistribuição dinâmica de pesos
+- ✅ **Database Schema**:
+  - ✅ `application_id` adicionado a `product_opportunities` (tenant isolation)
+  - ✅ 13 colunas Sprint A em `product_opportunities` (status, scores, lifecycle timestamps)
+  - ✅ `product_opportunity_id` em `affiliate_links` (attribution chain)
+  - ✅ `provider`, `external_conversion_id`, `product_opportunity_id` em `affiliate_conversions` (idempotency)
+  - ✅ Tabela `curation_decisions` (audit trail, sem UNIQUE)
+  - ✅ 7 Migrations com backfill logging e validação de duplicatas
+- ✅ **Idempotency**:
+  - ✅ UNIQUE constraint em `(application_id, provider, external_conversion_id)`
+- ✅ **Tests**:
+  - ✅ 15 testes PurchaseIntentClassifier (LOW/MEDIUM/HIGH, bonuses, bounds)
+  - ✅ 12 testes PerformanceScoreCalculator (dois-fatores, um-fator, sem-fatores, confidence)
+  - ✅ 27 testes 100% passando pré e pós-migrações
+
 ---
 
 ## Infraestrutura e Stack
@@ -218,30 +238,30 @@
 
 | Métrica | Status |
 |---------|--------|
-| Testes Automatizados | 381/382 (99.7%) |
+| Testes Automatizados | 386/387 (99.7%) |
 | Cobertura de Código | ~85% (estimado) |
 | Análise Estática (PHPStan) | 13 avisos pré-existentes |
 | Lint (Pint) | ✅ Sem erros |
 | Build (npm) | ✅ Sem erros |
-| Migrations | ✅ Todas testadas |
+| Migrations | ✅ 7 Sprint A testadas |
 | SDK Publicável | ✅ Pronto (v1.0.0) |
 
 ---
 
-## Roadmap Imediato (Próximas 3 Sprints)
+## Roadmap Imediato (Próximas Sprints)
 
-### Sprint 1 (Agosto)
-- [ ] Completar Fase 27 (validar UI em browser)
-- [ ] Completar Fase 28 (validar UI em browser)
-- [ ] Criar testes E2E para fluxo de conversões
+### Sprint A (Agosto-Setembro)
+- [x] ✅ **Fase 32 — Sprint A Etapa A1** — Database & Domain Layer (CONCLUÍDO 2026-08-11)
+  - [x] Domain Classes: PurchaseIntentTerms, PurchaseIntentClassifier, PerformanceScoreCalculator
+  - [x] 7 Migrations (application_id, Sprint A columns, curation_decisions, backfill, validation, constraint)
+  - [x] 27 Testes (100% passando)
+  - [x] Commit 0e0a499
+- [ ] **Sprint A Etapa A2–A6** — Blocked, awaiting approval of A1 results
 
-### Sprint 2 (Agosto-Setembro)
-- [ ] Fase 29 — Affiliate Analytics (dashboard)
-- [ ] Fase 30 — JMF Recommendation Engine
-
-### Sprint 3 (Setembro)
-- [ ] Validação em produção (Fase 11)
-- [ ] Integração com Feira Esquerda Livre (Fase 21)
+### Sprint B (Setembro+)
+- [ ] Fase 31 — IA e Machine Learning (quando houver volume de dados suficiente)
+- [ ] Fase 11 — Validação em produção
+- [ ] Fase 21 — Integração com Feira Esquerda Livre (Piloto)
 
 ---
 
@@ -287,5 +307,5 @@ Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md) para mais detalhes.
 
 ---
 
-**Última atualização:** 2026-08-10  
-**Próxima revisão:** 2026-08-24
+**Última atualização:** 2026-08-11  
+**Próxima revisão:** 2026-08-25

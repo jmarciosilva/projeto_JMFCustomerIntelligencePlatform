@@ -958,6 +958,64 @@ Depende da Fase 29 (dados reais de desempenho) e da Fase 26 (Opportunity Score).
 
 ---
 
+## Fase 32 — Product Opportunity Intelligence (Sprint A — Etapa A1)
+
+**Status:** `[x]` Concluída (2026-08-11)
+
+### Objetivo
+
+Implementar a fundação de Database & Domain para o motor de inteligência de oportunidades de produto. Sprint A MVP: classificação determinística de intenção comercial (0-100, LOW/MEDIUM/HIGH) e scoring de desempenho com redistribuição dinâmica de pesos (CTR + ConversionRate).
+
+### Tarefas (Sprint A — Etapa A1)
+
+- [x] **Domain Classes** (3 arquivos, 27 testes):
+  - `PurchaseIntentTerms` — vocabulário centralizado (4 categorias: INFORMATIONAL, INVESTIGATION, TRANSACTIONAL, INTENSITY_MODIFIERS; 4 constantes de ajuste)
+  - `PurchaseIntentClassifier` — classificação determinística de 0-100 (LOW/MEDIUM/HIGH) com breakdown explicável
+  - `PerformanceScoreCalculator` — scoring de desempenho com redistribuição dinâmica de pesos (faltam dados → peso=0 antes de normalização, não "zero performance")
+
+- [x] **Database Migrations** (7 migrações executadas com sucesso):
+  1. `2026_08_12_000_add_application_id_to_product_opportunities` — tenant isolation
+  2. `2026_08_12_001_update_product_opportunities_add_sprint_a_columns` — 13 colunas + 2 índices (status, scores, lifecycle timestamps)
+  3. `2026_08_12_002_update_affiliate_links_add_opportunity_id` — attribution chain (FK to product_opportunities)
+  4. `2026_08_12_003_update_affiliate_conversions_add_identity_columns` — idempotency (provider, external_conversion_id, product_opportunity_id)
+  5. `2026_08_12_004_create_curation_decisions_table` — audit trail (sem UNIQUE, permite histórico)
+  6. `2026_08_12_005_backfill_affiliate_conversions_provider` — backfill com logging de IDs afetados
+  7. `2026_08_12_006_validate_affiliate_conversions_duplicates` — remoção de duplicatas com logging (pré-constraint)
+  8. `2026_08_12_007_add_unique_constraint_affiliate_conversions` — UNIQUE em (application_id, provider, external_conversion_id)
+
+- [x] **Tests** (27 testes, 100% passando):
+  - `tests/Unit/Domain/Affiliate/PurchaseIntentClassifierTest.php` — 15 testes (LOW/MEDIUM/HIGH, bonuses, bounds, breakdown, case-insensitivity)
+  - `tests/Unit/Domain/Affiliate/PerformanceScoreCalculatorTest.php` — 12 testes (dois-fatores/um-fator/sem-fatores, confidence levels, pesos normalizados, edge cases)
+
+- [x] **Documentation**:
+  - ROADMAP.md atualizado (este checklist)
+  - Status de A1 registrado na memória (`sprint_a_etapa_a1_complete.md`)
+
+### Critérios de aceite
+
+- [x] **Database**: todas as 7 migrações executadas com sucesso em `jmf_ci_homolog` (backup anterior preservado, zero data loss, backward-compatible)
+- [x] **Domain Logic**: 3 classes com regras verificadas e 27 testes unitários 100% passando pré e pós-migrações
+- [x] **Idempotency**: UNIQUE constraint em affiliate_conversions garante que reimportes não criam duplicatas
+- [x] **Logging**: backfill e validação de duplicatas registram todos os IDs afetados em logs de banco de dados
+- [x] **Type Compatibility**: todas as FKs usam `bigint unsigned` (não UUID), matching schema existente
+- [x] **No Breaking Changes**: migrations usam `hasColumn()`/`hasIndex()` checks, roláveis sem perder dados
+- [x] **Commit**: código commitado em `0e0a499` com mensagem descritiva incluindo 3 classes + 7 migrations + 27 testes
+- [x] **Ready for A2**: Domain layer e database layer completos, validados, testados; próximas etapas (A2–A6) bloqueadas até aprovação
+
+### Dependências
+
+Nenhuma dependência de fases pendentes — reaproveita apenas a arquitetura consolidada (Tenant/Application).
+
+### Notas de Implementação
+
+- **Sprint A MVP Scope**: CTR + ConversionRate factors apenas; Recurrency deliberately null (deferred to Sprint B)
+- **Purchase Intent Deterministic**: sem ML; regras baseadas em keywords com pesos fixos de ajuste
+- **Performance Score Flexibility**: faltam fatores → peso redistribuído entre disponíveis (não assume zero)
+- **Confidence Levels**: Sprint A usa INSUFFICIENT_DATA, LOW (1 fator), MEDIUM (2 fatores) — HIGH (3+ fatores) deferred to Sprint B
+- **Historical Compliance**: no UNIQUE constraint violation detected on validation — all 7 migrations executed without rolling back; no duplicate conversions found in this phase's batch
+
+---
+
 ## Fase 31 — IA e Machine Learning (Trend/Affiliate Intelligence)
 
 **Status:** `[~]` Em andamento · depende da Fase 30 + dados reais
@@ -1049,3 +1107,4 @@ Depende de:
 - **2026-08-10** — Fase 29 iniciada — **Affiliate Analytics Dashboard**: `CalculateAffiliateMetricsAction` (KPIs: receita, conversões, clicks, CTR, EPC); `GetTopAffiliateProductsAction` (ranking de produtos por clicks); `GetTopAffiliateContentAction` (conteúdos mais clicados); **AnalyticsDashboard** componente Livewire com filtro de período (7/30/90/365 dias); view com 7 cards de métricas + tabelas de top products/content. Rotas: `/admin/affiliate/analytics`, link na sidebar (📊 Affiliate Analytics). 375/376 testes passando. Fase 29 alcançou Status `[~]` Em andamento.
 - **2026-08-10** — Fase 30 concluída — **JMF Recommendation Engine**: `ProductPerformanceScore` model (armazena CTR, conversão, recorrência); `CalculateProductPerformanceScoreAction` (agregação de performance de produtos, 4 scores componentes); `JmfRecommendationEngineAction` (combina Trend Score 35% + Opportunity Score 45% + Performance Score 20% = Confidence Score 0-100); **RecommendationDashboard** Livewire component com 15 cards (padrão) exibindo produto, 3 scores, confidence score e razões textuais; rota `/admin/affiliate/recommendations`, link na sidebar (🎯 Recomendações JMF). **Testes**: 5 testes passando (array de recomendações, confidence score combinado, ordenação descendente, limite, razões baseadas em scores). Suite: 386/387 testes passando (1 falha pré-existente não relacionada da Fase 20). Fase 30 Status `[x]` Concluída.
 - **2026-08-10** — Fase 31 iniciada — **IA e Machine Learning (estratégia MVP)**: Deliberadamente não codificada ainda. Planejamento de 3 sprints: (1) Preparação de dados — tabela `ml_training_data`, pipeline de exportação, logs estruturados; (2) Modelo baseline — regressão linear ou XGBoost para Trend Score e Opportunity Score, validação cruzada; (3) Deploy — microserviço Python/FastAPI, fallback a regras, A/B testing, monitoramento de drift. Dependências: Fase 30 funcional + 1-3 meses de dados reais das Fases 22-29. Milestone: não em produção até ter histórico suficiente (evita overfitting). Fase 31 alcançou Status `[~]` Em andamento.
+- **2026-08-11** — **Fase 32 (Sprint A — Etapa A1) concluída**: Implementação do Database & Domain layer para Product Opportunity Intelligence. **Domain Classes**: `PurchaseIntentTerms` (vocabulário centralizado de 4 categorias), `PurchaseIntentClassifier` (0-100, LOW/MEDIUM/HIGH determinístico), `PerformanceScoreCalculator` (redistribuição dinâmica de pesos, CTR + ConversionRate). **Migrations**: 7 executadas com sucesso — `application_id` adicionado a `product_opportunities` (tenant isolation), 13 colunas Sprint A + 2 índices, `product_opportunity_id` em `affiliate_links`/`affiliate_conversions`, tabela `curation_decisions` (audit trail), backfill de `provider='magalu'` com logging, validação e remoção de duplicatas (com logging), UNIQUE constraint em `(application_id, provider, external_conversion_id)`. Todos os tipos de dados corrigidos para `bigint unsigned` (não UUID) para compatibilidade com schema existente. **Tests**: 27 testes 100% passando pré e pós-migrações (15 PurchaseIntentClassifier + 12 PerformanceScoreCalculator). **Commit** `0e0a499`. Próximas etapas (A2–A6) bloqueadas até aprovação. Fase 32 Status `[x]` Concluída.
