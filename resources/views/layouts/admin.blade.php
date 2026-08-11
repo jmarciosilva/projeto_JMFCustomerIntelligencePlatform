@@ -113,6 +113,11 @@
                            class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.products.suggestions') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             ✨ Sugestões por Trends
                         </a>
+
+                        <a href="{{ route('admin.affiliate.product-opportunities.index') }}"
+                           class="block rounded-lg px-3 py-2 text-sm font-medium ml-2 {{ request()->routeIs('admin.affiliate.product-opportunities.*') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            💎 Oportunidades
+                        </a>
                     </div>
 
                     <!-- Campanhas -->

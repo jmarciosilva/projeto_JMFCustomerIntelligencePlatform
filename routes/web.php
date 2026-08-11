@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Affiliate\ProductOpportunitiesController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Affiliate\LinkRedirectController;
 use App\Http\Controllers\StatusController;
@@ -130,6 +131,9 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/recommendations', AffiliateRecommendationDashboard::class)->name('recommendations.index');
 
         Route::get('/guide', LabGuide::class)->name('guide');
+
+        // Sprint A — Etapa A4: UI & Admin Panels
+        Route::get('/product-opportunities', [ProductOpportunitiesController::class, 'index'])->name('product-opportunities.index');
     });
 
     // Fase 23 — Trend Intelligence
