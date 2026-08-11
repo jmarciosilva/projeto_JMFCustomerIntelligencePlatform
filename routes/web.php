@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\Affiliate\ProductOpportunitiesController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Affiliate\LinkRedirectController;
 use App\Http\Controllers\StatusController;
+use App\Livewire\Admin\Affiliate\ProductOpportunitiesIndex;
 use App\Livewire\Admin\Affiliate\AnalyticsDashboard as AffiliateAnalyticsDashboard;
 use App\Livewire\Admin\Affiliate\RecommendationDashboard as AffiliateRecommendationDashboard;
 use App\Livewire\Admin\Affiliate\LabGuide;
@@ -133,7 +133,7 @@ Route::middleware(['auth', 'ensure.active'])->prefix('admin')->name('admin.')->g
         Route::get('/guide', LabGuide::class)->name('guide');
 
         // Sprint A — Etapa A4: UI & Admin Panels
-        Route::get('/product-opportunities', [ProductOpportunitiesController::class, 'index'])->name('product-opportunities.index');
+        Route::get('/product-opportunities', ProductOpportunitiesIndex::class)->name('product-opportunities.index');
     });
 
     // Fase 23 — Trend Intelligence
