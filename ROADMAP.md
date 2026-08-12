@@ -1374,161 +1374,6 @@ Depende de:
 
 ---
 
-## Fase 34 — Novos Providers de Tendência Externos
-
-**Status:** `[ ]` Pendente · depende da Fase 23
-
-### Objetivo Geral
-
-Ativar de verdade os providers de tendência que têm caminho **oficial e automatizável**, sem scraping não-oficial ou violação de Termos de Serviço. Dividida em 4 sub-etapas (C1-C4), com enfoque em YouTube Data API (menor barreira), Mercado Livre (público, sem credencial), Google Merchant Center (com dependência de setup), e Pinterest (stub até aprovação formal).
-
-### C1 — Ativar YouTubeTrendProvider com YouTube Data API v3
-
-**Status:** `[ ]` Pendente
-
-**Objetivo:**
-
-Substituir o stub atual do `YouTubeTrendProvider` por implementação real contra a YouTube Data API v3 (oficial, gratuita, self-service no Google Cloud Console, não exige App Review).
-
-**Tarefas:**
-
-- [ ] Implementar chamadas reais ao endpoint `search.list` com `order=viewCount` ou `relevance` da API v3 (documentação oficial: https://developers.google.com/youtube/v3/docs/search/list).
-- [ ] `isConfigured()` valida presença de `YOUTUBE_API_KEY` no `.env`.
-- [ ] `collect()` executa busca por termo (reaproveitando `Trend.name` já armazenado) e retorna snapshots com menções/engagement.
-- [ ] Tratamento de quota: API tem cota diária limitada (gratuita: 10.000 unidades/dia). Logar quando estourar, nunca deixar quebrar o comando agendado `trends:collect` — falha elegante com exceção tratada.
-- [ ] Testes: HTTP fake (sem gastar quota durante `php artisan test`), casos de quota esgotada, termo sem resultados.
-- [ ] Documentação: `.env.example` com `YOUTUBE_API_KEY`, passo a passo de como gerar a key no Google Cloud Console (gratuito, não requer cartão).
-- [ ] Tests (5+ testes).
-- [ ] Documentation.
-
-**Critérios de aceite:**
-
-- [ ] YouTubeTrendProvider implementado contra YouTube Data API v3 oficial.
-- [ ] `isConfigured()` valida API key.
-- [ ] `collect()` retorna array de snapshots com menções/engagement de vídeos em alta.
-- [ ] Quota exhaustion tratada gracefully (log + falha silenciosa, não quebrando o job agendado).
-- [ ] Tests (5+ testes, 100% passando) com HTTP fake.
-- [ ] Documentação atualizada (.env.example, passo a passo de setup).
-- [ ] Sem regressão em Fases 22-33.
-- [ ] `vendor/bin/pint`, `phpstan analyse`, `php artisan test` sem novos erros.
-
-**Dependências:**
-
-Depende da Fase 23 (estrutura de TrendProviderInterface já existe).
-
----
-
-### C2 — Novo MercadoLivreTrendProvider
-
-**Status:** `[ ]` Pendente · depende de C1
-
-**Objetivo:**
-
-Implementar novo provider contra o endpoint público de tendências de busca do Mercado Livre (`/trends/{site_id}`, `site_id=MLB` para Brasil), sem necessidade de autenticação de vendedor.
-
-**Tarefas:**
-
-- [ ] Verificar documentação oficial (developers.mercadolivre.com.br) — confirmar que `/trends/{site_id}` é realmente público e não requer credenciais de vendedor, citar fonte.
-- [ ] Implementar `MercadoLivreTrendProvider` seguindo padrão existente (TrendProviderInterface).
-- [ ] `isConfigured()` retorna true (sem credenciais necessárias para leitura).
-- [ ] `collect()` faz GET a `/trends/MLB` e extrai termos em alta com volume de buscas.
-- [ ] Tratamento de erro/offline: falha elegante se API Mercado Livre estiver indisponível.
-- [ ] Tests: HTTP fake, casos de indisponibilidade, formato de resposta.
-- [ ] Documentação: nota no README.md sobre o provider novo.
-- [ ] Tests (5+ testes).
-- [ ] Documentation.
-
-**Critérios de aceite:**
-
-- [ ] MercadoLivreTrendProvider implementado contra API oficial pública.
-- [ ] Documentação oficial citada como fonte.
-- [ ] `collect()` retorna array de snapshots com termos e volumes de busca.
-- [ ] Tratamento de erro graceful.
-- [ ] Tests (5+ testes, 100% passando) com HTTP fake.
-- [ ] Documentação atualizada.
-- [ ] Sem regressão em C1 + Fases 22-33.
-
-**Dependências:**
-
-Depende de C1.
-
----
-
-### C3 — Novo GoogleMerchantTrendProvider (Shopping Trends Report)
-
-**Status:** `[ ]` Pendente · depende de C2
-
-**Objetivo:**
-
-Implementar novo provider contra a Content API for Shopping (Google Merchant Center), caso o setup externo (cadastro de produtos no Merchant Center) já tenha sido feito. Se não, deixar stub formal.
-
-**Tarefas:**
-
-- [ ] **Parar e perguntar ao usuário:** "Você tem conta no Google Merchant Center com pelo menos 2 produtos cadastrados em pelo menos uma categoria?"
-  - Se **SIM**: Implementar contra a `reports.search` endpoint da Content API, documentando requisitos.
-  - Se **NÃO**: Deixar interface + stub (mesmo padrão do Instagram), sem implementar coleta real.
-- [ ] Se implementar: `isConfigured()` valida `GOOGLE_MERCHANT_CENTER_API_KEY` e `GOOGLE_MERCHANT_CENTER_MERCHANT_ID`.
-- [ ] `collect()` faz GET a reports.search com `topic_trends` e extrai termos em alta por categoria.
-- [ ] Documentação: note no INSTALL.md os requisitos de setup no Merchant Center.
-- [ ] Tests: se implementado (5+ testes); se stub, apenas validação de que lança ProviderNotConfiguredException.
-- [ ] Documentation.
-
-**Critérios de aceite:**
-
-- [ ] Se implementado: Content API for Shopping integrada corretamente.
-- [ ] Se stub: interface + erro documentado.
-- [ ] Testes (5+ ou validação de stub).
-- [ ] Documentação clara sobre requisitos/status.
-- [ ] Sem regressão em C1-C2 + Fases 22-33.
-
-**Dependências:**
-
-Depende de C2. Também depende de confirmação de setup externo do usuário.
-
----
-
-### C4 — Stub formal para PinterestTrendProvider
-
-**Status:** `[ ]` Pendente · depende de C3
-
-**Objetivo:**
-
-Deixar interface + stub formal para Pinterest Trends & Insights API, documentando por que não está ativado (requer aprovação formal, acesso restrito a agências/Enterprise/parceiros), sem implementar coleta real até a aprovação chegar.
-
-**Tarefas:**
-
-- [ ] Criar `PinterestTrendProvider` seguindo padrão (TrendProviderInterface).
-- [ ] `isConfigured()` retorna false.
-- [ ] `collect()` lança `ProviderNotConfiguredException` com mensagem clara: "Pinterest Trends & Insights API é restrita a agências/Enterprise/parceiros. Acesso não foi aprovado. Contate Pinterest para solicitar acesso formal."
-- [ ] Documentação: README.md + ROADMAP.md mencionando que Pinterest fica a critério de aprovação futura.
-- [ ] Tests: validação de que lança exceção.
-- [ ] Documentation.
-
-**Critérios de aceite:**
-
-- [ ] PinterestTrendProvider stub criado com mensagem clara.
-- [ ] Tests validam que lança exceção apropriada.
-- [ ] Documentação explica status e como solicitar acesso.
-- [ ] Sem regressão em C1-C3 + Fases 22-33.
-
-**Dependências:**
-
-Depende de C3.
-
----
-
-### Nota importante: TikTok fora de escopo
-
-**Explicitamente não implementar** qualquer forma de scraping do TikTok Creative Center ou integração com wrappers não-oficiais (Apify, RapidAPI, etc.). TikTok não tem API oficial pública de trends, e scraping viola Termos de Serviço. Se dados do TikTok forem necessários, o caminho é observação manual via `ManualTrendProvider`.
-
----
-
-### Histórico de atualizações (Fase 34)
-
-- **2026-08-12** — Fase 34 planejada e documentada. C1 a iniciar.
-
----
-
 ## Histórico de atualizações
 
 - **2026-08-03** — Roadmap criado. Fase 01 iniciada (documentação criada; base Laravel em andamento).
@@ -1734,3 +1579,159 @@ Depende de B3.
 ### Histórico de atualizações (Fase 33)
 
 - **2026-08-12** — Fase 33 planejada e documentada. B1 iniciado.
+- **2026-08-12** — **Fase 33 B1 concluída e commitada**: Confiabilidade de Dados de Produto — 18 testes passando (7 ProductDataValidationService + 5 AffiliateProduct scopes + 3 RevalidateAction + 3 Command). Migration `price_checked_at`/`availability_checked_at`, ProductDataValidationService, ValidateAffiliateProductDataJob, ValidateAffiliateProductDataCommand agendado 05:45 diariamente. Pint OK, PHPStan OK, sem regressão. Commit `a77cd98`.
+
+---
+
+## Fase 34 — Novos Providers de Tendência Externos
+
+**Status:** `[ ]` Pendente · depende da Fase 23
+
+### Objetivo Geral
+
+Ativar de verdade os providers de tendência que têm caminho **oficial e automatizável**, sem scraping não-oficial ou violação de Termos de Serviço. Dividida em 4 sub-etapas (C1-C4), com enfoque em YouTube Data API (menor barreira), Mercado Livre (público, sem credencial), Google Merchant Center (com dependência de setup), e Pinterest (stub até aprovação formal).
+
+### C1 — Ativar YouTubeTrendProvider com YouTube Data API v3
+
+**Status:** `[ ]` Pendente
+
+**Objetivo:**
+
+Substituir o stub atual do `YouTubeTrendProvider` por implementação real contra a YouTube Data API v3 (oficial, gratuita, self-service no Google Cloud Console, não exige App Review).
+
+**Tarefas:**
+
+- [ ] Implementar chamadas reais ao endpoint `search.list` com `order=viewCount` ou `relevance` da API v3 (documentação oficial: https://developers.google.com/youtube/v3/docs/search/list).
+- [ ] `isConfigured()` valida presença de `YOUTUBE_API_KEY` no `.env`.
+- [ ] `collect()` executa busca por termo (reaproveitando `Trend.name` já armazenado) e retorna snapshots com menções/engagement.
+- [ ] Tratamento de quota: API tem cota diária limitada (gratuita: 10.000 unidades/dia). Logar quando estourar, nunca deixar quebrar o comando agendado `trends:collect` — falha elegante com exceção tratada.
+- [ ] Testes: HTTP fake (sem gastar quota durante `php artisan test`), casos de quota esgotada, termo sem resultados.
+- [ ] Documentação: `.env.example` com `YOUTUBE_API_KEY`, passo a passo de como gerar a key no Google Cloud Console (gratuito, não requer cartão).
+- [ ] Tests (5+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] YouTubeTrendProvider implementado contra YouTube Data API v3 oficial.
+- [ ] `isConfigured()` valida API key.
+- [ ] `collect()` retorna array de snapshots com menções/engagement de vídeos em alta.
+- [ ] Quota exhaustion tratada gracefully (log + falha silenciosa, não quebrando o job agendado).
+- [ ] Tests (5+ testes, 100% passando) com HTTP fake.
+- [ ] Documentação atualizada (.env.example, passo a passo de setup).
+- [ ] Sem regressão em Fases 22-33.
+- [ ] `vendor/bin/pint`, `phpstan analyse`, `php artisan test` sem novos erros.
+
+**Dependências:**
+
+Depende da Fase 23 (estrutura de TrendProviderInterface já existe).
+
+---
+
+### C2 — Novo MercadoLivreTrendProvider
+
+**Status:** `[ ]` Pendente · depende de C1
+
+**Objetivo:**
+
+Implementar novo provider contra o endpoint público de tendências de busca do Mercado Livre (`/trends/{site_id}`, `site_id=MLB` para Brasil), sem necessidade de autenticação de vendedor.
+
+**Tarefas:**
+
+- [ ] Verificar documentação oficial (developers.mercadolivre.com.br) — confirmar que `/trends/{site_id}` é realmente público e não requer credenciais de vendedor, citar fonte.
+- [ ] Implementar `MercadoLivreTrendProvider` seguindo padrão existente (TrendProviderInterface).
+- [ ] `isConfigured()` retorna true (sem credenciais necessárias para leitura).
+- [ ] `collect()` faz GET a `/trends/MLB` e extrai termos em alta com volume de buscas.
+- [ ] Tratamento de erro/offline: falha elegante se API Mercado Livre estiver indisponível.
+- [ ] Tests: HTTP fake, casos de indisponibilidade, formato de resposta.
+- [ ] Documentação: nota no README.md sobre o provider novo.
+- [ ] Tests (5+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] MercadoLivreTrendProvider implementado contra API oficial pública.
+- [ ] Documentação oficial citada como fonte.
+- [ ] `collect()` retorna array de snapshots com termos e volumes de busca.
+- [ ] Tratamento de erro graceful.
+- [ ] Tests (5+ testes, 100% passando) com HTTP fake.
+- [ ] Documentação atualizada.
+- [ ] Sem regressão em C1 + Fases 22-33.
+
+**Dependências:**
+
+Depende de C1.
+
+---
+
+### C3 — Novo GoogleMerchantTrendProvider (Shopping Trends Report)
+
+**Status:** `[ ]` Pendente · depende de C2
+
+**Objetivo:**
+
+Implementar novo provider contra a Content API for Shopping (Google Merchant Center), caso o setup externo (cadastro de produtos no Merchant Center) já tenha sido feito. Se não, deixar stub formal.
+
+**Tarefas:**
+
+- [ ] **Parar e perguntar ao usuário:** "Você tem conta no Google Merchant Center com pelo menos 2 produtos cadastrados em pelo menos uma categoria?"
+  - Se **SIM**: Implementar contra a `reports.search` endpoint da Content API, documentando requisitos.
+  - Se **NÃO**: Deixar interface + stub (mesmo padrão do Instagram), sem implementar coleta real.
+- [ ] Se implementar: `isConfigured()` valida `GOOGLE_MERCHANT_CENTER_API_KEY` e `GOOGLE_MERCHANT_CENTER_MERCHANT_ID`.
+- [ ] `collect()` faz GET a reports.search com `topic_trends` e extrai termos em alta por categoria.
+- [ ] Documentação: note no INSTALL.md os requisitos de setup no Merchant Center.
+- [ ] Tests: se implementado (5+ testes); se stub, apenas validação de que lança ProviderNotConfiguredException.
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] Se implementado: Content API for Shopping integrada corretamente.
+- [ ] Se stub: interface + erro documentado.
+- [ ] Testes (5+ ou validação de stub).
+- [ ] Documentação clara sobre requisitos/status.
+- [ ] Sem regressão em C1-C2 + Fases 22-33.
+
+**Dependências:**
+
+Depende de C2. Também depende de confirmação de setup externo do usuário.
+
+---
+
+### C4 — Stub formal para PinterestTrendProvider
+
+**Status:** `[ ]` Pendente · depende de C3
+
+**Objetivo:**
+
+Deixar interface + stub formal para Pinterest Trends & Insights API, documentando por que não está ativado (requer aprovação formal, acesso restrito a agências/Enterprise/parceiros), sem implementar coleta real até a aprovação chegar.
+
+**Tarefas:**
+
+- [ ] Criar `PinterestTrendProvider` seguindo padrão (TrendProviderInterface).
+- [ ] `isConfigured()` retorna false.
+- [ ] `collect()` lança `ProviderNotConfiguredException` com mensagem clara: "Pinterest Trends & Insights API é restrita a agências/Enterprise/parceiros. Acesso não foi aprovado. Contate Pinterest para solicitar acesso formal."
+- [ ] Documentação: README.md + ROADMAP.md mencionando que Pinterest fica a critério de aprovação futura.
+- [ ] Tests: validação de que lança exceção.
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] PinterestTrendProvider stub criado com mensagem clara.
+- [ ] Tests validam que lança exceção apropriada.
+- [ ] Documentação explica status e como solicitar acesso.
+- [ ] Sem regressão em C1-C3 + Fases 22-33.
+
+**Dependências:**
+
+Depende de C3.
+
+---
+
+### Nota importante: TikTok fora de escopo
+
+**Explicitamente não implementar** qualquer forma de scraping do TikTok Creative Center ou integração com wrappers não-oficiais (Apify, RapidAPI, etc.). TikTok não tem API oficial pública de trends, e scraping viola Termos de Serviço. Se dados do TikTok forem necessários, o caminho é observação manual via `ManualTrendProvider`.
+
+---
+
+### Histórico de atualizações (Fase 34)
+
+- **2026-08-12** — Fase 34 planejada e documentada. C1 a iniciar.
