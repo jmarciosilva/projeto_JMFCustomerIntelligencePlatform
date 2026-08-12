@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Campaign;
 use App\Models\ContentPublication;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,7 @@ class ContentPublicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'campaign_id' => fn() => \App\Models\Campaign::factory()->create()->id,
+            'campaign_id' => fn () => Campaign::factory()->create()->id,
             'product_opportunity_id' => null,
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),

@@ -5,8 +5,8 @@ namespace Database\Seeders;
 use App\Domain\Affiliate\Enums\PurchaseIntentLabel;
 use App\Domain\Affiliate\Enums\StatusSprintA;
 use App\Models\AffiliateProduct;
-use App\Models\Application;
 use App\Models\AffiliateProgram;
+use App\Models\Application;
 use App\Models\ProductOpportunity;
 use App\Models\Tenant;
 use App\Models\Trend;
@@ -195,13 +195,13 @@ class SprintATestDataSeeder extends Seeder
             $opportunityCount++;
         }
 
-        $this->command->info("Sprint A test data criado com sucesso!");
+        $this->command->info('Sprint A test data criado com sucesso!');
         $this->command->info("  - Tenant: {$tenant->name}");
         $this->command->info("  - Application: {$application->name}");
         $this->command->info("  - Watchlist: {$watchlist->name}");
-        $this->command->info("  - Usuário teste: teste@afiliado.com (senha: senha123)");
-        $this->command->info("  - Trends: " . count($createdTrends));
-        $this->command->info("  - Produtos: " . count($createdProducts));
+        $this->command->info('  - Usuário teste: teste@afiliado.com (senha: senha123)');
+        $this->command->info('  - Trends: '.count($createdTrends));
+        $this->command->info('  - Produtos: '.count($createdProducts));
         $this->command->info("  - Oportunidades: {$opportunityCount}");
         $this->command->info("\nAcesse em: http://jmf-customer-intelligence.test/admin/affiliate/product-opportunities");
     }

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Affiliate;
 use App\Models\Campaign;
 use App\Models\ContentPublication;
 use App\Models\ProductOpportunity;
+use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -70,7 +71,7 @@ class ContentPublicationForm extends Component
             'platform' => $this->platform,
             'url' => $this->url ?: null,
             'status' => $this->status,
-            'published_at' => $this->published_at ? \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $this->published_at) : null,
+            'published_at' => $this->published_at ? Carbon::createFromFormat('Y-m-d\TH:i', $this->published_at) : null,
         ];
 
         if ($this->content) {

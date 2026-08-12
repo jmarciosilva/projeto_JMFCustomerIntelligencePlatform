@@ -5,12 +5,13 @@ namespace App\Domain\Affiliate;
 use App\Models\Application;
 use App\Models\ProductOpportunity;
 use App\Models\ProductPerformanceScore;
+use App\Models\Trend;
 
 class JmfRecommendationEngineAction
 {
     public function execute(Application $application, int $limit = 10): array
     {
-        $trendIds = \App\Models\Trend::whereHas('watchlist', function ($query) use ($application) {
+        $trendIds = Trend::whereHas('watchlist', function ($query) use ($application) {
             $query->where('application_id', $application->id);
         })->pluck('id');
 
@@ -39,7 +40,7 @@ class JmfRecommendationEngineAction
                     $reasons[] = "Desempenho excelente ({$performanceScore}/100)";
                 }
                 if (empty($reasons)) {
-                    $reasons[] = "Combinação equilibrada de scores";
+                    $reasons[] = 'Combinação equilibrada de scores';
                 }
 
                 return [

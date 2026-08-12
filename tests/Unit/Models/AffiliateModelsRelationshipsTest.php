@@ -154,13 +154,13 @@ class AffiliateModelsRelationshipsTest extends TestCase
     #[Test]
     public function affiliate_link_fillable_includes_product_opportunity_id()
     {
-        $this->assertContains('product_opportunity_id', (new AffiliateLink())->getFillable());
+        $this->assertContains('product_opportunity_id', (new AffiliateLink)->getFillable());
     }
 
     #[Test]
     public function affiliate_conversion_fillable_includes_new_sprint_a_fields()
     {
-        $fillable = (new AffiliateConversion())->getFillable();
+        $fillable = (new AffiliateConversion)->getFillable();
         $this->assertContains('provider', $fillable);
         $this->assertContains('external_conversion_id', $fillable);
         $this->assertContains('product_opportunity_id', $fillable);

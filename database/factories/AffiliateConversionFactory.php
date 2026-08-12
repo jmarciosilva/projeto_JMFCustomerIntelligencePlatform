@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\AffiliateConversion;
+use App\Models\AffiliateProduct;
+use App\Models\AffiliateProgram;
+use App\Models\Application;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,9 +21,9 @@ class AffiliateConversionFactory extends Factory
     public function definition(): array
     {
         return [
-            'application_id' => fn() => \App\Models\Application::factory()->create()->id,
-            'affiliate_product_id' => fn() => \App\Models\AffiliateProduct::factory()->create()->id,
-            'affiliate_program_id' => fn() => \App\Models\AffiliateProgram::factory()->create()->id,
+            'application_id' => fn () => Application::factory()->create()->id,
+            'affiliate_product_id' => fn () => AffiliateProduct::factory()->create()->id,
+            'affiliate_program_id' => fn () => AffiliateProgram::factory()->create()->id,
             'campaign_id' => null,
             'affiliate_link_id' => null,
             'order_reference' => $this->faker->unique()->bothify('PED-########'),

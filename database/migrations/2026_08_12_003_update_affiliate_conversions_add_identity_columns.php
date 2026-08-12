@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::table('affiliate_conversions', function (Blueprint $table) {
             // Provider: identificador do provedor da conversão (magalu, amazon, manual, etc)
-            if (!Schema::hasColumn('affiliate_conversions', 'provider')) {
+            if (! Schema::hasColumn('affiliate_conversions', 'provider')) {
                 $table->string('provider')
                     ->nullable()
                     ->after('application_id')
@@ -22,7 +22,7 @@ return new class extends Migration
             }
 
             // External Conversion ID: ID da conversão no provider externo
-            if (!Schema::hasColumn('affiliate_conversions', 'external_conversion_id')) {
+            if (! Schema::hasColumn('affiliate_conversions', 'external_conversion_id')) {
                 $table->string('external_conversion_id')
                     ->nullable()
                     ->after('provider')
@@ -30,7 +30,7 @@ return new class extends Migration
             }
 
             // Product Opportunity ID: rastreamento end-to-end
-            if (!Schema::hasColumn('affiliate_conversions', 'product_opportunity_id')) {
+            if (! Schema::hasColumn('affiliate_conversions', 'product_opportunity_id')) {
                 $table->unsignedBigInteger('product_opportunity_id')
                     ->nullable()
                     ->after('external_conversion_id')
@@ -43,15 +43,15 @@ return new class extends Migration
             }
 
             // Índices para queries comuns
-            if (!Schema::hasIndex('affiliate_conversions', 'idx_provider_ext_id')) {
+            if (! Schema::hasIndex('affiliate_conversions', 'idx_provider_ext_id')) {
                 $table->index(['provider', 'external_conversion_id'], 'idx_provider_ext_id');
             }
 
-            if (!Schema::hasIndex('affiliate_conversions', 'idx_product_opportunity_id')) {
+            if (! Schema::hasIndex('affiliate_conversions', 'idx_product_opportunity_id')) {
                 $table->index('product_opportunity_id', 'idx_product_opportunity_id');
             }
 
-            if (!Schema::hasIndex('affiliate_conversions', 'idx_provider_created')) {
+            if (! Schema::hasIndex('affiliate_conversions', 'idx_provider_created')) {
                 $table->index(['provider', 'created_at'], 'idx_provider_created');
             }
         });

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Trends;
 
+use App\Models\PlatformSetting;
 use App\Models\TrendingTopic;
 use Illuminate\Support\Facades\Http;
 
@@ -48,8 +49,8 @@ class FetchGoogleTrendsAction
 
     private function fetchFromSerpAPI(): array
     {
-        $apiKey = \App\Models\PlatformSetting::get('serpapi_key');
-        if (!$apiKey) {
+        $apiKey = PlatformSetting::get('serpapi_key');
+        if (! $apiKey) {
             return $this->getMockTrends();
         }
 
@@ -67,7 +68,7 @@ class FetchGoogleTrendsAction
                 return $this->parseSerpAPIResponse($response->json());
             }
         } catch (\Exception $e) {
-            \Log::warning('SerpAPI Error: ' . $e->getMessage());
+            \Log::warning('SerpAPI Error: '.$e->getMessage());
         }
 
         return $this->getMockTrends();

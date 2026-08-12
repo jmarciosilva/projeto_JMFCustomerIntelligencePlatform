@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_conversions', function (Blueprint $table) {
-            if (!Schema::hasIndex('affiliate_conversions', 'uq_app_provider_external_id')) {
+            if (! Schema::hasIndex('affiliate_conversions', 'uq_app_provider_external_id')) {
                 $table->unique(['application_id', 'provider', 'external_conversion_id'], 'uq_app_provider_external_id');
             }
         });

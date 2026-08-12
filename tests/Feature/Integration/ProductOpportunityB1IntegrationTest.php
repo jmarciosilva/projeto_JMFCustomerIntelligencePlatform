@@ -3,12 +3,11 @@
 namespace Tests\Feature\Integration;
 
 use App\Domain\Affiliate\Actions\ApproveProductOpportunityAction;
-use App\Domain\Affiliate\Actions\CreateProductOpportunityAction;
 use App\Domain\Affiliate\Actions\PublishProductOpportunityAction;
 use App\Domain\Affiliate\PerformanceScoreCalculator;
 use App\Models\AffiliateConversion;
-use App\Models\Application;
 use App\Models\AffiliateProduct;
+use App\Models\Application;
 use App\Models\ProductOpportunity;
 use App\Models\Tenant;
 use App\Models\Trend;
@@ -19,10 +18,15 @@ use Tests\TestCase;
 class ProductOpportunityB1IntegrationTest extends TestCase
 {
     protected Tenant $tenant;
+
     protected Application $application;
+
     protected Trend $trend;
+
     protected AffiliateProduct $product;
+
     protected User $user;
+
     protected PerformanceScoreCalculator $calculator;
 
     protected function setUp(): void
@@ -34,7 +38,7 @@ class ProductOpportunityB1IntegrationTest extends TestCase
         $this->trend = Trend::factory()->for($this->application)->create();
         $this->product = AffiliateProduct::factory()->for($this->application)->create();
         $this->user = User::factory()->create();
-        $this->calculator = new PerformanceScoreCalculator();
+        $this->calculator = new PerformanceScoreCalculator;
     }
 
     #[Test]

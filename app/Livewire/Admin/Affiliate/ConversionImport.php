@@ -47,10 +47,9 @@ class ConversionImport extends Component
             );
             session()->flash('message', "Import realizado: {$this->result['successful']} sucesso, {$this->result['failed']} falhas");
         } catch (\Exception $e) {
-            session()->flash('error', "Erro no import: " . $e->getMessage());
+            session()->flash('error', 'Erro no import: '.$e->getMessage());
         }
     }
-
 
     public function render()
     {

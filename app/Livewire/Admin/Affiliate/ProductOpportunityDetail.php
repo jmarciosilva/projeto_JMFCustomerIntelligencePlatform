@@ -56,7 +56,7 @@ class ProductOpportunityDetail extends Component
         }
 
         try {
-            $action = new ApproveProductOpportunityAction();
+            $action = new ApproveProductOpportunityAction;
             $this->opportunity = $action->execute(
                 opportunity: $this->opportunity,
                 approver: auth()->user(),
@@ -82,7 +82,7 @@ class ProductOpportunityDetail extends Component
         }
 
         try {
-            $action = new RejectProductOpportunityAction();
+            $action = new RejectProductOpportunityAction;
             $this->opportunity = $action->execute(
                 opportunity: $this->opportunity,
                 rejecter: auth()->user(),
@@ -106,7 +106,7 @@ class ProductOpportunityDetail extends Component
         }
 
         try {
-            $action = new PublishProductOpportunityAction();
+            $action = new PublishProductOpportunityAction;
             $this->opportunity = $action->execute($this->opportunity);
 
             $this->dispatch('opportunity-updated');

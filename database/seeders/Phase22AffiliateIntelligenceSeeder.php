@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\AffiliateProgram;
 use App\Models\AffiliateProduct;
+use App\Models\AffiliateProgram;
 use App\Models\Application;
 use App\Models\Tenant;
 use Illuminate\Database\Seeder;

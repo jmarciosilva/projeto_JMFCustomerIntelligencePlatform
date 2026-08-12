@@ -19,7 +19,7 @@ class LinkRedirectController extends Controller
         $link = AffiliateLink::where('slug', $slug)->firstOrFail();
 
         // Verificar se link está ativo
-        if (!$link->isActive()) {
+        if (! $link->isActive()) {
             return response()->json(['error' => 'Link inactive'], 404);
         }
 
@@ -65,7 +65,7 @@ class LinkRedirectController extends Controller
     {
         $visitorId = $request->cookie('jmf_visitor_id');
 
-        if (!$visitorId) {
+        if (! $visitorId) {
             $visitorId = (string) Str::uuid();
         }
 
@@ -83,13 +83,13 @@ class LinkRedirectController extends Controller
         $params = $request->query();
 
         // Se o link tem UTMs configurados, usá-los como defaults (mas query string sobrescreve)
-        if ($link->utm_source && !isset($params['utm_source'])) {
+        if ($link->utm_source && ! isset($params['utm_source'])) {
             $params['utm_source'] = $link->utm_source;
         }
-        if ($link->utm_medium && !isset($params['utm_medium'])) {
+        if ($link->utm_medium && ! isset($params['utm_medium'])) {
             $params['utm_medium'] = $link->utm_medium;
         }
-        if ($link->utm_campaign && !isset($params['utm_campaign'])) {
+        if ($link->utm_campaign && ! isset($params['utm_campaign'])) {
             $params['utm_campaign'] = $link->utm_campaign;
         }
 
@@ -99,6 +99,6 @@ class LinkRedirectController extends Controller
 
         $separator = str_contains($url, '?') ? '&' : '?';
 
-        return $url . $separator . http_build_query($params);
+        return $url.$separator.http_build_query($params);
     }
 }

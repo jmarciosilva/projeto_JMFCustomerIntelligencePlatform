@@ -5,6 +5,7 @@ namespace App\Domain\Affiliate;
 use App\Models\AffiliateConversion;
 use App\Models\AffiliateLink;
 use App\Models\Application;
+use App\Models\Campaign;
 use Carbon\Carbon;
 
 class CalculateAffiliateMetricsAction
@@ -19,7 +20,7 @@ class CalculateAffiliateMetricsAction
             ->whereIn('status', [AffiliateConversion::STATUS_APPROVED, AffiliateConversion::STATUS_PAID])
             ->get();
 
-        $campaignIds = \App\Models\Campaign::where('application_id', $application->id)
+        $campaignIds = Campaign::where('application_id', $application->id)
             ->pluck('id');
 
         $totalClicks = AffiliateLink::whereIn('campaign_id', $campaignIds)

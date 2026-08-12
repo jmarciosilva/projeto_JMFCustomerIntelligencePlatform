@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_opportunities', function (Blueprint $table) {
-            if (!Schema::hasColumn('product_opportunities', 'application_id')) {
+            if (! Schema::hasColumn('product_opportunities', 'application_id')) {
                 // Adicionar como nullable primeiro, backfill depois via seeds/artisan
                 $table->unsignedBigInteger('application_id')
                     ->nullable()

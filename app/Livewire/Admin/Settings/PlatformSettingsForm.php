@@ -8,7 +8,9 @@ use Livewire\Component;
 class PlatformSettingsForm extends Component
 {
     public string $tab = 'api_keys';
+
     public array $settings = [];
+
     public array $formData = [];
 
     #[Validate('required|string')]

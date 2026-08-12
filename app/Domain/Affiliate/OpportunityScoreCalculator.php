@@ -3,6 +3,7 @@
 namespace App\Domain\Affiliate;
 
 use App\Models\AffiliateProduct;
+use App\Models\Event;
 use App\Models\Trend;
 use App\Models\TrendProductMatch;
 
@@ -70,7 +71,7 @@ class OpportunityScoreCalculator
     private function calculateProductPopularity(AffiliateProduct $product): float
     {
         // Contar eventos do produto em sua application nos últimos 90 dias
-        $eventCount = \App\Models\Event::where('application_id', $product->application_id)
+        $eventCount = Event::where('application_id', $product->application_id)
             ->where('subject_type', 'product')
             ->where('subject_id', $product->id)
             ->where('occurred_at', '>=', now()->subDays(90))

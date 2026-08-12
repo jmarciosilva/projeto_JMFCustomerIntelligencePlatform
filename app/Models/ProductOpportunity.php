@@ -102,9 +102,10 @@ class ProductOpportunity extends Model
         return $query->where('application_id', $applicationId);
     }
 
-    public function scopeByStatus($query, StatusSprintA | string $status)
+    public function scopeByStatus($query, StatusSprintA|string $status)
     {
         $value = $status instanceof StatusSprintA ? $status->value : $status;
+
         return $query->where('status_sprint_a', $value);
     }
 

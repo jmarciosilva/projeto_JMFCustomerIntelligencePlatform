@@ -58,6 +58,6 @@ class AffiliateLinkGenerator
 
         $separator = str_contains($affiliateUrl, '?') ? '&' : '?';
 
-        return $affiliateUrl . $separator . http_build_query($params);
+        return $affiliateUrl.$separator.http_build_query($params);
     }
 }

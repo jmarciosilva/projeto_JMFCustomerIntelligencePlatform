@@ -2,18 +2,22 @@
 
 namespace App\Livewire\Admin\Affiliate;
 
-use App\Models\Application;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
+use App\Models\Application;
 use App\Models\Watchlist;
 use Livewire\Component;
 
 class ProductSuggestionsByTrends extends Component
 {
     public ?int $watchlist = null;
+
     public array $suggestions = [];
+
     public array $selectedProducts = [];
+
     public $selectedProgramId = null;
+
     public bool $showImportForm = false;
 
     public function mount(): void
@@ -31,16 +35,18 @@ class ProductSuggestionsByTrends extends Component
 
     public function loadSuggestions(): void
     {
-        if (!$this->watchlist) {
+        if (! $this->watchlist) {
             $this->dispatch('toast', message: 'Selecione uma Watchlist primeiro', type: 'error');
+
             return;
         }
 
         $this->dispatch('show-loading', message: 'Buscando produtos relacionados aos trends...');
 
         $watchlistModel = Watchlist::find($this->watchlist);
-        if (!$watchlistModel) {
+        if (! $watchlistModel) {
             $this->dispatch('toast', message: 'Watchlist não encontrada', type: 'error');
+
             return;
         }
 
@@ -49,13 +55,14 @@ class ProductSuggestionsByTrends extends Component
 
         if (empty($trends)) {
             $this->dispatch('toast', message: 'Nenhum trend ativo nesta Watchlist', type: 'error');
+
             return;
         }
 
         // Generate mock product suggestions based on trends
         $this->suggestions = $this->generateMockSuggestions($trends);
 
-        $this->dispatch('toast', message: count($this->suggestions) . ' produtos encontrados!', type: 'success');
+        $this->dispatch('toast', message: count($this->suggestions).' produtos encontrados!', type: 'success');
     }
 
     private function generateMockSuggestions(array $trends): array
@@ -97,7 +104,7 @@ class ProductSuggestionsByTrends extends Component
             foreach ($productDatabase as $category => $products) {
                 if (str_contains($lowerTrend, $category) || str_contains($category, $lowerTrend)) {
                     foreach ($products as $product) {
-                        if (!collect($suggestions)->contains('name', $product['name'])) {
+                        if (! collect($suggestions)->contains('name', $product['name'])) {
                             $suggestions[] = array_merge($product, [
                                 'id' => md5($product['name']),
                                 'trend' => $trend,
@@ -111,7 +118,7 @@ class ProductSuggestionsByTrends extends Component
         // If no exact match, return general suggestions based on categories
         if (empty($suggestions)) {
             foreach ($productDatabase as $category => $products) {
-                $suggestions = array_merge($suggestions, array_map(fn($p) => array_merge($p, ['id' => md5($p['name']), 'trend' => 'Geral']), $products));
+                $suggestions = array_merge($suggestions, array_map(fn ($p) => array_merge($p, ['id' => md5($p['name']), 'trend' => 'Geral']), $products));
             }
         }
 
@@ -144,19 +151,22 @@ class ProductSuggestionsByTrends extends Component
 
         if (empty($this->selectedProducts)) {
             $this->dispatch('toast', message: 'Selecione pelo menos um produto', type: 'error');
+
             return;
         }
 
         if ($programId <= 0) {
             $this->dispatch('toast', message: 'Selecione um programa de afiliado válido', type: 'error');
+
             return;
         }
 
         $app = auth()->user()->application ?? Application::first();
         $program = AffiliateProgram::find($programId);
 
-        if (!$program) {
+        if (! $program) {
             $this->dispatch('toast', message: 'Programa não encontrado', type: 'error');
+
             return;
         }
 
@@ -179,7 +189,8 @@ class ProductSuggestionsByTrends extends Component
                     $count++;
                 } catch (\Exception $e) {
                     \Log::error('Error importing product', ['error' => $e->getMessage()]);
-                    $this->dispatch('toast', message: 'Erro ao importar: ' . $e->getMessage(), type: 'error');
+                    $this->dispatch('toast', message: 'Erro ao importar: '.$e->getMessage(), type: 'error');
+
                     return;
                 }
             }

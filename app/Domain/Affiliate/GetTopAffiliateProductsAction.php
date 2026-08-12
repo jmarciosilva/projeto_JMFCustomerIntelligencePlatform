@@ -4,6 +4,7 @@ namespace App\Domain\Affiliate;
 
 use App\Models\AffiliateLink;
 use App\Models\Application;
+use App\Models\Campaign;
 use Carbon\Carbon;
 
 class GetTopAffiliateProductsAction
@@ -13,7 +14,7 @@ class GetTopAffiliateProductsAction
         $startDate = $startDate ?? now()->startOfMonth();
         $endDate = $endDate ?? now()->endOfDay();
 
-        $campaignIds = \App\Models\Campaign::where('application_id', $application->id)
+        $campaignIds = Campaign::where('application_id', $application->id)
             ->pluck('id');
 
         $links = AffiliateLink::whereIn('campaign_id', $campaignIds)

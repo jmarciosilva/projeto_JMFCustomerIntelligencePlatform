@@ -3,11 +3,11 @@
 use App\Domain\Affiliate\ImportAffiliateConversionsFromCsvAction;
 use App\Domain\Affiliate\RegisterAffiliateConversionAction;
 use App\Models\AffiliateConversion;
+use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
 use App\Models\Application;
 use App\Models\Campaign;
 use App\Models\Tenant;
-use Illuminate\Support\Facades\Storage;
 
 describe('Affiliate Conversions', function () {
     beforeEach(function () {
@@ -19,7 +19,7 @@ describe('Affiliate Conversions', function () {
 
     it('registra conversão manualmente', function () {
         $action = app(RegisterAffiliateConversionAction::class);
-        $product = \App\Models\AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id]);
+        $product = AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id]);
 
         $conversion = $action->execute([
             'application_id' => $this->application->id,
@@ -41,7 +41,7 @@ describe('Affiliate Conversions', function () {
 
     it('valida duplicação de referência de pedido', function () {
         $action = app(RegisterAffiliateConversionAction::class);
-        $product = \App\Models\AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id]);
+        $product = AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id]);
 
         $action->execute([
             'application_id' => $this->application->id,
@@ -65,11 +65,11 @@ describe('Affiliate Conversions', function () {
                 'commission_rate' => 10,
                 'commission_value' => 100,
             ]);
-        })->toThrow(\Exception::class);
+        })->toThrow(Exception::class);
     });
 
     it('importa conversões do CSV', function () {
-        $product = \App\Models\AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
+        $product = AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
 
         $csv = "order_reference,product_name,order_date,product_price,commission_rate,commission_value,notes\n";
         $csv .= "PED-001,iPhone 15,2026-08-10,4999.00,15.00,749.85,Venda via link\n";
@@ -109,7 +109,7 @@ describe('Affiliate Conversions', function () {
     });
 
     it('importa CSV com linhas válidas e inválidas', function () {
-        $product = \App\Models\AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
+        $product = AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
 
         $csv = "order_reference,product_name,order_date,product_price,commission_rate,commission_value,campaign_name,notes\n";
         $csv .= "PED-001,iPhone 15,2026-08-10,4999.00,15.00,749.85,,Venda OK\n";
@@ -129,7 +129,7 @@ describe('Affiliate Conversions', function () {
     });
 
     it('reimportar o mesmo order_reference atualiza a conversão', function () {
-        $product = \App\Models\AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
+        $product = AffiliateProduct::factory()->create(['affiliate_program_id' => $this->program->id, 'name' => 'iPhone 15']);
 
         $csv = "order_reference,product_name,order_date,product_price,commission_rate,commission_value,notes\n";
         $csv .= "PED-001,iPhone 15,2026-08-10,4999.00,15.00,749.85,Primeira tentativa\n";

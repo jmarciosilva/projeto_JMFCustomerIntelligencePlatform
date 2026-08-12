@@ -1,6 +1,5 @@
 <?php
 
-use App\Application\Affiliate\Actions\CalculateOpportunitiesAction;
 use App\Domain\Affiliate\OpportunityScoreCalculator;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;

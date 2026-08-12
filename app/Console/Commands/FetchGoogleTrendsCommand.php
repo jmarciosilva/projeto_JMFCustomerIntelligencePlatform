@@ -20,7 +20,7 @@ class FetchGoogleTrendsCommand extends Command
         $action = new FetchGoogleTrendsAction($region);
         $trends = $action->execute();
 
-        $this->info("✅ " . count($trends) . " trending topics capturados!");
+        $this->info('✅ '.count($trends).' trending topics capturados!');
 
         foreach ($trends as $trend) {
             $growth = $trend['growth_percentage'] ?? 'N/A';

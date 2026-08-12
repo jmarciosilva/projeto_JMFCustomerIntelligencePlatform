@@ -78,6 +78,7 @@ class ProductMatcher
             // Score por matching exato (melhor)
             if (str_contains($combined, $word)) {
                 $maxScore = max($maxScore, 100);
+
                 continue;
             }
 
@@ -127,6 +128,7 @@ class ProductMatcher
 
         if ($maxLen > 0) {
             $similarity = (1 - ($distance / $maxLen)) * 100;
+
             return $similarity >= 60 ? $similarity : 0;
         }
 
@@ -156,6 +158,7 @@ class ProductMatcher
 
         if ($maxLen > 0) {
             $similarity = (1 - ($distance / $maxLen)) * 100;
+
             return $similarity >= 60 ? $similarity : 0;
         }
 

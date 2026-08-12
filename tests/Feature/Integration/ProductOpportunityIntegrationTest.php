@@ -20,9 +20,13 @@ use Tests\TestCase;
 class ProductOpportunityIntegrationTest extends TestCase
 {
     protected Tenant $tenant;
+
     protected Application $application;
+
     protected Trend $trend;
+
     protected AffiliateProduct $product;
+
     protected User $user;
 
     protected function setUp(): void

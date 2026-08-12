@@ -85,14 +85,16 @@ class AffiliateLinkForm extends Component
 
     public function updatePreview(): void
     {
-        if (!$this->affiliate_product_id) {
+        if (! $this->affiliate_product_id) {
             $this->redirectUrl = null;
+
             return;
         }
 
         $product = AffiliateProduct::find($this->affiliate_product_id);
-        if (!$product) {
+        if (! $product) {
             $this->redirectUrl = null;
+
             return;
         }
 
@@ -120,11 +122,12 @@ class AffiliateLinkForm extends Component
 
         // Check for slug uniqueness
         $existing = AffiliateLink::where('slug', $this->slug)
-            ->when($this->link, fn($q) => $q->where('id', '!=', $this->link->id))
+            ->when($this->link, fn ($q) => $q->where('id', '!=', $this->link->id))
             ->exists();
 
         if ($existing) {
             $this->addError('slug', 'Este slug já está em uso.');
+
             return;
         }
 

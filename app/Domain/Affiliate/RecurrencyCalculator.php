@@ -22,9 +22,9 @@ class RecurrencyCalculator
     /**
      * Calcula recurrency_rate baseado no histórico de conversões de um contato.
      *
-     * @param int $contactId ID do contato/lead
-     * @param int $applicationId ID da aplicação (multi-tenant)
-     * @param Carbon|null $referenceDate Data de referência (default: agora)
+     * @param  int  $contactId  ID do contato/lead
+     * @param  int  $applicationId  ID da aplicação (multi-tenant)
+     * @param  Carbon|null  $referenceDate  Data de referência (default: agora)
      * @return float|null Taxa de recorrência 0-100, ou null se sem dados
      */
     public function calculateForContact(
@@ -54,7 +54,7 @@ class RecurrencyCalculator
      * Calcula recurrency_rate baseado em count direto de conversões.
      * Útil para testes e cálculos de batch.
      *
-     * @param int $conversionCount Número de conversões no período (90 dias)
+     * @param  int  $conversionCount  Número de conversões no período (90 dias)
      * @return float Taxa de recorrência 0-100
      */
     public function normalizeRecurrency(int $conversionCount): float
@@ -74,8 +74,8 @@ class RecurrencyCalculator
      * Calcula recurrency para um período customizado.
      * Útil para análise retroativa ou períodos diferentes.
      *
-     * @param int $conversionCount Número de conversões
-     * @param int $days Período em dias (ex: 90, 180, 365)
+     * @param  int  $conversionCount  Número de conversões
+     * @param  int  $days  Período em dias (ex: 90, 180, 365)
      * @return float Taxa normalizada 0-100
      */
     public function normalizeForPeriod(int $conversionCount, int $days): float
@@ -85,6 +85,7 @@ class RecurrencyCalculator
         }
 
         $rate = ($conversionCount / $days) * 100;
+
         return min(100.0, $rate);
     }
 }

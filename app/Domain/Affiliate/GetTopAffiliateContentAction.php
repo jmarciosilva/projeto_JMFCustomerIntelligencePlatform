@@ -17,7 +17,7 @@ class GetTopAffiliateContentAction
         $content = ContentPublication::where('application_id', $application->id)
             ->with('campaign')
             ->get()
-            ->map(function ($pub) use ($startDate, $endDate) {
+            ->map(function ($pub) {
                 $clicks = AffiliateLink::where('application_id', $pub->application_id)
                     ->where('campaign_id', $pub->campaign_id)
                     ->sum('clicks');

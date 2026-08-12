@@ -11,7 +11,7 @@ class PublishProductOpportunityAction
     {
         if ($opportunity->status_sprint_a !== StatusSprintA::APPROVED) {
             throw new \InvalidArgumentException(
-                'Apenas oportunidades aprovadas podem ser publicadas. Status atual: ' . $opportunity->status_sprint_a->value
+                'Apenas oportunidades aprovadas podem ser publicadas. Status atual: '.$opportunity->status_sprint_a->value
             );
         }
 

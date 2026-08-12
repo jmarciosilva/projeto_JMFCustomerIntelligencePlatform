@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         // Encontrar duplicatas potenciais
-        $duplicates = DB::select("
+        $duplicates = DB::select('
             SELECT application_id, provider, external_conversion_id, COUNT(*) as count
             FROM affiliate_conversions
             WHERE application_id IS NOT NULL
@@ -21,10 +21,10 @@ return new class extends Migration
               AND external_conversion_id IS NOT NULL
             GROUP BY application_id, provider, external_conversion_id
             HAVING COUNT(*) > 1
-        ");
+        ');
 
         if (! empty($duplicates)) {
-            \Log::warning('Duplicidades encontradas em affiliate_conversions', [
+            Log::warning('Duplicidades encontradas em affiliate_conversions', [
                 'total_duplicates_detected' => count($duplicates),
                 'duplicates' => array_map(fn ($d) => [
                     'application_id' => $d->application_id,
@@ -47,7 +47,7 @@ return new class extends Migration
                     ->toArray();
 
                 if (! empty($to_delete)) {
-                    \Log::info('Removendo duplicatas', [
+                    Log::info('Removendo duplicatas', [
                         'application_id' => $dup->application_id,
                         'provider' => $dup->provider,
                         'external_conversion_id' => $dup->external_conversion_id,
@@ -61,9 +61,9 @@ return new class extends Migration
                 }
             }
 
-            \Log::info('Validação de duplicidades concluída');
+            Log::info('Validação de duplicidades concluída');
         } else {
-            \Log::info('Nenhuma duplicidade encontrada em affiliate_conversions');
+            Log::info('Nenhuma duplicidade encontrada em affiliate_conversions');
         }
     }
 
@@ -71,6 +71,6 @@ return new class extends Migration
     {
         // Reversão: não há como recuperar dados já deletados
         // Log apenas
-        \Log::warning('Rollback da validação de duplicidades: registros já foram deletados na migração forward. Recuperação manual pode ser necessária.');
+        Log::warning('Rollback da validação de duplicidades: registros já foram deletados na migração forward. Recuperação manual pode ser necessária.');
     }
 };

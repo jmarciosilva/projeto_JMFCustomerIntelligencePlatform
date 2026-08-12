@@ -18,5 +18,8 @@ Schedule::command('intelligence:generate-recommendations')->dailyAt('04:00');
 // Fase 23 — Trend Intelligence
 Schedule::command('trends:collect')->dailyAt('05:00');
 
+// Fase 33 — Curadoria de Tendências (B1)
+Schedule::command('affiliate:validate-product-data')->dailyAt('05:45');
+
 // Fase 24 — Trend Score
-Schedule::command('trends:calculate-scores')->dailyAt('05:30');
+Schedule::command('trends:calculate-scores')->dailyAt('06:00');

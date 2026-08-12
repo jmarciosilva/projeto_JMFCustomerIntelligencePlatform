@@ -13,7 +13,7 @@ class RecurrencyCalculatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new RecurrencyCalculator();
+        $this->calculator = new RecurrencyCalculator;
     }
 
     #[Test]

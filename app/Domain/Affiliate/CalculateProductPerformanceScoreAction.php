@@ -6,6 +6,7 @@ use App\Models\AffiliateConversion;
 use App\Models\AffiliateLink;
 use App\Models\AffiliateProduct;
 use App\Models\Application;
+use App\Models\Campaign;
 use App\Models\ProductPerformanceScore;
 use Carbon\Carbon;
 
@@ -27,7 +28,7 @@ class CalculateProductPerformanceScoreAction
 
     private function calculateProductScore(Application $application, AffiliateProduct $product, Carbon $startDate, Carbon $endDate): void
     {
-        $campaignIds = \App\Models\Campaign::where('application_id', $application->id)->pluck('id');
+        $campaignIds = Campaign::where('application_id', $application->id)->pluck('id');
 
         $totalClicks = AffiliateLink::where('affiliate_product_id', $product->id)
             ->whereIn('campaign_id', $campaignIds)

@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_links', function (Blueprint $table) {
-            if (!Schema::hasColumn('affiliate_links', 'product_opportunity_id')) {
+            if (! Schema::hasColumn('affiliate_links', 'product_opportunity_id')) {
                 $table->unsignedBigInteger('product_opportunity_id')
                     ->nullable()
                     ->after('affiliate_product_id')

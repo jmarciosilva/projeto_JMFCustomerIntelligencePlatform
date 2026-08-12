@@ -8,6 +8,7 @@ use Livewire\Component;
 class RecommendationDashboard extends Component
 {
     public array $recommendations = [];
+
     public int $limit = 15;
 
     public function mount(): void

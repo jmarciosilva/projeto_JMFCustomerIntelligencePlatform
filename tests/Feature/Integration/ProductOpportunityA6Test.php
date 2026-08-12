@@ -6,7 +6,6 @@ use App\Domain\Affiliate\Actions\ApproveProductOpportunityAction;
 use App\Domain\Affiliate\Actions\PublishProductOpportunityAction;
 use App\Domain\Affiliate\Actions\RejectProductOpportunityAction;
 use App\Models\AffiliateConversion;
-use App\Models\AffiliateLink;
 use App\Models\AffiliateProduct;
 use App\Models\Application;
 use App\Models\CurationDecision;
@@ -20,9 +19,13 @@ use Tests\TestCase;
 class ProductOpportunityA6Test extends TestCase
 {
     protected Tenant $tenant;
+
     protected Application $application;
+
     protected Trend $trend;
+
     protected AffiliateProduct $product;
+
     protected User $user;
 
     protected function setUp(): void

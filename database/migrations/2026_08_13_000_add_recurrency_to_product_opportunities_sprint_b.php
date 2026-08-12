@@ -13,14 +13,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_opportunities', function (Blueprint $table) {
-            if (!Schema::hasColumn('product_opportunities', 'recurrency_rate')) {
+            if (! Schema::hasColumn('product_opportunities', 'recurrency_rate')) {
                 $table->decimal('recurrency_rate', 8, 2)
                     ->nullable()
                     ->after('actual_performance_score')
                     ->comment('Taxa de recorrência (Sprint B): conversões / 90 dias, normalizado 0-100');
             }
 
-            if (!Schema::hasColumn('product_opportunities', 'confidence_level')) {
+            if (! Schema::hasColumn('product_opportunities', 'confidence_level')) {
                 $table->enum('confidence_level', ['INSUFFICIENT_DATA', 'LOW', 'MEDIUM', 'HIGH'])
                     ->nullable()
                     ->after('recurrency_rate')
@@ -28,7 +28,7 @@ return new class extends Migration
             }
 
             // Índice para queries que filtram por confidence level
-            if (!Schema::hasIndex('product_opportunities', 'idx_confidence_level')) {
+            if (! Schema::hasIndex('product_opportunities', 'idx_confidence_level')) {
                 $table->index(['application_id', 'confidence_level'], 'idx_confidence_level');
             }
         });

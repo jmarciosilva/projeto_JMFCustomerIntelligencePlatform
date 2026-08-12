@@ -47,9 +47,9 @@ class PurchaseIntentClassifier
 
         // PASSO 5: Determinar label
         $label = match (true) {
-            $score < 40  => 'LOW',
-            $score < 70  => 'MEDIUM',
-            default      => 'HIGH'
+            $score < 40 => 'LOW',
+            $score < 70 => 'MEDIUM',
+            default => 'HIGH'
         };
 
         return [
@@ -69,7 +69,7 @@ class PurchaseIntentClassifier
                         ? PurchaseIntentTerms::INTENSITY_BONUS : 0,
                 ],
                 'final_score' => $score,
-            ]
+            ],
         ];
     }
 
@@ -94,6 +94,7 @@ class PurchaseIntentClassifier
                 return true;
             }
         }
+
         return false;
     }
 
@@ -105,6 +106,7 @@ class PurchaseIntentClassifier
                 $count++;
             }
         }
+
         return $count;
     }
 

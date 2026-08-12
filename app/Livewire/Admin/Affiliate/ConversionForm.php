@@ -63,7 +63,7 @@ class ConversionForm extends Component
         $this->validate([
             'affiliate_program_id' => 'required|integer|exists:affiliate_programs,id',
             'affiliate_product_id' => 'required|integer|exists:affiliate_products,id',
-            'order_reference' => 'required|string|max:100|unique:affiliate_conversions,order_reference,' . ($this->conversion?->id ?? 'NULL'),
+            'order_reference' => 'required|string|max:100|unique:affiliate_conversions,order_reference,'.($this->conversion?->id ?? 'NULL'),
             'order_date' => 'required|date',
             'product_price' => 'required|numeric|min:0',
             'commission_rate' => 'required|numeric|min:0|max:100',

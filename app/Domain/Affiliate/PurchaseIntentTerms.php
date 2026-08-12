@@ -38,8 +38,12 @@ class PurchaseIntentTerms
 
     // Ajustes de score
     const INFORMATIONAL_PENALTY = -10;      // Reduz score
+
     const INVESTIGATION_BASE = 45;          // Score base para investigação
+
     const TRANSACTIONAL_BASE = 75;          // Score base para transação
+
     const MULTIPLE_SIGNALS_BONUS = 15;      // Bônus por múltiplos sinais
+
     const INTENSITY_BONUS = 5;              // Bônus por intensidade (quando há sinal)
 }

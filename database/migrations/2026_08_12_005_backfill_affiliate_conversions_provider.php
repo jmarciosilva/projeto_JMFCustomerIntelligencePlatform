@@ -18,13 +18,13 @@ return new class extends Migration
             ->count();
 
         if ($count > 0) {
-            \Log::info("Backfill: {$count} affiliate_conversions receberão provider='magalu'");
+            Log::info("Backfill: {$count} affiliate_conversions receberão provider='magalu'");
 
             DB::table('affiliate_conversions')
                 ->whereNull('provider')
                 ->update(['provider' => 'magalu']);
 
-            \Log::info("Backfill concluído: provider='magalu' atribuído a {$count} registros");
+            Log::info("Backfill concluído: provider='magalu' atribuído a {$count} registros");
         }
     }
 
@@ -38,7 +38,7 @@ return new class extends Migration
             ->count();
 
         if ($count > 0) {
-            \Log::warning("Rollback: {$count} conversões com provider='magalu' e external_conversion_id=null ainda existem. Decisão manual necessária.");
+            Log::warning("Rollback: {$count} conversões com provider='magalu' e external_conversion_id=null ainda existem. Decisão manual necessária.");
         }
     }
 };

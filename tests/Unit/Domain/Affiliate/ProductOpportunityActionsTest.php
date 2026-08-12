@@ -59,7 +59,7 @@ class ProductOpportunityActionsTest extends TestCase
             ->for($trend)
             ->create(['status_sprint_a' => StatusSprintA::DISCOVERED]);
 
-        $action = new ApproveProductOpportunityAction();
+        $action = new ApproveProductOpportunityAction;
         $approved = $action->execute(
             opportunity: $opportunity,
             approver: $user,
@@ -88,7 +88,7 @@ class ProductOpportunityActionsTest extends TestCase
             ->for($trend)
             ->create(['status_sprint_a' => StatusSprintA::DISCOVERED]);
 
-        $action = new RejectProductOpportunityAction();
+        $action = new RejectProductOpportunityAction;
         $rejected = $action->execute(
             opportunity: $opportunity,
             rejecter: $user,
@@ -115,7 +115,7 @@ class ProductOpportunityActionsTest extends TestCase
             ->for($trend)
             ->create(['status_sprint_a' => StatusSprintA::APPROVED]);
 
-        $action = new PublishProductOpportunityAction();
+        $action = new PublishProductOpportunityAction;
         $published = $action->execute($opportunity);
 
         $this->assertEquals(StatusSprintA::PUBLISHED, $published->status_sprint_a);
@@ -134,7 +134,7 @@ class ProductOpportunityActionsTest extends TestCase
             ->for($trend)
             ->create(['status_sprint_a' => StatusSprintA::DISCOVERED]);
 
-        $action = new PublishProductOpportunityAction();
+        $action = new PublishProductOpportunityAction;
 
         $this->expectException(\InvalidArgumentException::class);
         $action->execute($opportunity);

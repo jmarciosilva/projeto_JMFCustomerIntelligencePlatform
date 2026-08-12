@@ -26,6 +26,7 @@ class TrendingTopic extends Model
         if ($category) {
             $query->where('category', $category);
         }
+
         return $query->get();
     }
 }

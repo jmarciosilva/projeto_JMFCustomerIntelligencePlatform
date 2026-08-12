@@ -23,7 +23,9 @@ class PerformanceScoreCalculator
 {
     // Pesos originais (para referência futura Sprint B)
     private const WEIGHT_CTR = 40;              // 40%
+
     private const WEIGHT_CONVERSION_RATE = 40;  // 40%
+
     private const WEIGHT_RECURRENCY = 20;       // 20% (Sprint B)
 
     /**
@@ -85,8 +87,8 @@ class PerformanceScoreCalculator
                     'ctr' => null,
                     'conversion_rate' => null,
                     'recurrency' => null,
-                    'reason' => 'No factors available'
-                ]
+                    'reason' => 'No factors available',
+                ],
             ];
         }
 
@@ -128,7 +130,7 @@ class PerformanceScoreCalculator
                 'recurrency' => $factors['recurrency'],
                 'recurrency_normalized_weight' => $normalized_weights['recurrency'] ?? null,
                 'calculation' => $this->explainCalculation($factors, $normalized_weights),
-            ]
+            ],
         ];
     }
 
@@ -159,23 +161,23 @@ class PerformanceScoreCalculator
         $parts = [];
 
         if ($factors['ctr'] !== null && isset($weights['ctr'])) {
-            $parts[] = sprintf("CTR: %.1f × %.1f%% = %.1f",
+            $parts[] = sprintf('CTR: %.1f × %.1f%% = %.1f',
                 $factors['ctr'], $weights['ctr'],
                 $factors['ctr'] * $weights['ctr'] / 100);
         }
 
         if ($factors['conversion_rate'] !== null && isset($weights['conversion_rate'])) {
-            $parts[] = sprintf("Conv: %.1f × %.1f%% = %.1f",
+            $parts[] = sprintf('Conv: %.1f × %.1f%% = %.1f',
                 $factors['conversion_rate'], $weights['conversion_rate'],
                 $factors['conversion_rate'] * $weights['conversion_rate'] / 100);
         }
 
         if ($factors['recurrency'] !== null && isset($weights['recurrency'])) {
-            $parts[] = sprintf("Rec: %.1f × %.1f%% = %.1f",
+            $parts[] = sprintf('Rec: %.1f × %.1f%% = %.1f',
                 $factors['recurrency'], $weights['recurrency'],
                 $factors['recurrency'] * $weights['recurrency'] / 100);
         }
 
-        return implode(" + ", $parts);
+        return implode(' + ', $parts);
     }
 }

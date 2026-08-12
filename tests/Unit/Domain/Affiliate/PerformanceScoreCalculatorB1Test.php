@@ -13,7 +13,7 @@ class PerformanceScoreCalculatorB1Test extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->calculator = new PerformanceScoreCalculator();
+        $this->calculator = new PerformanceScoreCalculator;
     }
 
     #[Test]

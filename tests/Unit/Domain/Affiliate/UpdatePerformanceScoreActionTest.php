@@ -4,8 +4,8 @@ namespace Tests\Unit\Domain\Affiliate;
 
 use App\Domain\Affiliate\Actions\UpdatePerformanceScoreAction;
 use App\Models\AffiliateConversion;
-use App\Models\Application;
 use App\Models\AffiliateProduct;
+use App\Models\Application;
 use App\Models\ProductOpportunity;
 use App\Models\Tenant;
 use App\Models\Trend;
@@ -15,9 +15,13 @@ use Tests\TestCase;
 class UpdatePerformanceScoreActionTest extends TestCase
 {
     protected Tenant $tenant;
+
     protected Application $application;
+
     protected Trend $trend;
+
     protected AffiliateProduct $product;
+
     protected UpdatePerformanceScoreAction $action;
 
     protected function setUp(): void

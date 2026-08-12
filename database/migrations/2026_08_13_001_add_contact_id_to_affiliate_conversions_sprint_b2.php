@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_conversions', function (Blueprint $table) {
-            if (!Schema::hasColumn('affiliate_conversions', 'contact_id')) {
+            if (! Schema::hasColumn('affiliate_conversions', 'contact_id')) {
                 $table->unsignedBigInteger('contact_id')
                     ->nullable()
                     ->after('application_id')
@@ -21,7 +21,7 @@ return new class extends Migration
             }
 
             // Índice para queries eficientes de recurrency (últimos 90 dias)
-            if (!Schema::hasIndex('affiliate_conversions', 'idx_app_contact_created')) {
+            if (! Schema::hasIndex('affiliate_conversions', 'idx_app_contact_created')) {
                 $table->index(['application_id', 'contact_id', 'created_at'], 'idx_app_contact_created');
             }
         });

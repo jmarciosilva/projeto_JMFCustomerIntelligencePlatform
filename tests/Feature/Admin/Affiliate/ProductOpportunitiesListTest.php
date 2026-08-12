@@ -70,7 +70,6 @@ class ProductOpportunitiesListTest extends TestCase
             ->assertViewIs('livewire.admin.affiliate.product-opportunities-list');
     }
 
-
     #[Test]
     public function sorts_by_discovery_opportunity_score()
     {

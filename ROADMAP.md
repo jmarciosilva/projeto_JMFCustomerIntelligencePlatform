@@ -1414,3 +1414,168 @@ Depende de:
 - **2026-08-11** — **Fase 32 (Sprint A — Etapa A2) concluída**: Implementação de Models & Relationships. **4 Models**: ProductOpportunity (13 relacionamentos e 8 scopes), AffiliateConversion, AffiliateLink, CurationDecision. **2 Enums**: StatusSprintA (6 estados com labels), PurchaseIntentLabel (3 níveis). **11 Relacionamentos bilaterais** estabelecidos com proper fillable columns. **2 Factories** criadas/atualizadas. **Tests**: 16/18 passando. **Commit** `42dd294`. Aprovado e iniciado A3.
 
 - **2026-08-11** — **Fase 32 (Sprint A — Etapa A3) concluída**: Implementação de Service Layer & APIs. **4 Actions**: CreateProductOpportunityAction, ApproveProductOpportunityAction, RejectProductOpportunityAction, PublishProductOpportunityAction. **API Controller**: 6 endpoints REST (LIST, SHOW, CREATE, APPROVE, REJECT, PUBLISH) com paginação, filtros, e validação. **3 Request classes** com validação de entrada, **1 Resource** com transformação JSON aninhada. **Rotas**: `/api/v1/affiliate/product-opportunities` integradas com Sanctum authentication. **Tests**: 5/5 Actions passando + 7/12 API Feature (5 pendentes: application active status fix). **Commit** `3f711a6`. Sprint A 75% completo (A1, A2, A3 concluídos; A4-A6 pendentes). Total: 78 testes passando.
+
+---
+
+## Fase 33 — Curadoria de Tendências: Confiabilidade, Público e Canal
+
+**Status:** `[~]` Em andamento · depende da Fase 30
+
+### Objetivo Geral
+
+Fechar as lacunas críticas no pipeline de Trend Intelligence, respondendo às perguntas finais do funil de decisão de curadoria: dados de produtos estão atualizados? Qual é o público-alvo? Em qual canal divulgar? Dividida em 4 sub-etapas (B1-B4), foco em confiabilidade de dados e regras explicáveis.
+
+### B1 — Confiabilidade de dados de produto (preço/avaliação/disponibilidade)
+
+**Status:** `[ ]` Pendente
+
+**Objetivo:**
+
+Garantir que preço, avaliação e disponibilidade de `AffiliateProduct` não fiquem desatualizados além de um limiar configurável, bloqueando recomendações de produtos com dados obsoletos.
+
+**Tarefas:**
+
+- [ ] Model: campo `price_checked_at` / `availability_checked_at` (timestamp, default null).
+- [ ] Migration correspondente.
+- [ ] Service: `App\Domain\Affiliate\ProductDataValidationService` com método `isDataStale(AffiliateProduct, int $days = 7): bool`.
+- [ ] Job: `ValidateAffiliateProductDataJob` (ShouldQueue, tries=1), despachado por comando agendado `affiliate:validate-product-data` (diariamente 06:00, após `trends:collect` e antes de `trends:calculate-scores`).
+- [ ] Action: `RevalidateAffiliateProductAction` — revalidação manual via UI (atualiza `price_checked_at`/`availability_checked_at`, simula chamada a provider sem alterar dados reais; para `ManualAffiliateProvider`, revalidação é manual/noop; para futuros providers com API real, dispara atualização).
+- [ ] Scopes em `AffiliateProduct`: `withStaleData(int $days = 7)`, `withFreshData(int $days = 7)`.
+- [ ] Regra de negócio: `ProductOpportunity` com `AffiliateProduct.price_checked_at` além do limiar não deve aparecer em recomendações "prontas para divulgar" — campo `data_staleness_warning` booleano derivado (não persistido, calculado em read-time).
+- [ ] UI: componente `<x-product-data-staleness-badge>` na listagem de produtos e no detalhe da oportunidade; botão "Revalidar dados" que dispara `RevalidateAffiliateProductAction`.
+- [ ] Tests: validação de produto recém-verificado vs. desatualizado, escopo `withStaleData/withFreshData`, job agendado, permissões (7+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] Models: AffiliateProduct com campos `price_checked_at` e `availability_checked_at`.
+- [ ] Migrations: campos novos sem quebra de integridade.
+- [ ] Services: `ProductDataValidationService` com métodos de validação.
+- [ ] Repositories — não aplicável (Eloquent direto em Actions).
+- [ ] Jobs: `ValidateAffiliateProductDataJob` integrado ao comando agendado.
+- [ ] UI: badges de staleness + botão de revalidação.
+- [ ] Tests (7+ testes, 100% passando).
+- [ ] Documentation.
+- [ ] Sem regressão em Fases 22-30.
+- [ ] `vendor/bin/pint`, `phpstan analyse`, `php artisan test` sem novos erros.
+
+**Dependências:**
+
+Depende da Fase 22 (modelo `AffiliateProduct` existe).
+
+---
+
+### B2 — Clareza sobre "existe na Magalu?"
+
+**Status:** `[ ]` Pendente · depende de B1
+
+**Objetivo:**
+
+Deixar explícito, na UI e API, que o match de produtos é contra o catálogo importado (`AffiliateProduct`), não contra a Magalu ao vivo, eliminando ambiguidade e falsa confiança.
+
+**Tarefas:**
+
+- [ ] Campo `match_status` enum em `TrendProductMatch`: `MATCHED`, `NO_MATCH_IN_CATALOG`, `NO_TREND_DATA`.
+- [ ] Migration correspondente, backfill com lógica deduzida (`TrendProductMatch` existente = `MATCHED`, `Trend` sem qualquer match = `NO_MATCH_IN_CATALOG`).
+- [ ] UI: exibir estado explícito em tela de tendência (`TrendShow`), diferenciando "produto encontrado no catálogo importado" de "nenhum produto correspondente no catálogo".
+- [ ] Documentação: nota visível nas telas de curadoria explicando que "Magalu" neste contexto significa "catálogo de produtos importados via CSV/API de provider", não "loja Magalu ao vivo".
+- [ ] Tests: verificação de backfill, enum transitions, UI rendering (5+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] Models: TrendProductMatch com campo `match_status` enum.
+- [ ] Migrations: backfill seguro, sem perda de dados.
+- [ ] UI: exibição clara de match_status com ícones/cores (verde = matched, âmbar = no_match_in_catalog).
+- [ ] Tests (5+ testes, 100% passando).
+- [ ] Sem regressão em B1 + Fases 22-30.
+- [ ] Documentation clara sobre definição de "Magalu" neste contexto.
+
+**Dependências:**
+
+Depende de B1.
+
+---
+
+### B3 — Público-alvo
+
+**Status:** `[ ]` Pendente · depende de B2
+
+**Objetivo:**
+
+Novo conceito de decisão: dado um `ProductOpportunity`, determinar qual público é mais adequado, com regras explicáveis e sem dados inventados.
+
+**Tarefas:**
+
+- [ ] Model: `AudienceSegment` (name, description, age_range_approx, interests, purchase_intent_preference enum LOW/MEDIUM/HIGH, active).
+- [ ] Migration correspondente.
+- [ ] Seed: 5-7 segmentos típicos (ex.: Jovens Adultos / Profissionais / Pais / Saúde & Bem-estar / Tecnologia Entusiastas), sem dados inventados — apenas descrições genéricas.
+- [ ] Service: `App\Domain\Affiliate\AudienceTargetingService` com método `determineAudiencesForOpportunity(ProductOpportunity): Collection<AudienceSegment>` baseado em regras:
+  - Reaproveitam `PurchaseIntentLabel` da oportunidade (HIGH intent → Profissionais, pais, health-conscious; MEDIUM → everyone; LOW → curiosos, browsing).
+  - Reaproveitam categoria do produto (tech → Tecnologia, parenting → Pais, etc.).
+  - Nunca inventa probabilidades — retorna segmentos ou diz "sem dados suficientes".
+- [ ] Action: `DetermineAudienceTargetingAction` — integrada ao workflow de curadoria, retorna `audience_ids` em ProductOpportunity (nova coluna pivot/json).
+- [ ] UI: campo no formulário de aprovação/publicação exibindo públicos sugeridos com checkbox de seleção (permite override manual).
+- [ ] Tests: método retorna segmentos corretos por intent/categoria, ausência de dados não força resposta, multi-select (8+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] Models: AudienceSegment, ProductOpportunity.audience_ids (json/pivot).
+- [ ] Migrations.
+- [ ] Services: AudienceTargetingService com regras explícitas.
+- [ ] Repositories — não aplicável.
+- [ ] Jobs — não aplicável (integrado em ação de curadoria).
+- [ ] UI: multi-select de públicos na tela de aprovação.
+- [ ] Tests (8+ testes, 100% passando).
+- [ ] Documentation das regras de segmentação.
+- [ ] Sem regressão em B1-B2 + Fases 22-30.
+
+**Dependências:**
+
+Depende de B2.
+
+---
+
+### B4 — Canal de divulgação
+
+**Status:** `[ ]` Pendente · depende de B3
+
+**Objetivo:**
+
+Determinar qual(is) canal(is) são mais adequados para cada oportunidade × público, priorizando naqueles onde o público é mais ativo/receptivo.
+
+**Tarefas:**
+
+- [ ] Model: `DivulgationChannel` (name: Instagram|WhatsApp|Email|Facebook, description, audience_affinity JSON map de AudienceSegment.id → affinity 0-100, active).
+- [ ] Migration correspondente.
+- [ ] Seed: 4 canais (Instagram, WhatsApp, Email, Facebook) com afinidades genéricas por público (ex.: Jovens Adultos → Instagram 95, WhatsApp 80, Email 50).
+- [ ] Service: `App\Domain\Affiliate\ChannelRecommendationService` com método `recommendChannelsForOpportunityAndAudiences(ProductOpportunity, Collection<AudienceSegment>): Collection<DivulgationChannel>` ordenada por score (media de afinidades dos públicos selecionados).
+- [ ] Action: `DetermineChannelRecommendationAction` — integrada após B3, retorna `channel_ids` ordenados com `priority_score` derivado em ProductOpportunity (nova coluna json).
+- [ ] Integração na UI: campo de visualização dos canais recomendados + override manual, aparece logo após públicos em workflow de curadoria.
+- [ ] Integração no `JmfRecommendationEngine` (Fase 30): output da recomendação agora inclui `public_segments` + `recommended_channels` na Resource JSON/API.
+- [ ] Tests: método retorna canais ordenados por afinidade, múltiplos públicos combinados, override manual valida (8+ testes).
+- [ ] Documentation.
+
+**Critérios de aceite:**
+
+- [ ] Models: DivulgationChannel, ProductOpportunity.channel_ids (json).
+- [ ] Migrations.
+- [ ] Services: ChannelRecommendationService com regras de afinidade.
+- [ ] Repositories — não aplicável.
+- [ ] Jobs — não aplicável.
+- [ ] UI: visualização de canais recomendados, override manual.
+- [ ] API: ProductOpportunityResource atualizado com públicos + canais.
+- [ ] Tests (8+ testes, 100% passando).
+- [ ] Integração com Fase 30 sem regressão.
+- [ ] Documentation.
+
+**Dependências:**
+
+Depende de B3.
+
+---
+
+### Histórico de atualizações (Fase 33)
+
+- **2026-08-12** — Fase 33 planejada e documentada. B1 iniciado.

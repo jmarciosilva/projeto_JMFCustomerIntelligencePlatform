@@ -28,6 +28,7 @@ class CurationDecision extends Model
     ];
 
     const DECISION_APPROVED = 'APPROVED';
+
     const DECISION_REJECTED = 'REJECTED';
 
     public function application(): BelongsTo

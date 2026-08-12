@@ -2,6 +2,7 @@
 
 namespace App\Domain\Affiliate;
 
+use App\Models\AffiliateConversion;
 use App\Models\AffiliateProgram;
 use App\Models\Application;
 use App\Models\Campaign;
@@ -27,7 +28,7 @@ class ImportAffiliateConversionsFromCsvAction
                 $successful++;
             } catch (\Exception $e) {
                 $failed++;
-                $errors[] = "Linha " . ($index + 2) . ": " . $e->getMessage();
+                $errors[] = 'Linha '.($index + 2).': '.$e->getMessage();
             }
         }
 
@@ -35,7 +36,7 @@ class ImportAffiliateConversionsFromCsvAction
             'application_id' => $application->id,
             'integration' => 'affiliate_conversions_csv',
             'status' => $failed === 0 ? 'success' : 'partial',
-            'message' => !empty($errors) ? implode("\n", $errors) : null,
+            'message' => ! empty($errors) ? implode("\n", $errors) : null,
             'items_processed' => $successful,
             'items_failed' => $failed,
             'occurred_at' => now(),
@@ -68,7 +69,7 @@ class ImportAffiliateConversionsFromCsvAction
         try {
             $orderDate = Carbon::createFromFormat('Y-m-d', $orderDateStr);
         } catch (\Exception $e) {
-            throw new \Exception("order_date inválida: use formato Y-m-d");
+            throw new \Exception('order_date inválida: use formato Y-m-d');
         }
 
         $productPrice = floatval($row['product_price'] ?? 0);
@@ -79,19 +80,19 @@ class ImportAffiliateConversionsFromCsvAction
             ->where('name', 'like', "%$productName%")
             ->first();
 
-        if (!$affiliateProduct) {
+        if (! $affiliateProduct) {
             throw new \Exception("Produto '$productName' não encontrado no programa");
         }
 
         $campaignId = null;
-        if (!empty($row['campaign_name'])) {
+        if (! empty($row['campaign_name'])) {
             $campaign = Campaign::where('application_id', $application->id)
                 ->where('name', 'ilike', $row['campaign_name'])
                 ->first();
             $campaignId = $campaign?->id;
         }
 
-        \App\Models\AffiliateConversion::updateOrCreate(
+        AffiliateConversion::updateOrCreate(
             ['order_reference' => $orderReference],
             [
                 'application_id' => $application->id,

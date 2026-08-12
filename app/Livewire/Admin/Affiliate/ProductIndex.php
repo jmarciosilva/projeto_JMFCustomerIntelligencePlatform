@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Affiliate;
 use App\Application\Affiliate\Actions\DeleteAffiliateProductAction;
 use App\Models\AffiliateProduct;
 use App\Models\AffiliateProgram;
+use App\Models\Application;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -47,7 +48,7 @@ class ProductIndex extends Component
 
     public function render(): View
     {
-        $app = auth()->user()->application ?? \App\Models\Application::first();
+        $app = auth()->user()->application ?? Application::first();
 
         $products = AffiliateProduct::query()
             ->where('application_id', $app->id)

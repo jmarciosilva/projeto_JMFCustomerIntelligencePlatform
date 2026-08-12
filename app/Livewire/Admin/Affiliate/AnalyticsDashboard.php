@@ -6,7 +6,6 @@ use App\Domain\Affiliate\CalculateAffiliateMetricsAction;
 use App\Domain\Affiliate\GetTopAffiliateContentAction;
 use App\Domain\Affiliate\GetTopAffiliateProductsAction;
 use App\Models\Application;
-use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 

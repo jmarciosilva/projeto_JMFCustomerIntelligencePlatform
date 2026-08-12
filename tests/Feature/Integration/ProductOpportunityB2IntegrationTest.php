@@ -5,8 +5,8 @@ namespace Tests\Feature\Integration;
 use App\Domain\Affiliate\Actions\CreateProductOpportunityAction;
 use App\Domain\Affiliate\RecurrencyCalculator;
 use App\Models\AffiliateConversion;
-use App\Models\Application;
 use App\Models\AffiliateProduct;
+use App\Models\Application;
 use App\Models\ProductOpportunity;
 use App\Models\Tenant;
 use App\Models\Trend;
@@ -16,10 +16,15 @@ use Tests\TestCase;
 class ProductOpportunityB2IntegrationTest extends TestCase
 {
     protected Tenant $tenant;
+
     protected Application $application;
+
     protected Trend $trend;
+
     protected AffiliateProduct $product;
+
     protected RecurrencyCalculator $calculator;
+
     protected CreateProductOpportunityAction $createAction;
 
     protected function setUp(): void

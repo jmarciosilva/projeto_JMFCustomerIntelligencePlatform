@@ -105,7 +105,7 @@ class AffiliateLink extends Model
 
         $separator = str_contains($this->affiliate_url, '?') ? '&' : '?';
 
-        return $this->affiliate_url . $separator . http_build_query($params);
+        return $this->affiliate_url.$separator.http_build_query($params);
     }
 
     public function isActive(): bool

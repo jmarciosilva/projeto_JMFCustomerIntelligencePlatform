@@ -12,7 +12,7 @@ class PurchaseIntentClassifierTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->classifier = new PurchaseIntentClassifier();
+        $this->classifier = new PurchaseIntentClassifier;
     }
 
     // LOW (0-39) Tests
