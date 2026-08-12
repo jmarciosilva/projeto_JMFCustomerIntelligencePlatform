@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('audience_segments', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('age_range_approx')->nullable();
             $table->json('interests')->nullable();
             $table->enum('purchase_intent_preference', ['LOW', 'MEDIUM', 'HIGH'])->default('MEDIUM');

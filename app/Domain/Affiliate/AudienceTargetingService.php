@@ -2,7 +2,7 @@
 
 namespace App\Domain\Affiliate;
 
-use App\Enums\PurchaseIntentLabel;
+use App\Domain\Affiliate\Enums\PurchaseIntentLabel;
 use App\Models\AudienceSegment;
 use App\Models\ProductOpportunity;
 use Illuminate\Support\Collection;
@@ -26,12 +26,12 @@ class AudienceTargetingService
             return $audiences;
         }
 
-        $product = $opportunity->product;
+        $product = $opportunity->affiliateProduct;
         if (! $product) {
             return $audiences;
         }
 
-        $intent = $opportunity->commercial_intent;
+        $intent = $opportunity->purchase_intent_label?->value;
         $category = strtolower($product->category ?? '');
 
         // Mapa de categorias para segmentos de interesse
@@ -54,8 +54,12 @@ class AudienceTargetingService
         $intentSegments = $this->getSegmentsByIntent($intent);
 
         // Refina por categoria se aplicável
-        if ($categoryMatch = $categorySegmentMap[array_key_first(array_filter($categorySegmentMap, fn ($cat) => str_contains($category, $cat)))]) {
-            $audiences->push($categoryMatch);
+        $matches = array_filter($categorySegmentMap, fn ($cat) => str_contains($category, $cat));
+        if ($matches) {
+            $key = array_key_first($matches);
+            if ($key !== null) {
+                $audiences->push($categorySegmentMap[$key]);
+            }
         }
 
         // Adiciona segmentos por intent se ainda não estão inclusos
