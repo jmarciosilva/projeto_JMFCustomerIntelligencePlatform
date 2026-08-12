@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MatchStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,7 @@ class TrendProductMatch extends Model
         'affiliate_product_id',
         'match_score',
         'match_breakdown',
+        'match_status',
     ];
 
     /**
@@ -28,6 +30,7 @@ class TrendProductMatch extends Model
     protected $casts = [
         'match_score' => 'decimal:2',
         'match_breakdown' => 'array',
+        'match_status' => MatchStatus::class,
     ];
 
     /**

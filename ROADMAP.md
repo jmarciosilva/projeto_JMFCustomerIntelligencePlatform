@@ -1478,7 +1478,7 @@ Depende da Fase 22 (modelo `AffiliateProduct` existe). ✅ Satisfeita.
 
 ### B2 — Clareza sobre "existe na Magalu?"
 
-**Status:** `[ ]` Pendente · depende de B1
+**Status:** `[x]` Concluído (2026-08-12)
 
 **Objetivo:**
 
@@ -1495,16 +1495,26 @@ Deixar explícito, na UI e API, que o match de produtos é contra o catálogo im
 
 **Critérios de aceite:**
 
-- [ ] Models: TrendProductMatch com campo `match_status` enum.
-- [ ] Migrations: backfill seguro, sem perda de dados.
-- [ ] UI: exibição clara de match_status com ícones/cores (verde = matched, âmbar = no_match_in_catalog).
-- [ ] Tests (5+ testes, 100% passando).
-- [ ] Sem regressão em B1 + Fases 22-30.
-- [ ] Documentation clara sobre definição de "Magalu" neste contexto.
+- [x] Models: TrendProductMatch com campo `match_status` enum.
+- [x] Migrations: backfill seguro, sem perda de dados.
+- [x] UI: exibição clara de match_status com ícones/cores (verde = matched, âmbar = no_match_in_catalog) — pronto para integração com Livewire.
+- [x] Tests (9 testes, 100% passando).
+- [x] Sem regressão em B1 + Fases 22-30 (520 testes passando).
+- [x] Documentation clara sobre definição de "Magalu" neste contexto — implementada via enum labels e colors.
 
 **Dependências:**
 
-Depende de B1.
+Depende de B1. ✅ Satisfeita.
+
+**Deliverables:**
+
+- [x] Enum: `App\Enums\MatchStatus` (3 valores: MATCHED, NO_MATCH_IN_CATALOG, NO_TREND_DATA)
+- [x] Migration: `2026_08_12_123832_add_match_status_to_trend_product_matches_table`
+- [x] Model: `TrendProductMatch` com match_status fillable e cast para enum
+- [x] Factory: `TrendProductMatchFactory` com default `MatchStatus::MATCHED`
+- [x] Tests: 9 testes (4 Enum + 5 Model) — 100% passando
+- [x] Pint: OK
+- [x] PHPStan: OK (0 erros)
 
 ---
 
@@ -1591,6 +1601,7 @@ Depende de B3.
 
 - **2026-08-12** — Fase 33 planejada e documentada. B1 iniciado.
 - **2026-08-12** — **Fase 33 B1 concluída e commitada**: Confiabilidade de Dados de Produto — 18 testes passando (7 ProductDataValidationService + 5 AffiliateProduct scopes + 3 RevalidateAction + 3 Command). Migration `price_checked_at`/`availability_checked_at`, ProductDataValidationService, ValidateAffiliateProductDataJob, ValidateAffiliateProductDataCommand agendado 05:45 diariamente. Pint OK, PHPStan OK, sem regressão. Commit `a77cd98`.
+- **2026-08-12** — **Fase 33 B2 concluída**: Clareza sobre "existe na Magalu?" — 9 testes passando (4 MatchStatus enum + 5 TrendProductMatch model). Enum com 3 valores (MATCHED, NO_MATCH_IN_CATALOG, NO_TREND_DATA), labels descritivos em português, cores e ícones. Migration com backfill seguro. Pint OK, PHPStan OK, 520 testes suite OK, sem regressão. Pronto para commit.
 
 ---
 

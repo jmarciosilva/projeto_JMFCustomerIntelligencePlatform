@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\MatchStatus;
 use App\Models\AffiliateProduct;
 use App\Models\Trend;
 use App\Models\TrendProductMatch;
@@ -30,6 +31,7 @@ class TrendProductMatchFactory extends Factory
                 'category' => $this->faker->numberBetween(0, 100),
                 'brand' => $this->faker->numberBetween(0, 100),
             ],
+            'match_status' => MatchStatus::MATCHED,
         ];
     }
 }
