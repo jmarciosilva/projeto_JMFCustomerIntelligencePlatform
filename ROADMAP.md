@@ -1601,7 +1601,7 @@ Depende de B3.
 
 - **2026-08-12** — Fase 33 planejada e documentada. B1 iniciado.
 - **2026-08-12** — **Fase 33 B1 concluída e commitada**: Confiabilidade de Dados de Produto — 18 testes passando (7 ProductDataValidationService + 5 AffiliateProduct scopes + 3 RevalidateAction + 3 Command). Migration `price_checked_at`/`availability_checked_at`, ProductDataValidationService, ValidateAffiliateProductDataJob, ValidateAffiliateProductDataCommand agendado 05:45 diariamente. Pint OK, PHPStan OK, sem regressão. Commit `a77cd98`.
-- **2026-08-12** — **Fase 33 B2 concluída**: Clareza sobre "existe na Magalu?" — 9 testes passando (4 MatchStatus enum + 5 TrendProductMatch model). Enum com 3 valores (MATCHED, NO_MATCH_IN_CATALOG, NO_TREND_DATA), labels descritivos em português, cores e ícones. Migration com backfill seguro. Pint OK, PHPStan OK, 520 testes suite OK, sem regressão. Pronto para commit.
+- **2026-08-12** — **Fase 33 B2 concluída e commitada**: Clareza sobre "existe na Magalu?" — 9 testes passando (4 MatchStatus enum + 5 TrendProductMatch model). Enum com 3 valores (MATCHED, NO_MATCH_IN_CATALOG, NO_TREND_DATA), labels descritivos em português, cores e ícones. Migration com backfill seguro. Pint OK, PHPStan OK, 520 testes suite OK, sem regressão. Commit `99b7fbd`.
 
 ---
 
