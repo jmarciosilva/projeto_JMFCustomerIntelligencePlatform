@@ -7,6 +7,7 @@ use App\Domain\Affiliate\Enums\StatusSprintA;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductOpportunity extends Model
@@ -95,6 +96,19 @@ class ProductOpportunity extends Model
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return BelongsToMany<AudienceSegment, $this>
+     */
+    public function audiences(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            AudienceSegment::class,
+            'product_opportunity_audience_segment',
+            'product_opportunity_id',
+            'audience_segment_id'
+        );
     }
 
     public function scopeByApplication($query, $applicationId)
