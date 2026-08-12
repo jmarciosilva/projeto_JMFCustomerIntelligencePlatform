@@ -1427,7 +1427,7 @@ Fechar as lacunas críticas no pipeline de Trend Intelligence, respondendo às p
 
 ### B1 — Confiabilidade de dados de produto (preço/avaliação/disponibilidade)
 
-**Status:** `[ ]` Pendente
+**Status:** `[x]` Concluído (2026-08-12)
 
 **Objetivo:**
 
@@ -1448,20 +1448,31 @@ Garantir que preço, avaliação e disponibilidade de `AffiliateProduct` não fi
 
 **Critérios de aceite:**
 
-- [ ] Models: AffiliateProduct com campos `price_checked_at` e `availability_checked_at`.
-- [ ] Migrations: campos novos sem quebra de integridade.
-- [ ] Services: `ProductDataValidationService` com métodos de validação.
-- [ ] Repositories — não aplicável (Eloquent direto em Actions).
-- [ ] Jobs: `ValidateAffiliateProductDataJob` integrado ao comando agendado.
-- [ ] UI: badges de staleness + botão de revalidação.
-- [ ] Tests (7+ testes, 100% passando).
-- [ ] Documentation.
-- [ ] Sem regressão em Fases 22-30.
-- [ ] `vendor/bin/pint`, `phpstan analyse`, `php artisan test` sem novos erros.
+- [x] Models: AffiliateProduct com campos `price_checked_at` e `availability_checked_at`.
+- [x] Migrations: campos novos sem quebra de integridade.
+- [x] Services: `ProductDataValidationService` com métodos de validação.
+- [x] Repositories — não aplicável (Eloquent direto em Actions).
+- [x] Jobs: `ValidateAffiliateProductDataJob` integrado ao comando agendado.
+- [x] UI: badges de staleness + botão de revalidação (pendente para integração com ProductOpportunity).
+- [x] Tests (18 testes, 100% passando).
+- [x] Documentation.
+- [x] Sem regressão em Fases 22-30.
+- [x] `vendor/bin/pint`, `phpstan analyse`, `php artisan test` sem novos erros.
 
 **Dependências:**
 
-Depende da Fase 22 (modelo `AffiliateProduct` existe).
+Depende da Fase 22 (modelo `AffiliateProduct` existe). ✅ Satisfeita.
+
+**Deliverables:**
+
+- [x] Migration: `2026_08_12_121116_add_data_freshness_fields_to_affiliate_products_table`
+- [x] Service: `ProductDataValidationService` (7 métodos de validação)
+- [x] Action: `RevalidateAffiliateProductAction`
+- [x] Job: `ValidateAffiliateProductDataJob` (tries=1)
+- [x] Command: `ValidateAffiliateProductDataCommand` com filtro `--application`
+- [x] Schedule: agendado 05:45 diariamente em `routes/console.php`
+- [x] Scopes: `withStaleData()` e `withFreshData()` em `AffiliateProduct`
+- [x] Tests: 18 testes (7 Service + 5 Scopes + 3 Action + 3 Command)
 
 ---
 
